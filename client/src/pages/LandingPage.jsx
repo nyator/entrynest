@@ -1,10 +1,9 @@
 import React from 'react'
+import Navbar from '../components/navbar'
 
 const LandingPage = () => {
   return (
-    <h1 className="text-3xl font-bold underline">
-      entrynest
-    </h1>
+    <Navbar/>
   )
 }
 
