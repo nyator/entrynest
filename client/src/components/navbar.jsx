@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router";
 
 import { logo } from "../constants/assests";
@@ -12,6 +12,11 @@ const navLinks = [
 ];
 
 const Navbar = () => {
+  const [open, setOpen] = useState(false)
+  const toggleMenu = () => {
+    setOpen((prevOpen) => !prevOpen);
+  };
+  
   return (
     <>
       <div className="flex items-center justify-between">

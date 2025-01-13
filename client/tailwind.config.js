@@ -1,9 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: [
-    "./index.html",
-    "./src/**/*.{js,ts,jsx,tsx}",
-  ],
+  content: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   theme: {
     screens: {
       sm: "520px",
@@ -12,20 +9,9 @@ export default {
       xl: "1280px",
       "2xl": "1536px",
     },
-    
+
     fontFamily: {
-      sora: ["Sora", "serif"]
-    },
-
-    colors: {
-      primary: "#",
-      navblack: "#",
-
-      secondary: {
-        default: "#",
-      },
-      blue: "#",
-      gray: "#",
+      sora: ["Sora", "serif"],
     },
 
     extend: {
@@ -41,8 +27,18 @@ export default {
         SatoshiBlack: "Satoshi-Black",
         SatoshiBlackItalic: "Satoshi-BlackItalic",
       },
+
+      colors: {
+        primary: "#",
+        navblack: "#",
+
+        secondary: {
+          default: "#",
+        },
+
+        gray: "#",
+      },
     },
   },
   plugins: [],
-}
-
+};
