@@ -5,6 +5,14 @@ export default {
     "./src/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
+    screens: {
+      sm: "520px",
+      md: "890px",
+      lg: "1024px",
+      xl: "1280px",
+      "2xl": "1536px",
+    },
+    
     fontFamily: {
       sora: ["Sora", "serif"]
 
