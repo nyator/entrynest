@@ -4,7 +4,7 @@ import Navbar from '../components/navbar'
 
 const LandingPage = () => {
   return (
-    <div className='w-screen mx-[50px] my-[25px] bg-red-600'>
+    <div className='w-11/12 mx-auto my-[25px]'>
       <Navbar/>
 
     </div>
