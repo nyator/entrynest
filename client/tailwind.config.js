@@ -15,8 +15,19 @@ export default {
     
     fontFamily: {
       sora: ["Sora", "serif"]
-
     },
+
+    colors: {
+      primary: "#",
+      navblack: "#",
+
+      secondary: {
+        default: "#",
+      },
+      blue: "#",
+      gray: "#",
+    },
+
     extend: {
       fontFamily: {
         SatoshiLight: "Satoshi-Light",
