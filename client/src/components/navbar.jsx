@@ -3,11 +3,12 @@ import { Link } from "react-router";
 
 import { logo } from "../constants/assests";
 import Button from "../elements/button";
-import { CgMenuMotion } from "react-icons/cg";
-import { AiFillCloseCircle } from "react-icons/ai";
+
+import { IoMenu } from "react-icons/io5";
+import { IoClose } from "react-icons/io5";
 
 const navLinks = [
-  { title: "Find Job", href: "/find_job", id: 1 },
+  { title: "Find Job", href: "/", id: 1 },
   { title: "Find Talent", href: "/find_talent", id: 2 },
   { title: "Community", href: "/community", id: 3 },
   { title: "Support", href: "/support", id: 4 },
@@ -49,32 +50,35 @@ const Navbar = () => {
           aria-label={open ? "Close menu" : "Open menu"}
         >
           {!open ? (
-            <CgMenuMotion className="size-7 hover:size-6 transition-all ease-in-out duration-200" />
+            <IoMenu className="size-7 hover:size-6 transition-all ease-in-out duration-200" />
           ) : (
-            <AiFillCloseCircle className="size-7 hover:size-6 transition-all ease-in-out duration-200" />
+            <IoClose className="size-7 hover:size-6 transition-all ease-in-out duration-200" />
           )}
         </button>
-      
 
-      {open && (
-        <>
-          <div
-            className={`fixed top-16 left-0 w-full bg-slate-400 transition-all duration-1000 ease-in-out overflow-hidden ${
-              open ? "max-h-screen opacity-100" : "max-h-0 opacity-0"
-            }`}
-          >
-            <div className="flex flex-col gap-8 w-full bg-slate-400">
-              {navLinks.map((items) => {
-                return (
-                  <a href={items.href} key={items.id} className="">
-                    {items.title}
-                  </a>
-                );
-              })}
+        {open && (
+          <>
+            <div
+              className={`fixed top-20 left-0 w-full h-full bg-white transition-all duration-1000 ease-in-out overflow-hidden 
+            `}
+            >
+              <div className="flex flex-col w-11/12 mx-auto">
+                {navLinks.map((items) => {
+                  return (
+                    <div
+                      key={items.id}
+                      className="items-center justify-start border-b-[1px] border-[#e3e3e3] py-5"
+                    >
+                      <a href={items.href} className="text-xl">
+                        <div className="py-3">{items.title}</div>
+                      </a>
+                    </div>
+                  );
+                })}
+              </div>
             </div>
-          </div>
-        </>
-      )}
+          </>
+        )}
       </div>
     </>
   );

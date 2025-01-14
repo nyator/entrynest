@@ -35,7 +35,7 @@ export default {
           default: "#",
         },
 
-        gray: "#",
+        gray: "#9A9797",
       },
     },
   },
