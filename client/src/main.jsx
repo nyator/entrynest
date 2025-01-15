@@ -9,16 +9,18 @@ import "./index.css";
 
 import LandingPage from "../src/pages/LandingPage"
 import Layout from "./Layout";
+import NotFoundPage from "./pages/notFoundPage"
 
 const router = createBrowserRouter([
   {
     path: "/",
     element: <Layout />,
+    errorElement: <NotFoundPage />,
     children: [
-      // {
-      //   path: "team",
-      //   element: <Team />,
-      // },
+      {
+        path: "/",
+        element: <LandingPage />,
+      },
     ],
   },
 ]);
