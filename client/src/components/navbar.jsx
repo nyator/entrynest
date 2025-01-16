@@ -24,7 +24,9 @@ const Navbar = () => {
     <>
       {/* DESKTOP */}
       <div className="md:flex hidden items-center justify-between">
-        <img src={logo} alt="" className="" />
+        <Link to="/">
+          <img src={logo} alt="logo" />
+        </Link>
 
         <div className="flex flex-row gap-8 ">
           {navLinks.map((items) => {
@@ -56,7 +58,9 @@ const Navbar = () => {
       {/* MOBILE */}
 
       <div className="md:hidden flex items-center justify-between">
-        <img src={logo} alt="" className="" />
+        <Link to="/">
+          <img src={logo} alt="logo" />
+        </Link>
 
         <button
           onClick={toggleMenu}
@@ -77,7 +81,7 @@ const Navbar = () => {
             >
               <div className="flex flex-col w-11/12 mx-auto">
                 <div className="flex gap-4 justify-end">
-                  <Link to="/join_login" onClick={toggleMenu}th>
+                  <Link to="/join_login" onClick={toggleMenu} th>
                     <Button text="Login" />
                   </Link>
                   <Link to="/join_signup" onClick={toggleMenu}>
