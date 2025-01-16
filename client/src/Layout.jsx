@@ -1,3 +1,4 @@
+import Footer from "./components/footer";
 import Navbar from "./components/navbar";
 import { Outlet } from "react-router-dom";
 
@@ -6,7 +7,8 @@ const Layout = () => {
     <>
       <main className="w-11/12 mx-auto my-[25px]">
         <Navbar />
-        <Outlet />
+        {/* <Outlet /> */}
+        <Footer />
       </main>
     </>
   );

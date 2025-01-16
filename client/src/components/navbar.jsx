@@ -29,7 +29,7 @@ const Navbar = () => {
         <div className="flex flex-row gap-8 ">
           {navLinks.map((items) => {
             return (
-              <div className="hover:font-medium">
+              <div key={items.id} className="hover:font-medium">
                 <NavLink
                   to={items.href}
                   key={items.id}
@@ -76,6 +76,14 @@ const Navbar = () => {
             `}
             >
               <div className="flex flex-col w-11/12 mx-auto">
+                <div className="flex gap-4 justify-end">
+                  <Link to="/join_login" onClick={toggleMenu}th>
+                    <Button text="Login" />
+                  </Link>
+                  <Link to="/join_signup" onClick={toggleMenu}>
+                    <Button text="SignUp" className="text-white bg-blue-400" />
+                  </Link>
+                </div>
                 {navLinks.map((items) => {
                   return (
                     <div
