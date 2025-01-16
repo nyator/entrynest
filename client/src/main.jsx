@@ -7,9 +7,12 @@ import {
 
 import "./index.css";
 
-import LandingPage from "../src/pages/LandingPage"
+import LandingPage from "../src/pages/LandingPage"//ALSO JOB_SEARCH PAGE
 import Layout from "./Layout";
 import NotFoundPage from "./pages/notFoundPage"
+import FindTalentPage from "./pages/FIndTalentPage";
+import CommunityPage from "./pages/CommunityPage";
+
 
 const router = createBrowserRouter([
   {
@@ -21,6 +24,19 @@ const router = createBrowserRouter([
         path: "/",
         element: <LandingPage />,
       },
+      {
+        path: "/find_talent",
+        element: <FindTalentPage />,
+      },
+      {
+        path: "/community",
+        element: <CommunityPage />,
+      },
+      {
+        path: "/join_login",
+        element: <CommunityPage />,
+      },
+
     ],
   },
 ]);

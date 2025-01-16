@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router";
+import { Link, NavLink } from "react-router";
 
 import { logo } from "../constants/assests";
 import Button from "../elements/button";
@@ -22,15 +22,24 @@ const Navbar = () => {
 
   return (
     <>
+      {/* DESKTOP */}
       <div className="md:flex hidden items-center justify-between">
         <img src={logo} alt="" className="" />
 
         <div className="flex flex-row gap-8 ">
           {navLinks.map((items) => {
             return (
-              <a href={items.href} key={items.id} className="">
-                {items.title}
-              </a>
+              <div className="hover:font-medium">
+                <NavLink
+                  to={items.href}
+                  key={items.id}
+                  className={({ isActive }) =>
+                    isActive ? "font-medium" : "text-black"
+                  }
+                >
+                  {items.title}
+                </NavLink>
+              </div>
             );
           })}
         </div>
