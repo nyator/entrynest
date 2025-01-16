@@ -13,6 +13,10 @@ import NotFoundPage from "./pages/notFoundPage"
 import FindTalentPage from "./pages/FIndTalentPage";
 import CommunityPage from "./pages/CommunityPage";
 
+import LoginPage from "../src/pages/LoginPage"
+import SignupPage from "../src/pages/SignupPage"
+import SupportPage from "./pages/SupportPage";
+
 
 const router = createBrowserRouter([
   {
@@ -33,8 +37,16 @@ const router = createBrowserRouter([
         element: <CommunityPage />,
       },
       {
+        path: "/support",
+        element: <SupportPage />,
+      },
+      {
         path: "/join_login",
-        element: <CommunityPage />,
+        element: <LoginPage />
+      },
+      {
+        path: "/join_signup",
+        element: <SignupPage />
       },
 
     ],
