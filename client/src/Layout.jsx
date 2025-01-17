@@ -7,7 +7,7 @@ const Layout = () => {
     <>
       <main className="w-11/12 mx-auto my-[25px]">
         <Navbar />
-        {/* <Outlet /> */}
+        <Outlet />
         <Footer />
       </main>
     </>

@@ -1,6 +1,8 @@
 import React from "react";
-import { logo } from "../constants/assests";
 import { Link } from "react-router";
+
+import { logo } from "../constants/assests";
+import Button from "../elements/button";
 
 function Footer() {
   return (
@@ -12,7 +14,7 @@ function Footer() {
         </div>
 
         <div className="w-9/12 space-y-4">
-          <div className="flex justify-start space-x-10">
+          <div className="flex justify-start space-x-20">
             <Link to={"/"}>
               <p>Option 1</p>
             </Link>
@@ -22,6 +24,7 @@ function Footer() {
             <Link to={"/"}>
               <p>Option 3</p>
             </Link>
+            <Button text="Button"/>
           </div>
           <div>
             <p className="text-sm">
@@ -31,8 +34,12 @@ function Footer() {
           </div>
           <div className="h-[2px] w-full bg-[#D9D9D9]"></div>
           <div className="flex text-sm space-x-10">
-            <p>User Agreement</p>
-            <p>Privacy</p>
+            <Link to="">
+              <p>User Agreement</p>
+            </Link>
+            <Link to="">
+              <p>Privacy</p>
+            </Link>
           </div>
         </div>
       </div>

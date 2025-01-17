@@ -25,7 +25,7 @@ const Navbar = () => {
       {/* DESKTOP */}
       <div className="md:flex hidden items-center justify-between">
         <Link to="/">
-          <img src={logo} alt="logo"/>
+          <img src={logo} alt="logo" />
         </Link>
 
         <div className="flex flex-row gap-8">
@@ -47,10 +47,10 @@ const Navbar = () => {
         </div>
         <div className="flex gap-2">
           <Link to="/join_login">
-            <Button text="Login" className="" />
+            <Button text="Login" className="text-primary" />
           </Link>
           <Link to="/join_signup">
-            <Button text="SignUp" className="text-white bg-blue-400" />
+            <Button text="SignUp" className="text-white bg-primary" />
           </Link>
         </div>
       </div>
@@ -76,16 +76,16 @@ const Navbar = () => {
         {open && (
           <>
             <div
-              className={`fixed top-20 left-0 w-full h-full bg-white transition-all duration-1000 ease-in-out overflow-hidden 
+              className={`fixed top-[53px] left-0 w-full h-full pt-20 bg-white transition-all duration-1000 ease-in-out  overflow-hidden 
             `}
             >
               <div className="flex flex-col w-11/12 mx-auto">
                 <div className="flex gap-4 justify-end">
                   <Link to="/join_login" onClick={toggleMenu} th>
-                    <Button text="Login" />
+                    <Button text="Login" className="text-primary" />
                   </Link>
                   <Link to="/join_signup" onClick={toggleMenu}>
-                    <Button text="SignUp" className="text-white bg-blue-400" />
+                    <Button text="SignUp" className="text-white bg-primary" />
                   </Link>
                 </div>
                 {navLinks.map((items) => {
