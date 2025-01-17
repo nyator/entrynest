@@ -25,10 +25,10 @@ const Navbar = () => {
       {/* DESKTOP */}
       <div className="md:flex hidden items-center justify-between">
         <Link to="/">
-          <img src={logo} alt="logo" />
+          <img src={logo} alt="logo"/>
         </Link>
 
-        <div className="flex flex-row gap-8 ">
+        <div className="flex flex-row gap-8">
           {navLinks.map((items) => {
             return (
               <div key={items.id} className="hover:font-medium">
