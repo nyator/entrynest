@@ -1,8 +1,11 @@
 import logo from '../assets/images/logo.svg'
-import logohead from '../assets/images/loghead.svg'
-
+import logoHeadLeft from '../assets/images/logoHeadLeft.svg'
+import logoHeadRight from '../assets/images/logoHeadRight.svg'
+import loginPhoto from '../assets/images/loginPhoto.png'
 
 export {
     logo,
-    logohead,
+    logoHeadLeft,
+    logoHeadRight,
+    loginPhoto,
 }

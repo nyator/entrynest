@@ -57,28 +57,31 @@ const Navbar = () => {
 
       {/* MOBILE */}
 
-      <div className="md:hidden flex items-center justify-between">
+      <div className="md:hidden flex items-center justify-between z-50">
         <Link to="/">
           <img src={logo} alt="logo" />
         </Link>
 
-        <button
-          onClick={toggleMenu}
-          aria-label={open ? "Close menu" : "Open menu"}
-        >
-          {!open ? (
-            <IoMenu className="size-7 hover:size-6 transition-all ease-in-out duration-200" />
-          ) : (
-            <IoClose className="size-7 hover:size-6 transition-all ease-in-out duration-200" />
-          )}
+        <button onClick={toggleMenu}>
+          <IoMenu className="size-7 hover:size-6 transition-all ease-in-out duration-200" />
         </button>
 
         {open && (
           <>
             <div
-              className={`fixed top-[53px] left-0 w-full h-full pt-20 bg-white transition-all duration-1000 ease-in-out  overflow-hidden 
+              className={`fixed top-0 left-0 w-full h-full  bg-white transition-all duration-1000 ease-in-out overflow-hidden z-50
             `}
             >
+              <div className="flex justify-between w-11/12 mx-auto my-[25px] ">
+                <Link to="/">
+                  <img src={logo} alt="logo" />
+                </Link>
+
+                <button onClick={toggleMenu}>
+                  <IoClose className="size-7 hover:size-6 transition-all ease-in-out duration-200" />
+                </button>
+              </div>
+
               <div className="flex flex-col w-11/12 mx-auto">
                 <div className="flex gap-4 justify-end">
                   <Link to="/join_login" onClick={toggleMenu} th>
