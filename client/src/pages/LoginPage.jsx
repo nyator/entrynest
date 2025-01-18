@@ -7,7 +7,7 @@ import Button from "../elements/button";
 import { FcGoogle } from "react-icons/fc";
 
 function LoginPage() {
-  const [username, setUsername] = React.useState("");
+  const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
   const handleUsernameChange = (e) => {
@@ -78,7 +78,7 @@ function LoginPage() {
             <div className="flex justify-center items-center">
               <p className="font-SatoshiMedium ">
                 New to entrynest ?{"  "}
-                <Link>
+                <Link to="/join_signup">
                   <span className="font-medium underline">Signup</span>
                 </Link>
               </p>

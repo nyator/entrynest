@@ -11,7 +11,8 @@ const Layout = () => {
       <main className="w-11/12 mx-auto my-[25px]">
         <Navbar />
         <Outlet />
-        {location.pathname !== "/join_login" && <Footer />}
+        {location.pathname !== "/join_login" &&
+          location.pathname !== "/join_signup" && <Footer />}
       </main>
     </>
   );
