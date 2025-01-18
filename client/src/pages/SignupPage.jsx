@@ -67,17 +67,17 @@ function SignupPage() {
         </div>
 
         <div className="flex justify-center">
-          <div className="space-y-4 md:space-y-6 w-4/5 items-center">
-            <div className="flex md:flex-row flex-col justify-between gap-4 bg-slate-500">
-              <div>
-                <h1>First Name</h1>
+          <div className="space-y-4 md:space-y-7 w-4/5 items-center">
+            <div className="flex sm:flex-row flex-col justify-between gap-4">
+              <div className="w-full">
+                <h1 className="text-clampText">First Name</h1>
                 <InputField
                   placeholder="First Name"
                   onChange={handlePasswordChange}
                 />
               </div>
-              <div>
-                <h1>Last Name</h1>
+              <div className="w-full">
+                <h1 className="text-clampText">Last Name</h1>
                 <InputField
                   placeholder="Last Name"
                   onChange={handlePasswordChange}
@@ -86,7 +86,7 @@ function SignupPage() {
             </div>
 
             <div className="flex flex-col">
-              <h1>Email</h1>
+              <h1 className="text-clampText">Email</h1>
               <InputField
                 placeholder="Type email"
                 onChange={handlePasswordChange}
@@ -94,7 +94,7 @@ function SignupPage() {
             </div>
 
             <div className="flex flex-col">
-              <h1>Create a password</h1>
+              <h1 className="text-clampText">Create a password</h1>
               <InputField
                 type="password"
                 placeholder="Type password"

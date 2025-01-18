@@ -37,7 +37,7 @@ function LoginPage() {
         <div className="flex justify-center">
           <div className="space-y-4 md:space-y-6 w-4/5 items-center">
             <div className="flex flex-col">
-              <h1>Email</h1>
+              <h1 className="text-clampText">Email</h1>
               <InputField
                 placeholder="Type email"
                 onChange={handlePasswordChange}
@@ -45,7 +45,7 @@ function LoginPage() {
             </div>
 
             <div className="flex flex-col">
-              <h1>Password</h1>
+              <h1 className="text-clampText">Password</h1>
               <InputField
                 type="password"
                 placeholder="Type password"

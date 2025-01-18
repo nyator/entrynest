@@ -42,7 +42,7 @@ export default {
         clampHead: "clamp(20px, 5vw, 65px)",
         clampHeadSm: "clamp(17px, 5vw, 40px)",
         clampDesc: "clamp(0.8rem, 1vw, 25px)",
-        clampText: "clamp(0.6rem, 2vw, 1rem)",
+        clampText: "clamp(0.8rem, 2vw, 1rem)",
         clampInputText: "clamp(0.8rem, 1vw, 18px)", 
       },
 
