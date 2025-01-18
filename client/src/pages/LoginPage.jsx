@@ -63,7 +63,7 @@ function LoginPage() {
                 Forgot Password ?
               </p>
             </Link>
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between text-gray">
               <div className="w-2/5 h-[1.5px] bg-gray"></div>or
               <div className="w-2/5 h-[1.5px] bg-gray"></div>
             </div>

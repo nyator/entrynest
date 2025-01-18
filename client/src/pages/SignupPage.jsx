@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 import { logPhoto } from "../constants/assests";
 import InputField from "../elements/inputField";
@@ -9,6 +9,7 @@ import { FcGoogle } from "react-icons/fc";
 function SignupPage() {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
+  const [toggle, setToggle] = useState("jobseeker");
 
   const handleUsernameChange = (e) => {
     setUsername(e.target.value);
@@ -18,7 +19,14 @@ function SignupPage() {
     setPassword(e.target.value);
   };
 
-  const [toggle, setToggle] = useState("enabled");
+  // const handleSubmit = (e) => {
+  //   e.preventDefault();
+  //   if (toggle === "jobseeker") {
+  //     history.push("/signup-jobseeker");
+  //   } else {
+  //     // Handle employer submission
+  //   }
+  // };
 
   return (
     <div className="flex  md:flex-row w-full mt-10 justify-center items-center my-10 h-full bg-white rounded-xl">
@@ -35,31 +43,26 @@ function SignupPage() {
           <p className="text-clampDesc">WELCOME TO THE NEST</p>
         </div>
 
-        {/* <div className="flex gap-2 items-center justify-center w-fit bg-green-700">
-          <p>Job Seeker</p>
-          <p>Employer</p>
-        </div> */}
-
         <div className=" flex justify-center items-center">
           <div className="flex w-fit rounded-xl">
             <button
               className={`text-clampText border-[1.5px] border-primaryStroke border-r-0 py-2 px-4 rounded-s-xl  ${
-                toggle === "enabled"
+                toggle === "jobseeker"
                   ? "bg-primary text-white"
                   : "bg-gray-200 text-primaryStroke"
               } transition duration-300`}
-              onClick={() => setToggle("enabled")}
+              onClick={() => setToggle("jobseeker")}
             >
               Job Seeker
             </button>
 
             <button
               className={`text-clampText border-[1.5px] border-primaryStroke py-2 px-4 rounded-r-xl ${
-                toggle === "disabled"
+                toggle === "employer"
                   ? "bg-primary text-white"
                   : "bg-gray-200 text-primaryStroke"
               } transition duration-300`}
-              onClick={() => setToggle("disabled")}
+              onClick={() => setToggle("employer")}
             >
               Employer
             </button>
@@ -102,12 +105,22 @@ function SignupPage() {
               />
             </div>
 
+            <div className="flex flex-col">
+              <h1 className="text-clampText">Confirm password</h1>
+              <InputField
+                type="password"
+                placeholder="Confirm password"
+                onChange={handlePasswordChange}
+              />
+            </div>
+
             <Button
+              // onCLick={handleSubmit}
               text="Signup"
               className="w-full bg-primary text-white font-medium py-2 rounded-xl"
             />
 
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between text-gray">
               <div className="w-2/5 h-[1.5px] bg-gray"></div>or
               <div className="w-2/5 h-[1.5px] bg-gray"></div>
             </div>

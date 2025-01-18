@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { FaEyeSlash } from "react-icons/fa";
-import { FaEye } from "react-icons/fa";
+import { VscEyeClosed } from "react-icons/vsc";
+import { VscEye } from "react-icons/vsc";
+
+
 
 const InputField = ({ type, placeholder, onChange }) => {
   const [showPassword, setShowPassword] = useState(false);
@@ -25,7 +27,7 @@ const InputField = ({ type, placeholder, onChange }) => {
           onClick={handleTogglePassword}
           className="absolute top-1/2 transform -translate-y-1/2 right-2 "
         >
-          {showPassword ? <FaEyeSlash className="text-black/50"/> : <FaEye className="text-black/50"/>}
+          {showPassword ? <VscEyeClosed className="text-grayStroke"/> : <VscEye className="text-grayStroke"/>}
         </button>
       )}
     </div>
