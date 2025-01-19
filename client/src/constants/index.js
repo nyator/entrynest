@@ -113,4 +113,6 @@ export const jobStyle =[
         id: 3,
         title: "Hybrid",
     }
-]
+];
+
+// export const 

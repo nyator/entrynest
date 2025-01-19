@@ -1,11 +1,16 @@
-import React from 'react'
+import React from "react";
+import { Link } from "react-router";
 
 const Button = (props) => {
   return (
-    <button className={`px-3 py-1 rounded-lg border-[1.5px] border-primaryStroke ${props.className}`}> 
+    <Link to={props.Link}>
+    <button onClick={props.onClick}
+      className={`px-3 py-1 rounded-lg border-[1.5px] border-primaryStroke ${props.className}`}
+    >
       {props.text}
     </button>
-  )
-}
+      </Link>
+  );
+};
 
-export default Button
+export default Button;

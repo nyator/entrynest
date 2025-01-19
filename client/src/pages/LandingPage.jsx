@@ -16,7 +16,7 @@ const LandingPage = () => {
         </div>
 
         <div className="flex flex-col md:items-start items-center justify-start gap-3 z-50">
-          <h1 className="text-clampHead font-bold text-white text-center md:text-left">
+          <h1 className="text-clampHead font-black leading-tight text-white text-center md:text-left">
             Discover The Right Starting Point With “entrynest”
           </h1>
           <div className="gap-2 flex flex-row">

@@ -5,8 +5,7 @@ export default {
     screens: {
       sm: "600px",
       md: "950px",
-      lg: "1024px",
-      xl: "1280px",
+      lg: "1350px",
     },
 
     fontFamily: {
