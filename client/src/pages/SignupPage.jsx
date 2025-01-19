@@ -50,7 +50,7 @@ function SignupPage() {
                 toggle === "jobseeker"
                   ? "bg-primary text-white"
                   : "bg-gray-200 text-primaryStroke"
-              } transition duration-300`}
+              } transition ease-in-out duration-300`}
               onClick={() => setToggle("jobseeker")}
             >
               Job Seeker
@@ -61,7 +61,7 @@ function SignupPage() {
                 toggle === "employer"
                   ? "bg-primary text-white"
                   : "bg-gray-200 text-primaryStroke"
-              } transition duration-300`}
+              } transition ease-in-out duration-300`}
               onClick={() => setToggle("employer")}
             >
               Employer

@@ -84,7 +84,7 @@ const Navbar = () => {
 
               <div className="flex flex-col w-11/12 mx-auto">
                 <div className="flex gap-4 justify-end">
-                  <Link to="/join_login" onClick={toggleMenu} th>
+                  <Link to="/join_login" onClick={toggleMenu}>
                     <Button text="Login" className="text-primary" />
                   </Link>
                   <Link to="/join_signup" onClick={toggleMenu}>
