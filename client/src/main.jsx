@@ -1,22 +1,19 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
-import {
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import "./index.css";
 
-import LandingPage from "../src/pages/LandingPage"//ALSO JOB_SEARCH PAGE
+import LandingPage from "../src/pages/LandingPage"; //ALSO JOB_SEARCH PAGE
 import Layout from "./Layout";
-import NotFoundPage from "./pages/notFoundPage"
+import NotFoundPage from "./pages/notFoundPage";
 import FindTalentPage from "./pages/FIndTalentPage";
 import CommunityPage from "./pages/CommunityPage";
 
-import LoginPage from "../src/pages/LoginPage"
-import SignupPage from "../src/pages/SignupPage"
+import LoginPage from "../src/pages/LoginPage";
+import SignupPage from "../src/pages/SignupPage";
 import SupportPage from "./pages/SupportPage";
-
+import SignupJobSeeker from "./pages/SignupJobSeeker";
 
 const router = createBrowserRouter([
   {
@@ -42,13 +39,12 @@ const router = createBrowserRouter([
       },
       {
         path: "/join_login",
-        element: <LoginPage />
+        element: <LoginPage />,
       },
       {
         path: "/join_signup",
-        element: <SignupPage />
+        element: <SignupJobSeeker />,
       },
-
     ],
   },
 ]);
@@ -56,4 +52,3 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")).render(
   <RouterProvider router={router} />
 );
-
