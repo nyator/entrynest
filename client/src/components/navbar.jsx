@@ -46,12 +46,17 @@ const Navbar = () => {
           })}
         </div>
         <div className="flex gap-2">
-          <Link to="/join_login">
-            <Button text="Login" className="text-primaryStroke" />
-          </Link>
-          <Link to="/join_signup">
-            <Button text="SignUp" className="text-white bg-primary" />
-          </Link>
+          <Button
+            text="Login"
+            className="text-primaryStroke"
+            Link="/join_login"
+          />
+
+          <Button
+            text="SignUp"
+            className="text-white bg-primary"
+            Link="/join_signup"
+          />
         </div>
       </div>
 
@@ -69,7 +74,7 @@ const Navbar = () => {
         {open && (
           <>
             <div
-              className={`fixed top-0 left-0 w-full h-full  bg-white transition-all duration-1000 ease-in-out overflow-hidden z-50
+              className={`fixed top-0 left-0 w-full h-full bg-white transition-all duration-1000 ease-in-out overflow-hidden z-50
             `}
             >
               <div className="flex justify-between w-11/12 mx-auto my-[25px] ">
@@ -84,12 +89,19 @@ const Navbar = () => {
 
               <div className="flex flex-col w-11/12 mx-auto">
                 <div className="flex gap-4 justify-end">
-                  <Link to="/join_login" onClick={toggleMenu}>
-                    <Button text="Login" className="text-primary" />
-                  </Link>
-                  <Link to="/join_signup" onClick={toggleMenu}>
-                    <Button text="SignUp" className="text-white bg-primary" />
-                  </Link>
+                  <Button
+                    text="Login"
+                    className="text-primary"
+                    Link="/join_login"
+                    onClick={toggleMenu}
+                  />
+
+                  <Button
+                    text="SignUp"
+                    className="text-white bg-primary"
+                    Link="/join_signup"
+                    onClick={toggleMenu}
+                  />
                 </div>
                 {navLinks.map((items) => {
                   return (

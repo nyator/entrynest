@@ -24,7 +24,7 @@ function Footer() {
             <Link to={"/"}>
               <p className="text-clampText">Option 3</p>
             </Link>
-            <Button text="Button" className="text-clampText" />
+            <Button text="Button" className="text-clampText" Link={"/"} />
           </div>
           <div>
             <p className="text-center sm:text-start text-sm">

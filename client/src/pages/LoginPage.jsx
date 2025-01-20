@@ -53,10 +53,12 @@ function LoginPage() {
               />
             </div>
 
-            <Button
-              text="Login"
-              className="w-full bg-primary text-white font-medium py-2 rounded-xl"
-            />
+            <div>
+              <Button
+                text="Login"
+                className="w-full bg-primary text-white font-medium py-2 rounded-xl"
+              />
+            </div>
 
             <Link to="">
               <p className="text-mred text-sm text-center mt-4 md:mt-6">
