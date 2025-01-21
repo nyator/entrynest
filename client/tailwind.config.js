@@ -11,6 +11,7 @@ export default {
     fontFamily: {
       sora: ["Sora", "serif"],
     },
+    
 
     extend: {
       fontFamily: {
@@ -35,11 +36,13 @@ export default {
         gray: "#D9D9D9",
         grayStroke: "#9A9797",
         mred: "#CE0000",
+        mblack: "#2D2D2E"
       },
 
       fontSize: {
         clampHead: "clamp(25px, 5vw, 65px)",
         clampHeadSm: "clamp(17px, 5vw, 40px)",
+        clampHeadXs: "clamp(30px, 3vw, 40px)",
         clampDesc: "clamp(0.8rem, 1vw, 25px)",
         clampText: "clamp(0.8rem, 2vw, 1rem)",
         clampInputText: "clamp(0.8rem, 1vw, 18px)", 
@@ -47,6 +50,7 @@ export default {
 
       backgroundImage: {
         'loginBG': "url(../src/assets/images/loginPhoto.png)",
+        'unhBG': "url(../src/assets/images/unh.jpg)",
       },
     },
   },

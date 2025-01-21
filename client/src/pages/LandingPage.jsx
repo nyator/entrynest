@@ -8,7 +8,7 @@ import { logoHeadRight } from "../constants/assests";
 const LandingPage = () => {
   return (
     <div>
-      <section className="relative flex flex-col justify-center items-center gap-3 bg-primary px-5 md:px-20 py-10 my-10 overflow-hidden -z-10">
+      <section className="relative flex flex-col justify-center items-center gap-3 bg-primary px-5 md:px-20 py-10 my-10 overflow-hidden rounded-xl -z-10">
         <div className="flex gap-[0.5px] font-thin text-clampDesc text-center text-gray flex-row z-50">
           <p>#internship</p>
           <p>#mentorship</p>
@@ -33,11 +33,11 @@ const LandingPage = () => {
         </div>
         <img
           src={logoHeadLeft}
-          className="absolute bottom-0 left-0 size-80 z-0 object-fill"
+          className="absolute bottom-0 left-0 size-72 z-0 object-fill"
         />
         <img
           src={logoHeadRight}
-          className="absolute bottom-0 right-0 sm:visible invisible size-80 z-0  object-fill"
+          className="absolute bottom-0 right-0 sm:visible invisible size-64 z-0 object-fill"
         />
       </section>
 
