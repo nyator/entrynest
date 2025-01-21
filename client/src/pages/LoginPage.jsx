@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router";
 
-import { logPhoto } from "../constants/assests";
+import { fr } from "../constants/assests";
 import InputField from "../elements/inputField";
 import Button from "../elements/button";
 import { FcGoogle } from "react-icons/fc";
@@ -22,7 +22,7 @@ function LoginPage() {
     <div className="flex  md:flex-row w-full mt-10 justify-center items-center my-10 h-full bg-white rounded-xl">
       <div className="hidden md:flex h-screen w-1/2">
         <img
-          src={logPhoto}
+          src={fr}
           // className="object-cover hidden md:flex h-1/2 md:w-1/2"
           className="object-cover h-full w-full rounded-s-xl"
         />
