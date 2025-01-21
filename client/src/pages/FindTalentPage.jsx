@@ -4,13 +4,13 @@ import { logoHeadRight } from "../constants/assests";
 
 const FindTalentPage = () => {
   return (
-    <div>
-      <section className="mx-auto my-20 w-5/6 ">
+    <>
+      <section className="mx-auto mt-20 mb-5 sm:my-20 w-5/6 ">
         <div className="flex flex-col text-center ">
           <h1 className="text-clampHead font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-[#af00ce]">
             Hire Smarter, Build Faster!
           </h1>
-          <p className="text-clampHeadSm">
+          <p className="text-clampHeadM">
             Empower your business with exceptional interns and entry-level
             hires.
           </p>
@@ -18,7 +18,7 @@ const FindTalentPage = () => {
       </section>
 
       <section className="relative">
-        <div className="flex flex-col justify-center items-center gap-3 bg-[#9B56E5]/30 px-5 md:px-20 py-10 my-20 overflow-hidden rounded-xl -z-10">
+        <div className="flex flex-col justify-center items-center gap-3 bg-[#9B56E5]/30 px-5 md:px-20 py-10 my-5 sm:my-20 overflow-hidden rounded-xl -z-10">
           <div className="flex gap-[0.5px] font-thin text-clampDesc text-center text-primaryStroke flex-row z-50">
             <p>#internship</p>
             <p>#mentorship</p>
@@ -44,7 +44,7 @@ const FindTalentPage = () => {
           </div>
           <img
             src={logoHeadLeft}
-            className="absolute bottom-0 left-0 size-80 z-0 object-fill"
+            className="absolute bottom-0 left-0 size-48 sm:size-64 z-0 object-fill"
           />
           <img
             src={logoHeadRight}
@@ -53,7 +53,7 @@ const FindTalentPage = () => {
         </div>
       </section>
 
-      <section className="flex flex-col-reverse sm:flex-row-reverse gap-3 items-center justify-evenly my-20">
+      <section className="flex flex-col-reverse sm:flex-row-reverse space-y-5 gap-3 items-center justify-evenly my-5 sm:my-20">
         <div>
           <h1 className="text-clampHeadXs font-medium">Find Your</h1>
           <h1 className="text-clampHeadXs font-medium bg-grayStroke border-black border-t-2 border-b-2 pl-2 text-white">
@@ -76,10 +76,10 @@ const FindTalentPage = () => {
         </div>
         <img
           src={unh}
-          className="size-56 object-cover rounded-xl bg-blend-luminosity"
+          className="w-full h-56 sm:size-56 object-cover rounded-xl bg-blend-luminosity"
         />
       </section>
-    </div>
+    </>
   );
 };
 
