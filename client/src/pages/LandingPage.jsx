@@ -1,7 +1,9 @@
 import Button from "../elements/button";
 import { logoHeadLeft, to } from "../constants/assests";
 import { logoHeadRight } from "../constants/assests";
+import { shadowBox } from "../constants/styles";
 
+import { LiaLaptopCodeSolid } from "react-icons/lia";
 import { BsVectorPen } from "react-icons/bs";
 
 const LandingPage = () => {
@@ -17,8 +19,8 @@ const LandingPage = () => {
             match.{" "}
           </p>
         </div>
-        <div className="flex justify-around sm:justify-center w-full space-x-3">
-          <div className="bg-mblack flex flex-row items-center px-3 py-5 md:p-7 w-fit rounded-l-xl space-x-3 md:space-x-6">
+        <div className="flex justify-around sm:justify-center w-full space-x-3 mt-4">
+          <div className={`${shadowBox} bg-mblack flex flex-row items-center px-3 py-5 md:p-7 w-fit rounded-l-xl space-x-3 md:space-x-6`}>
             <div className="rounded-full bg-grayStroke border-gray border-[1px] p-1 h-fit w-fit">
               <BsVectorPen className="text-white"/>
             </div>
@@ -27,11 +29,11 @@ const LandingPage = () => {
               <p className="text-clampDesc font-light">View available opportunities...</p>
             </div>
           </div>
-          <div className="bg-white flex flex-row items-center px-3 py-5 md:p-7 w-fit rounded-r-xl space-x-6">
-            <div className="rounded-full bg-grayStroke border-gray border-[1px] p-1 h-fit w-fit">
-              <BsVectorPen className="text-white"/>
+          <div className={`${shadowBox} bg-white flex flex-row items-center px-3 py-5 md:p-7 w-fit rounded-r-xl space-x-3 md:space-x-6`}>
+            <div className="rounded-full bg-mblack border-gray border-[1px] p-1 h-fit w-fit">
+              <LiaLaptopCodeSolid className="text-white"/>
             </div>
-            <div className="text-white leading-tight">
+            <div className="text-mblack leading-tight">
               <h1 className="text-clampHeadM">Development & IT</h1>
               <p className="text-clampDesc font-light">View available opportunities...</p>
             </div>
