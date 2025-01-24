@@ -105,7 +105,7 @@ const LandingPage = () => {
           </h1>
           <h1 className="text-clampHeadXs font-medium">With Us</h1>
         </div>
-        <div className="bg-mblack text-white p-10 rounded-xl">
+        <div className="bg-fr bg-cover sm:bg-none sm:bg-mblack text-white p-10 rounded-xl ">
           <h1 className="text-clampHeadSm font-medium">
             Get The Right Candidate
           </h1>
@@ -120,7 +120,7 @@ const LandingPage = () => {
         </div>
         <img
           src={to}
-          className="w-full h-56 sm:size-56 object-cover rounded-xl bg-blend-luminosity"
+          className="w-full h-56 sm:size-56 object-cover rounded-xl bg-blend-luminosity hidden sm:flex"
         />
       </section>
     </>

@@ -41,7 +41,7 @@ export default {
 
       fontSize: {
         clampHead: "clamp(25px, 5vw, 65px)",
-        clampHeadM: "clamp(17px, 5vw, 25px)",
+        clampHeadM: "clamp(1px, 3vw, 25px)",
         clampHeadSm: "clamp(17px, 5vw, 40px)",
         clampHeadXs: "clamp(30px, 3vw, 40px)",
         clampDesc: "clamp(0.7rem, 1vw, 25px)",
@@ -52,6 +52,7 @@ export default {
       backgroundImage: {
         'loginBG': "url(../src/assets/images/loginPhoto.png)",
         'unhBG': "url(../src/assets/images/unh.jpg)",
+        'fr': "url(../src/assets/images/fr.jpg)",
       },
     },
   },

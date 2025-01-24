@@ -44,11 +44,11 @@ const FindTalentPage = () => {
           </div>
           <img
             src={logoHeadLeft}
-            className="absolute bottom-0 left-0 size-48 sm:size-64 z-0 object-fill"
+            className="absolute bottom-0 left-0 size-48 sm:size-64 -z-10 object-fill"
           />
           <img
             src={logoHeadRight}
-            className="absolute bottom-0 right-0 sm:visible invisible size-80 z-0  object-fill"
+            className="absolute bottom-0 right-0 sm:visible invisible size-80 -z-10  object-fill"
           />
         </div>
       </section>
@@ -61,7 +61,7 @@ const FindTalentPage = () => {
           </h1>
           <h1 className="text-clampHeadXs font-medium">With Us</h1>
         </div>
-        <div className="bg-mblack text-white p-10 rounded-xl">
+        <div className="bg-unhBG bg-cover bg-center sm:bg-none sm:bg-mblack text-white p-10 rounded-xl">
           <h1 className="text-clampHeadSm font-medium">
             Get The Right Candidate
           </h1>
@@ -76,7 +76,7 @@ const FindTalentPage = () => {
         </div>
         <img
           src={unh}
-          className="w-full h-56 sm:size-56 object-cover rounded-xl bg-blend-luminosity"
+          className="w-full h-56 sm:size-56 object-cover rounded-xl bg-blend-luminosity hidden sm:flex"
         />
       </section>
     </>
