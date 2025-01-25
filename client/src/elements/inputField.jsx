@@ -4,7 +4,7 @@ import { VscEye } from "react-icons/vsc";
 
 
 
-const InputField = ({ type, placeholder, onChange }) => {
+const InputField = ({ type, placeholder, onChange, value }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [inputType, setInputType] = useState(type);
 
@@ -16,6 +16,7 @@ const InputField = ({ type, placeholder, onChange }) => {
   return (
     <div className="relative ">
       <input
+      value={value}
         type={inputType}
         placeholder={placeholder}
         onChange={onChange}
