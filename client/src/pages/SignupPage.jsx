@@ -6,8 +6,6 @@ import InputField from "../elements/inputField";
 import Button from "../elements/button";
 import { FcGoogle } from "react-icons/fc";
 
-
-
 function SignupPage() {
   const [username, setUsername] = React.useState("");
   const [password, setPassword] = React.useState("");
