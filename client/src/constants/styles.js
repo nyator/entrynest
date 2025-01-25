@@ -1,1 +1,1 @@
-export const shadowBox = "shadow-[rgba(50,50,93,0.25)_0px_6px_12px_-2px,_rgba(0,0,0,0.3)_0px_3px_7px_-3px]"
+export const shadowBox = "shadow-[0_3px_10px_rgb(0,0,0,0.2)]"

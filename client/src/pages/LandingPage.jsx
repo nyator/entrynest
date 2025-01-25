@@ -21,7 +21,7 @@ const LandingPage = () => {
         </div>
         <div className="flex justify-around sm:justify-center w-full space-x-3 mt-4">
           <div
-            className={`${shadowBox} bg-mblack flex flex-row items-center px-3 py-5 md:p-7 w-fit rounded-l-xl space-x-3 md:space-x-6`}
+            className={`${shadowBox} bg-mblack flex flex-row items-center px-3 py-5 md:p-7 w-fit rounded-l-xl space-x-3 md:space-x-6 `}
           >
             <div className="rounded-full bg-grayStroke border-gray border-[1px] p-1 h-fit w-fit">
               <BsVectorPen className="text-white" />

@@ -5,7 +5,7 @@ import { logoHeadRight } from "../constants/assests";
 const FindTalentPage = () => {
   return (
     <>
-      <section className="mx-auto mt-20 mb-5 sm:my-20 w-5/6 ">
+      <section className="mx-auto mt-20 mb-5 sm:my-20 w-5/6 -z-10">
         <div className="flex flex-col text-center ">
           <h1 className="text-clampHead font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-[#af00ce]">
             Hire Smarter, Build Faster!
@@ -17,7 +17,7 @@ const FindTalentPage = () => {
         </div>
       </section>
 
-      <section className="relative">
+      <section className="relative -z-10">
         <div className="flex flex-col justify-center items-center gap-3 bg-[#9B56E5]/30 px-5 md:px-20 py-10 my-5 sm:my-20 overflow-hidden rounded-xl -z-10">
           <div className="flex gap-[0.5px] font-thin text-clampDesc text-center text-primaryStroke flex-row z-50">
             <p>#internship</p>
