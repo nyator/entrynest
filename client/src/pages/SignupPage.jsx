@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 
-import { logPhoto } from "../constants/assests";
+import { fg } from "../constants/assests";
 import InputField from "../elements/inputField";
 import Button from "../elements/button";
 import { FcGoogle } from "react-icons/fc";
+
+
 
 function SignupPage() {
   const [username, setUsername] = React.useState("");
@@ -19,20 +21,11 @@ function SignupPage() {
     setPassword(e.target.value);
   };
 
-  // const handleSubmit = (e) => {
-  //   e.preventDefault();
-  //   if (toggle === "jobseeker") {
-  //     history.push("/signup-jobseeker");
-  //   } else {
-  //     // Handle employer submission
-  //   }
-  // };
-
   return (
     <div className="flex  md:flex-row w-full mt-10 justify-center items-center my-10 h-full bg-white rounded-xl">
       <div className="hidden md:flex h-screen w-1/2">
         <img
-          src={logPhoto}
+          src={fg}
           className="object-cover h-full w-full rounded-s-xl"
         />
       </div>
@@ -113,12 +106,13 @@ function SignupPage() {
                 onChange={handlePasswordChange}
               />
             </div>
-
-            <Button
-              // onCLick={handleSubmit}
-              text="Signup"
-              className="w-full bg-primary text-white font-medium py-2 rounded-xl"
-            />
+            <div>
+              <Button
+                // onCLick={handleSubmit}
+                text="Signup"
+                className="w-full bg-primary text-white font-medium py-2 rounded-xl "
+              />
+            </div>
 
             <div className="flex items-center justify-between text-gray">
               <div className="w-2/5 h-[1.5px] bg-gray"></div>or

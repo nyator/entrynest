@@ -43,7 +43,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/join_signup",
-        element: <SignupJobSeeker />,
+        element: <SignupPage />,
       },
     ],
   },

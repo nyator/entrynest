@@ -7,6 +7,7 @@ import fr from '../assets/images/fr.jpg'
 import fo from '../assets/images/fo.jpg'
 import to from '../assets/images/to.jpg'
 import unh from '../assets/images/unh.jpg'
+import fg from '../assets/images/fg.jpg'
 
 export {
     logo,
@@ -18,4 +19,5 @@ export {
     fo,
     to,
     unh,
+    fg,
 }
