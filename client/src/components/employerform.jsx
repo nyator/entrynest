@@ -5,7 +5,18 @@ import { FcGoogle } from "react-icons/fc";
 
 import { Link } from "react-router-dom";
 
-function EmployerForm() {
+function EmployerForm({
+  emfirstname,
+  setEmfirstname,
+  emlastname,
+  setEmlastname,
+  workemail,
+  setWorkemail,
+  empassword,
+  setEmpassword,
+  emconfirmpassword,
+  setEmconfirmpassword,
+}) {
   return (
     <form id="2" className="space-y-4 md:space-y-7 w-4/5 items-center">
       <div className="flex sm:flex-row flex-col justify-between gap-4">
@@ -13,14 +24,16 @@ function EmployerForm() {
           <label className="text-clampText">First Name</label>
           <InputField
             placeholder="First Name"
-            // onChange={handlePasswordChange}
+            value={emfirstname}
+            onChange={(e) => setEmfirstname(e.target.value)}
           />
         </div>
         <div className="w-full">
           <label className="text-clampText">Last Name</label>
           <InputField
             placeholder="Last Name"
-            //   onChange={handlePasswordChange}
+            value={emlastname}
+            onChange={(e) => setEmlastname(e.target.value)}
           />
         </div>
       </div>
@@ -29,7 +42,8 @@ function EmployerForm() {
         <label className="text-clampText">Work Email</label>
         <InputField
           placeholder="Type email"
-          //  onChange={handlePasswordChange}
+          value={workemail}
+          onChange={(e) => setWorkemail(e.target.value)}
         />
       </div>
 
@@ -38,7 +52,8 @@ function EmployerForm() {
         <InputField
           type="password"
           placeholder="Type password"
-          // onChange={handlePasswordChange}
+          value={empassword}
+          onChange={(e) => setEmpassword(e.target.value)}
         />
       </div>
 
@@ -47,7 +62,8 @@ function EmployerForm() {
         <InputField
           type="password"
           placeholder="Confirm password"
-          // onChange={handlePasswordChange}
+          value={emconfirmpassword}
+          onChange={(e) => setEmconfirmpassword(e.target.value)}
         />
       </div>
       <div>

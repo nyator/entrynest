@@ -14,6 +14,14 @@ function SignupPage() {
   const [jspassword, setJspassword] = useState('');
   const [jsconfirmpassword, setJsconfirmpassword] = useState('');
 
+  const [emfirstname, setEmfirstname] = useState('');
+  const [emlastname, setEmlastname] = useState('');
+  const [workemail, setWorkemail] = useState('');
+  const [empassword, setEmpassword] = useState('');
+  const [emconfirmpassword, setEmconfirmpassword] = useState('');
+
+ 
+
   return (
     <div className="flex  md:flex-row w-full mt-10 justify-center items-center my-10 h-full bg-white rounded-xl">
       <div className="hidden md:flex h-screen w-1/2">
@@ -53,14 +61,22 @@ function SignupPage() {
         </div>
 
         <div className="flex justify-center">
-          {toggle === "jobseeker" ? <JobseekerForm 
+          {toggle === "jobseeker" ? 
+          <JobseekerForm 
           jsfirstname={jsfirstname} setJsfirstname={setJsfirstname}
           jslastname={jslastname} setJslastname={setJslastname}
           jsemail={jsemail} setJsemail={setJsemail}
           jspassword={jspassword} setJspassword={setJspassword}
           jsconfirmpassword={jsconfirmpassword} setJsconfirmpassword={setJsconfirmpassword}
            /> : 
-          <EmployerForm />
+          <EmployerForm 
+          emfirstname={emfirstname} setEmfirstname={setEmfirstname}
+          emlastname={emlastname} setEmlastname={setEmlastname}
+          workemail={workemail} setWorkemail={setWorkemail}
+          empassword={empassword} setEmpassword={setEmpassword}
+          emconfirmpassword={emconfirmpassword} setEmconfirmpassword={setEmconfirmpassword}
+
+           />
           }
         </div>
       </div>
