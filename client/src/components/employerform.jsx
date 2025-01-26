@@ -10,14 +10,14 @@ function EmployerForm() {
     <form id="2" className="space-y-4 md:space-y-7 w-4/5 items-center">
       <div className="flex sm:flex-row flex-col justify-between gap-4">
         <div className="w-full">
-          <h1 className="text-clampText">First Name</h1>
+          <label className="text-clampText">First Name</label>
           <InputField
             placeholder="First Name"
             // onChange={handlePasswordChange}
           />
         </div>
         <div className="w-full">
-          <h1 className="text-clampText">Last Name</h1>
+          <label className="text-clampText">Last Name</label>
           <InputField
             placeholder="Last Name"
             //   onChange={handlePasswordChange}
@@ -26,7 +26,7 @@ function EmployerForm() {
       </div>
 
       <div className="flex flex-col">
-        <h1 className="text-clampText">Work Email</h1>
+        <label className="text-clampText">Work Email</label>
         <InputField
           placeholder="Type email"
           //  onChange={handlePasswordChange}
@@ -34,7 +34,7 @@ function EmployerForm() {
       </div>
 
       <div className="flex flex-col">
-        <h1 className="text-clampText">Create a password</h1>
+        <label className="text-clampText">Create a password</label>
         <InputField
           type="password"
           placeholder="Type password"
@@ -43,7 +43,7 @@ function EmployerForm() {
       </div>
 
       <div className="flex flex-col">
-        <h1 className="text-clampText">Confirm password</h1>
+        <label className="text-clampText">Confirm password</label>
         <InputField
           type="password"
           placeholder="Confirm password"

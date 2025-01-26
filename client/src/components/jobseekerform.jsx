@@ -5,42 +5,70 @@ import { FcGoogle } from "react-icons/fc";
 
 import { Link } from "react-router-dom";
 
-function JobseekerForm({ firstname }) {
-
+function JobseekerForm({
+  jsfirstname,
+  setJsfirstname,
+  jslastname,
+  setJslastname,
+  jsemail,
+  setJsemail,
+  jspassword,
+  setJspassword,
+  jsconfirmpassword,
+  setJsconfirmpassword,
+}) {
   return (
     <form id="1" className="space-y-4 md:space-y-7 w-4/5 items-center">
       <div className="flex sm:flex-row flex-col justify-between gap-4">
         <div className="w-full">
-          <h1 className="text-clampText">First Name</h1>
+          <label className="text-clampText">First Name</label>
           <InputField
+            type="text"
             placeholder="First Name"
-            value={firstname}
-            onChange={(e) => setFirstname(e.target.value)}
+            value={jsfirstname}
+            onChange={(e) => setJsfirstname(e.target.value)}
           />
           {/* {errors.firstname && <p className="text-red-500">{errors.firstname}</p>} */}
         </div>
         <div className="w-full">
-          <h1 className="text-clampText">Last Name</h1>
-          <InputField placeholder="Last Name" />
-          {/* {errors.lastname && <p className="text-red-500">{errors.lastname}</p>} */}
+          <label className="text-clampText">Last Name</label>
+          <InputField
+            type="text"
+            placeholder="Last Name"
+            value={jslastname}
+            onChange={(e) => setJslastname(e.target.value)}
+          />
         </div>
       </div>
 
       <div className="flex flex-col">
-        <h1 className="text-clampText">Email</h1>
-        <InputField placeholder="Type email" />
-        {/* {errors.email && <p className="text-red-500">{errors.email}</p>} */}
+        <label className="text-clampText">Email</label>
+        <InputField
+          type="email"
+          placeholder="Type email"
+          value={jsemail}
+          onChange={(e) => setJsemail(e.target.value)}
+        />
       </div>
 
       <div className="flex flex-col">
-        <h1 className="text-clampText">Create a password</h1>
-        <InputField type="password" placeholder="Type password" />{" "}
+        <label className="text-clampText">Create a password</label>
+        <InputField
+          type="password"
+          placeholder="Type password"
+          value={jspassword}
+          onChange={(e) => setJspassword(e.target.value)}
+        />
       </div>
 
       <div className="flex flex-col">
-        <h1 className="text-clampText">Confirm password</h1>
-        <InputField type="password" placeholder="Confirm password" />
-        {error && <p style={{ color: 'red' }}>{error}</p>}
+        <label className="text-clampText">Confirm password</label>
+        <InputField
+          type="password"
+          placeholder="Confirm password"
+          value={jsconfirmpassword}
+          onChange={(e) => setJsconfirmpassword(e.target.value)}
+        />
       </div>
       <div>
         <Button

@@ -8,7 +8,11 @@ import EmployerForm from "../components/employerform";
 function SignupPage() {
   const [toggle, setToggle] = useState("jobseeker");
 
-  const [firstname, setFirstname] = useState('');
+  const [jsfirstname, setJsfirstname] = useState('');
+  const [jslastname, setJslastname] = useState('');
+  const [jsemail, setJsemail] = useState('');
+  const [jspassword, setJspassword] = useState('');
+  const [jsconfirmpassword, setJsconfirmpassword] = useState('');
 
   return (
     <div className="flex  md:flex-row w-full mt-10 justify-center items-center my-10 h-full bg-white rounded-xl">
@@ -49,7 +53,15 @@ function SignupPage() {
         </div>
 
         <div className="flex justify-center">
-          {toggle === "jobseeker" ? <JobseekerForm firstname={firstname} /> : <EmployerForm />}
+          {toggle === "jobseeker" ? <JobseekerForm 
+          jsfirstname={jsfirstname} setJsfirstname={setJsfirstname}
+          jslastname={jslastname} setJslastname={setJslastname}
+          jsemail={jsemail} setJsemail={setJsemail}
+          jspassword={jspassword} setJspassword={setJspassword}
+          jsconfirmpassword={jsconfirmpassword} setJsconfirmpassword={setJsconfirmpassword}
+           /> : 
+          <EmployerForm />
+          }
         </div>
       </div>
     </div>
