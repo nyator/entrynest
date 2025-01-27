@@ -1,18 +1,19 @@
 import express from "express";
 import dotenv from "dotenv";
-import { connectDB } from "./db/connectDB.js";
 
-const app = express();
+import { connectDB } from "./db/connectDB.js";
+import authRoutes from "./routes/auth.routes.js";
 
 dotenv.config();
 
-app.get("/", (req, res) => {
-  res.send("hello world");
-});
+const app = express();
+const PORT = process.env.PORT || 5000; //but PORT 5000 is already taken by macos
 
-app.listen(3000, () => {
+app.use(express.json());
+
+app.use("/api/auth", authRoutes); //allows you to parse incoming requests from user
+
+app.listen(PORT, () => {
   connectDB();
-  console.log("Server is running on port 3000");
+  console.log("Server is running on port:", PORT);
 });
-
-//0n8dC15LTfjUFSyj
