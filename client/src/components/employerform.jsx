@@ -17,58 +17,76 @@ function EmployerForm({
   emconfirmpassword,
   setEmconfirmpassword,
 }) {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+  };
+
   return (
-    <form id="2" className="space-y-4 md:space-y-7 w-4/5 items-center">
+    <form
+      id="2"
+      className="space-y-4 md:space-y-7 w-4/5 items-center"
+      onSubmit={(e) => handleSubmit(e)}
+    >
       <div className="flex sm:flex-row flex-col justify-between gap-4">
         <div className="w-full">
-          <label className="text-clampText">First Name</label>
-          <InputField
-            placeholder="First Name"
-            value={emfirstname}
-            onChange={(e) => setEmfirstname(e.target.value)}
-          />
+          <label className="text-clampText">
+            First Name
+            <InputField
+              placeholder="First Name"
+              value={emfirstname}
+              onChange={(e) => setEmfirstname(e.target.value)}
+            />
+          </label>
         </div>
         <div className="w-full">
-          <label className="text-clampText">Last Name</label>
-          <InputField
-            placeholder="Last Name"
-            value={emlastname}
-            onChange={(e) => setEmlastname(e.target.value)}
-          />
+          <label className="text-clampText">
+            Last Name
+            <InputField
+              placeholder="Last Name"
+              value={emlastname}
+              onChange={(e) => setEmlastname(e.target.value)}
+            />
+          </label>
         </div>
       </div>
 
       <div className="flex flex-col">
-        <label className="text-clampText">Work Email</label>
-        <InputField
-          placeholder="Type email"
-          value={workemail}
-          onChange={(e) => setWorkemail(e.target.value)}
-        />
+        <label className="text-clampText">
+          Work Email
+          <InputField
+            placeholder="Type email"
+            value={workemail}
+            onChange={(e) => setWorkemail(e.target.value)}
+          />
+        </label>
       </div>
 
       <div className="flex flex-col">
-        <label className="text-clampText">Create a password</label>
-        <InputField
-          type="password"
-          placeholder="Type password"
-          value={empassword}
-          onChange={(e) => setEmpassword(e.target.value)}
-        />
+        <label className="text-clampText">
+          Create a password
+          <InputField
+            type="password"
+            placeholder="Type password"
+            value={empassword}
+            onChange={(e) => setEmpassword(e.target.value)}
+          />
+        </label>
       </div>
 
       <div className="flex flex-col">
-        <label className="text-clampText">Confirm password</label>
-        <InputField
-          type="password"
-          placeholder="Confirm password"
-          value={emconfirmpassword}
-          onChange={(e) => setEmconfirmpassword(e.target.value)}
-        />
+        <label className="text-clampText">
+          Confirm password
+          <InputField
+            type="password"
+            placeholder="Confirm password"
+            value={emconfirmpassword}
+            onChange={(e) => setEmconfirmpassword(e.target.value)}
+          />
+        </label>
       </div>
       <div>
         <Button
-          // onClick={handleSubmit}
+          type="submit"
           text="Signup"
           className="w-full bg-primary text-white font-medium py-2 rounded-xl "
         />
