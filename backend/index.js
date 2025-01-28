@@ -7,11 +7,11 @@ import authRoutes from "./routes/auth.routes.js";
 dotenv.config();
 
 const app = express();
-const PORT = process.env.PORT || 5000; //but PORT 5000 is already taken by macos
+const PORT = process.env.PORT || 5000; // But PORT 5000 is already taken by macos
 
 app.use(express.json());
 
-app.use("/api/auth", authRoutes); //allows you to parse incoming requests from user
+app.use("/api/auth", authRoutes); // Allows you to parse incoming requests from user
 
 app.listen(PORT, () => {
   connectDB();
