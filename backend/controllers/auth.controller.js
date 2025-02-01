@@ -75,7 +75,7 @@ export const verifyEmail = async (req, res) => {
     user.verificationTokenExpiresAt = undefined;
     await user.save();
 
-    await sendWelcomeEmail(user.email, user.name);
+    await sendWelcomeEmail(user.email, user.firstname);
 
     res.status(200).json({
       success: true,
@@ -158,6 +158,7 @@ export const forgotPassword = async (req, res) => {
     // send email
     await sendPasswordResetEmail(
       user.email,
+      user.firstname,
       `${process.env.CLIENT_URL}/reset-password/${resetToken}`
     );
 
