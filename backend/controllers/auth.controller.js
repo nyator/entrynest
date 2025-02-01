@@ -55,36 +55,40 @@ export const signup = async (req, res) => {
 };
 
 export const verifyEmail = async (req, res) => {
-	const { code } = req.body;
-	try {
-		const user = await User.findOne({
-			verificationToken: code,
-			verificationTokenExpiresAt: { $gt: Date.now() },
-		});
+  const { code } = req.body;
 
-		if (!user) {
-			return res.status(400).json({ success: false, message: "Invalid or expired verification code" });
-		}
+  try {
+    const user = await User.findOne({
+      verificationToken: code,
+      verificationTokenExpiresAt: { $gt: Date.now() },
+    });
 
-		user.isVerified = true;
-		user.verificationToken = undefined;
-		user.verificationTokenExpiresAt = undefined;
-		await user.save();
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid or expired verification code",
+      });
+    }
 
-		await sendWelcomeEmail(user.email, user.firstname);
+    user.isVerified = true;
+    user.verificationToken = undefined;
+    user.verificationTokenExpiresAt = undefined;
+    await user.save();
 
-		res.status(200).json({
-			success: true,
-			message: "Email verified successfully",
-			user: {
-				...user._doc,
-				password: undefined,
-			},
-		});
-	} catch (error) {
-		console.log("error in verifyEmail ", error);
-		res.status(500).json({ success: false, message: "Server error" });
-	}
+    await sendWelcomeEmail(user.email, user.name);
+
+    res.status(200).json({
+      success: true,
+      message: "Email verified successfully",
+      user: {
+        ...user._doc,
+        password: undefined,
+      },
+    });
+  } catch (error) {
+    console.log("error in verifyEmail ", error);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
 };
 
 export const login = async (req, res) => {
@@ -157,19 +161,15 @@ export const forgotPassword = async (req, res) => {
       `${process.env.CLIENT_URL}/reset-password/${resetToken}`
     );
 
-    res
-      .status(200)
-      .json({
-        success: true,
-        message: "Password reset link sent to your email",
-      });
+    res.status(200).json({
+      success: true,
+      message: "Password reset link sent to your email",
+    });
   } catch (error) {
     console.log("Error in forgotPassword ", error);
     res.status(400).json({ success: false, message: error.message });
   }
 };
-
-
 
 // export const resetPassword = async (req, res) => {
 // 	try {
