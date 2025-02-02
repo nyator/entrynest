@@ -70,3 +70,12 @@ export const sendPasswordResetEmail = async (email, firstname, resetURL) => {
 		throw new Error(`Error sending password reset email: ${error}`);
 	}
 };
+
+export  const   sendResetSuccessEmail = async (email) => {
+	const recipient = [{email}]
+	try {
+		
+	} catch (error) {
+		
+	}
+}
