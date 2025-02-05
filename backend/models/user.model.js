@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema(
     resetPasswordToken: String,
     resetPasswordExpireAt: Date,
     verificationToken: String,
-    verificationTokenExpiresAt: Date,
+    verificationTokenExpireAt: Date,
   },
   { timestamps: true }
 ); //createAt and updateAt will be added automatically cus of the timestamp

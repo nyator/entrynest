@@ -61,9 +61,9 @@ export const verifyEmail = async (req, res) => {
   try {
     const user = await User.findOne({
       verificationToken: code,
-      // verificationTokenExpiresAt: { $gt: Date.now() },
+      verificationTokenExpireAt: { $gt: Date.now() },
     });
-
+ console.log("User: ", user)
     if (!user) {
       return res.status(400).json({
         success: false,
@@ -73,7 +73,7 @@ export const verifyEmail = async (req, res) => {
 
     user.isVerified = true;
     user.verificationToken = undefined;
-    user.verificationTokenExpiresAt = undefined;
+    user.verificationTokenExpireAt = undefined;
     await user.save();
 
     await sendWelcomeEmail(user.email, user.firstname);
@@ -180,7 +180,7 @@ export const resetPassword = async (req, res) => {
 
 		const user = await User.findOne({
 			resetPasswordToken: token,
-			// resetPasswordExpiresAt: { $gt: Date.now() },
+			resetPasswordExpireAt: { $gt: Date.now() },
 		});
 
     console.log('User :', token);
