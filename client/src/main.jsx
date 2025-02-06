@@ -14,6 +14,7 @@ import LoginPage from "../src/pages/LoginPage";
 import SignupPage from "../src/pages/SignupPage";
 import SupportPage from "./pages/SupportPage";
 import SignupJobSeeker from "./pages/SignupJobSeeker";
+import EmailVerificationPage from "./pages/EmailVerificationPage";
 
 const router = createBrowserRouter([
   {
@@ -45,10 +46,10 @@ const router = createBrowserRouter([
         path: "/join_signup",
         element: <SignupPage />,
       },
-      // {
-      //   path: "/verify-password",
-      //   element: <EmailVerificationPage />,
-      // },
+      {
+        path: "/verify-email",
+        element: <EmailVerificationPage />,
+      },
       // {
       //   path: "/forgot-password",
       //   element: <ForgotPasswordPage />,

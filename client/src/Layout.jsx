@@ -9,10 +9,11 @@ const Layout = () => {
   return (
     <>
       <main className="w-11/12 mx-auto my-[25px]">
-        <Navbar />
+        {location.pathname !== "/verify-email" && <Navbar />}
         <Outlet />
         {location.pathname !== "/join_login" &&
-          location.pathname !== "/join_signup" && <Footer />}
+          location.pathname !== "/join_signup" &&
+          location.pathname !== "/verify-email" && <Footer />}
       </main>
     </>
   );
