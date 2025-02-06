@@ -6,24 +6,25 @@ import InputField from "../elements/inputField";
 import Button from "../elements/button";
 import { FcGoogle } from "react-icons/fc";
 
+
 function LoginPage() {
   const [email, setEmail] = React.useState("");
   const [password, setPassword] = React.useState("");
 
-  const handleUsernameChange = (e) => {
+
+  const handleLogin = (e) => {
     setUsername(e.target.value);
   };
 
-  const handlePasswordChange = (e) => {
-    setPassword(e.target.value);
-  };
+  // const handlePasswordChange = (e) => {
+  //   setPassword(e.target.value);
+  // };
 
   return (
     <div className="flex  md:flex-row w-full mt-10 justify-center items-center my-10 h-full bg-white rounded-xl">
       <div className="hidden md:flex h-screen w-1/2">
         <img
           src={fr}
-          // className="object-cover hidden md:flex h-1/2 md:w-1/2"
           className="object-cover h-full w-full rounded-s-xl"
         />
       </div>
@@ -34,13 +35,13 @@ function LoginPage() {
           <p className="text-clampDesc">ENTER THE NEST</p>
         </div>
 
-        <div className="flex justify-center">
+        <form className="flex justify-center"  onSubmit={handleLogin}>
           <div className="space-y-4 md:space-y-6 w-4/5 items-center">
             <div className="flex flex-col">
               <h1 className="text-clampText">Email</h1>
               <InputField
                 placeholder="Type email"
-                onChange={handlePasswordChange}
+                // onChange={handlePasswordChange}
               />
             </div>
 
@@ -49,18 +50,19 @@ function LoginPage() {
               <InputField
                 type="password"
                 placeholder="Type password"
-                onChange={handlePasswordChange}
+                // onChange={handlePasswordChange}
               />
             </div>
 
             <div>
               <Button
                 text="Login"
+                type="submit"
                 className="w-full bg-primary text-white font-medium py-2 rounded-xl"
               />
             </div>
 
-            <Link to="">
+            <Link to="/forgot-password">
               <p className="text-mred text-sm text-center mt-4 md:mt-6">
                 Forgot Password ?
               </p>
@@ -86,7 +88,7 @@ function LoginPage() {
               </p>
             </div>
           </div>
-        </div>
+        </form>
       </div>
     </div>
   );

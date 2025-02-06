@@ -45,6 +45,14 @@ const router = createBrowserRouter([
         path: "/join_signup",
         element: <SignupPage />,
       },
+      // {
+      //   path: "/verify-password",
+      //   element: <EmailVerificationPage />,
+      // },
+      // {
+      //   path: "/forgot-password",
+      //   element: <ForgotPasswordPage />,
+      // },
     ],
   },
 ]);
