@@ -2,8 +2,9 @@ import React from "react";
 import InputField from "../elements/inputField";
 import Button from "../elements/button";
 import { FcGoogle } from "react-icons/fc";
+import { useAuthStore } from "../store/authStore";
 
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function JobseekerForm({
   jsfirstname,
@@ -17,8 +18,26 @@ function JobseekerForm({
   jsconfirmpassword,
   setJsconfirmpassword,
 }) {
+  const navigate = useNavigate();
+
+  const { signup, error, isLoading } = useAuthStore();
+
+  const handleSignup = async (e) => {
+    e.preventDefault();
+  };
+
+  try {
+    signup(email, password, firstname, lastname);
+    navigate("verify-email")
+  } catch (error) {
+    console.log(error);
+  }
+
+
   return (
-    <form id="1" className="space-y-4 md:space-y-7 w-4/5 items-center">
+    <div id="1" className="space-y-4 md:space-y-7 w-4/5" >
+
+      <form action="" onSubmit={handleSignup} className="space-y-4 md:space-y-7 items-center">
       <div className="flex sm:flex-row flex-col justify-between gap-4">
         <div className="w-full">
           <label className="text-clampText">First Name</label>
@@ -77,6 +96,7 @@ function JobseekerForm({
           className="w-full bg-primary text-white font-medium py-2 rounded-xl "
         />
       </div>
+      </form>
 
       <div className="flex items-center justify-between text-gray">
         <div className="w-2/5 h-[1.5px] bg-gray"></div>or
@@ -98,7 +118,7 @@ function JobseekerForm({
           </Link>
         </p>
       </div>
-    </form>
+    </div>
   );
 }
 

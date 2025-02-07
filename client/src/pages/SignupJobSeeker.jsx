@@ -1,8 +1,15 @@
 import React from "react";
 import InputField from "../elements/inputField";
 import Button from "../elements/button";
+import { useAuthStore } from "../store/authStore";
 
 function SignupJobSeeker() {
+  const { signup } = useAuthStore();
+
+  const handleSignup = async(e) => {
+    e.preventDefault();
+  }
+
   return (
     <div className="bg-white w-11/12 flex flex-col mx-auto px-5 md:px-20 py-7 -center md:py-20 my-10 gap-9 rounded-xl">
       <div>
@@ -21,19 +28,19 @@ function SignupJobSeeker() {
           <div className="md:space-y-2">
             <h1 className="text-clampText">Last Name</h1>
             <InputField
-              placeholder="Last Name" //onChange={handlePasswordChange}
+              placeholder="Last Name" 
             />
           </div>
           <div className="md:space-y-2">
             <h1 className="text-clampText">Last Name</h1>
             <InputField
-              placeholder="Last Name" //onChange={handlePasswordChange}
+              placeholder="Last Name" 
             />
           </div>
           <div className="md:space-y-2">
             <h1 className="text-clampText">Last Name</h1>
             <InputField
-              placeholder="Last Name" //onChange={handlePasswordChange}
+              placeholder="Last Name" 
             />
           </div>
         </div>
@@ -54,7 +61,7 @@ function SignupJobSeeker() {
           <div className="md:space-y-2">
             <h1 className="text-clampText">Last Name</h1>
             <InputField
-              placeholder="Last Name" //onChange={handlePasswordChange}
+              placeholder="Last Name" 
             />
           </div>
         </div>

@@ -20,6 +20,7 @@ function SignupPage() {
   const [empassword, setEmpassword] = useState("");
   const [emconfirmpassword, setEmconfirmpassword] = useState("");
 
+
   return (
     <div className="flex  md:flex-row w-full mt-10 justify-center items-center my-10 h-full bg-white rounded-xl">
       <div className="hidden md:flex h-screen w-1/2">
