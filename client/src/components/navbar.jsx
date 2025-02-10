@@ -16,6 +16,7 @@ const navLinks = [
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+
   const toggleMenu = () => {
     setOpen((prevOpen) => !prevOpen);
   };
@@ -78,7 +79,7 @@ const Navbar = () => {
             `}
             >
               <div className="flex justify-between w-11/12 mx-auto my-[25px] ">
-                <Link to="/">
+                <Link to="/" onClick={toggleMenu}>
                   <img src={logo} alt="logo" />
                 </Link>
 
@@ -110,6 +111,7 @@ const Navbar = () => {
                       className="items-center justify-start border-b-[1px] border-[#e3e3e3] py-5"
                     >
                       <a href={items.href} className="text-xl">
+
                         <div className="py-3">{items.title}</div>
                       </a>
                     </div>

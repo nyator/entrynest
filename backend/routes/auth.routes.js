@@ -3,7 +3,7 @@ import { login, logout, signup, verifyEmail, forgotPassword, resetPassword, chec
 import { verifyToken } from "../middleware/verifyToken.js";
 
 const router = express.Router()
-router.get("/check-auth", verifyToken ,checkAuth )
+router.get("/check-auth", [verifyToken, checkAuth])
 
 router.post("/signup", signup)
 
@@ -17,4 +17,4 @@ router.post("/forgot-password", forgotPassword)
 
 router.post("/reset-password/:token", resetPassword)
 
-export default router
+export default router;

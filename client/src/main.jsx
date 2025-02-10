@@ -15,6 +15,7 @@ import SignupPage from "../src/pages/SignupPage";
 import SupportPage from "./pages/SupportPage";
 import SignupJobSeeker from "./pages/SignupJobSeeker";
 import EmailVerificationPage from "./pages/EmailVerificationPage";
+import JobPage from "./pages/JobPage";
 
 const router = createBrowserRouter([
   {
@@ -25,6 +26,10 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <LandingPage />,
+      },
+      {
+        path: "/jobs",
+        element: <JobPage />,
       },
       {
         path: "/find_talent",

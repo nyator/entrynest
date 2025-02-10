@@ -1,8 +1,7 @@
-import React, { useState } from "react";
-import { VscEyeClosed } from "react-icons/vsc";
-import { VscEye } from "react-icons/vsc";
+import React, { useState, forwardRef } from "react";
+import { VscEyeClosed, VscEye } from "react-icons/vsc";
 
-const InputField = ({ type, placeholder, onChange, value }) => {
+const InputField = forwardRef(({ type, placeholder, onChange, value }, ref) => {
   const [showPassword, setShowPassword] = useState(false);
   const [inputType, setInputType] = useState(type);
 
@@ -18,6 +17,7 @@ const InputField = ({ type, placeholder, onChange, value }) => {
         placeholder={placeholder}
         value={value}
         onChange={onChange}
+        ref={ref}
         className="w-full p-2 pl-3 pr-7 text-clampInputText text-black border-[1.5px] border-gray rounded-xl focus:outline-none focus:ring-1 focus:ring-primary placeholder:text-gray placeholder:font-light"
       />
       {type === "password" && (
@@ -35,6 +35,6 @@ const InputField = ({ type, placeholder, onChange, value }) => {
       )}
     </div>
   );
-};
+});
 
 export default InputField;

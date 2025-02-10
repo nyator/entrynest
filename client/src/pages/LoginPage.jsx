@@ -1,70 +1,83 @@
-import React from "react";
-import { Link } from "react-router";
+import React, { useRef } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
 import { fr } from "../constants/assests";
 import InputField from "../elements/inputField";
-import Button from "../elements/button";
 import { FcGoogle } from "react-icons/fc";
 
-
 function LoginPage() {
-  const [email, setEmail] = React.useState("");
-  const [password, setPassword] = React.useState("");
+  const emailRef = useRef(null);
+  const passwordRef = useRef(null);
+  const navigate = useNavigate();
 
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    
+    const email = emailRef.current.value;
+    const password = passwordRef.current.value;
 
-  const handleLogin = (e) => {
-    setUsername(e.target.value);
+    console.log("Attempting to log in with Email:", email);
+    console.log("Attempting to log in with Password:", password);
+    console.log("Sending request to login API...");
+
+    try {
+      const response = await axios.post(
+        "http://localhost:3000/api/auth/login",
+        {
+          email,
+          password,
+        }
+      );
+      console.log("Login successful. Response data:", response.data);
+      // Handle successful login
+      navigate("/jobs"); // Redirect to the dashboard page
+    } catch (error) {
+      console.error("Login failed. Error response:", error.response);
+      alert("Login failed. Please check your email and password."); // User feedback for login error
+    }
   };
 
-  // const handlePasswordChange = (e) => {
-  //   setPassword(e.target.value);
-  // };
-
   return (
-    <div className="flex  md:flex-row w-full mt-10 justify-center items-center my-10 h-full bg-white rounded-xl">
+    <div className="flex md:flex-row w-full mt-10 justify-center items-center my-10 h-full bg-white rounded-xl">
       <div className="hidden md:flex h-screen w-1/2">
-        <img
-          src={fr}
-          className="object-cover h-full w-full rounded-s-xl"
-        />
+        <img src={fr} className="object-cover h-full w-full rounded-s-xl" />
       </div>
 
-      <div className="flex flex-col  w-full md:w-1/2 h-1/2 py-8">
+      <div className="flex flex-col w-full md:w-1/2 h-1/2 py-8">
         <div className="leading-tight justify-center text-center mb-10">
           <h1 className="font-bold text-clampHeadSm">LOGIN</h1>
           <p className="text-clampDesc">ENTER THE NEST</p>
         </div>
 
-        <form className="flex justify-center"  onSubmit={handleLogin}>
+        <div className="flex justify-center">
           <div className="space-y-4 md:space-y-6 w-4/5 items-center">
-            <div className="flex flex-col">
-              <h1 className="text-clampText">Email</h1>
-              <InputField
-                placeholder="Type email"
-                // onChange={handlePasswordChange}
-              />
-            </div>
+            <form onSubmit={handleLogin} className="space-y-4 md:space-y-6">
+              <div className="flex flex-col">
+                <h1 className="text-clampText">Email</h1>
+                <InputField
+                  placeholder="Type email"
+                  ref={emailRef}
+                />
+              </div>
 
-            <div className="flex flex-col">
-              <h1 className="text-clampText">Password</h1>
-              <InputField
-                type="password"
-                placeholder="Type password"
-                // onChange={handlePasswordChange}
-              />
-            </div>
+              <div className="flex flex-col">
+                <h1 className="text-clampText">Password</h1>
+                <InputField
+                  type="password"
+                  placeholder="Type password"
+                  ref={passwordRef}
+                />
+              </div>
 
-            <div>
-              <Button
-                text="Login"
-                type="submit"
-                className="w-full bg-primary text-white font-medium py-2 rounded-xl"
-              />
-            </div>
+              <div>
+                <button type="submit" className="w-full bg-primary text-white font-medium py-2 rounded-xl">Login</button>
+              </div>
+            </form>
 
             <Link to="/forgot-password">
               <p className="text-mred text-sm text-center mt-4 md:mt-6">
-                Forgot Password ?
+                Forgot Password?
               </p>
             </Link>
             <div className="flex items-center justify-between text-gray">
@@ -73,7 +86,7 @@ function LoginPage() {
             </div>
 
             <Link to={""} className="flex items-center justify-center">
-              <div className="flex w-fit items-center  gap-2 rounded-full text-clampInputText bg-gray border border-grayStroke px-[20px] py-[10px]">
+              <div className="flex w-fit items-center gap-2 rounded-full text-clampInputText bg-gray border border-grayStroke px-[20px] py-[10px]">
                 <FcGoogle className="size-6" />
                 Continue with Google
               </div>
@@ -81,14 +94,14 @@ function LoginPage() {
 
             <div className="flex justify-center items-center">
               <p className="font-SatoshiMedium ">
-                New to entrynest ?{"  "}
+                New to entrynest?{"  "}
                 <Link to="/join_signup">
                   <span className="font-medium underline">Signup</span>
                 </Link>
               </p>
             </div>
           </div>
-        </form>
+        </div>
       </div>
     </div>
   );
