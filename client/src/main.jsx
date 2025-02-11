@@ -44,11 +44,11 @@ const router = createBrowserRouter([
         element: <SupportPage />,
       },
       {
-        path: "/join_login",
+        path: "/login",
         element: <LoginPage />,
       },
       {
-        path: "/join_signup",
+        path: "/signup",
         element: <SignupPage />,
       },
       {

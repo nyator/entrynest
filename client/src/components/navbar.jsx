@@ -50,13 +50,13 @@ const Navbar = () => {
           <Button
             text="Login"
             className="text-primaryStroke"
-            Link="/join_login"
+            Link="/login"
           />
 
           <Button
             text="SignUp"
             className="text-white bg-primary"
-            Link="/join_signup"
+            Link="/signup"
           />
         </div>
       </div>
@@ -93,14 +93,14 @@ const Navbar = () => {
                   <Button
                     text="Login"
                     className="text-primary"
-                    Link="/join_login"
+                    Link="/login"
                     onClick={toggleMenu}
                   />
 
                   <Button
                     text="SignUp"
                     className="text-white bg-primary"
-                    Link="/join_signup"
+                    Link="/signup"
                     onClick={toggleMenu}
                   />
                 </div>

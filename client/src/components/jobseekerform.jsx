@@ -20,21 +20,26 @@ function JobseekerForm({
   const navigate = useNavigate();
   const { signup, error, isLoading } = useAuthStore();
 
-  const handleSignup = async (e) => {
-    e.preventDefault();
+const [signupError, setSignupError] = useState("");
+const handleSignup = async (e) => {
+  e.preventDefault();
+    setSignupError(""); // Reset error state before signup attempt
     
 
     try {
-      await signup(jsemail, jspassword, jsfirstname, jslastname);
+      await signup(jsfirstname, jslastname, jsemail, jspassword);
       navigate("/verify-email");
-    } catch (error) {
-      console.log(error);
+  } catch (error) {
+    setSignupError(error.response?.data?.message || "Signup failed"); // Set error message
+    console.log(error);
+
     }
   };
 
   return (
     <div className="space-y-4 md:space-y-7 w-4/5">
-      <form onSubmit={handleSignup} className="space-y-4 md:space-y-7 items-center">
+      <form onSubmit={handleSignup} className="space-y-4 md:space-y-7 items-center"> 
+        {signupError && <p className="text-red-500">{signupError}</p>} {/* Display error message */}
         <div className="flex sm:flex-row flex-col justify-between gap-4">
           <div className="w-full">
             <label className="text-clampText">First Name</label>
