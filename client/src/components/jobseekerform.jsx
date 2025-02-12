@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import InputField from "../elements/inputField";
 import Button from "../elements/button";
 import { FcGoogle } from "react-icons/fc";
@@ -20,26 +20,43 @@ function JobseekerForm({
   const navigate = useNavigate();
   const { signup, error, isLoading } = useAuthStore();
 
-const [signupError, setSignupError] = useState("");
-const handleSignup = async (e) => {
-  e.preventDefault();
-    setSignupError(""); // Reset error state before signup attempt
-    
+  const [signupError, setSignupError] = useState("");
+  const handleSignup = async (e, handleNextStep, currentStep, totalSteps) => {
+    e.preventDefault();
+    console.log("Form submitted with:", {
+      jsfirstname,
+      jslastname,
+      jsemail,
+      jspassword,
+      jsconfirmpassword,
+    });
 
-    try {
-      await signup(jsfirstname, jslastname, jsemail, jspassword);
-      navigate("/verify-email");
-  } catch (error) {
-    setSignupError(error.response?.data?.message || "Signup failed"); // Set error message
-    console.log(error);
+    // Logic to handle multi-page form submission
+    if (currentStep < totalSteps) {
+      handleNextStep();
+    } else {
+      // Final submission logic
+      setSignupError(""); // Reset error state before signup attempt
 
+      try {
+        await signup(jsfirstname, jslastname, jsemail, jspassword);
+        console.log("Signup successful, navigating to SignupJobSeeker");
+        navigate("/signup-jobseeker"); // Navigate to SignupJobSeeker.jsx
+      } catch (error) {
+        setSignupError(error.response?.data?.message || "Signup failed"); // Set error message
+        console.log("Signup error:", error);
+      }
     }
   };
 
   return (
     <div className="space-y-4 md:space-y-7 w-4/5">
-      <form onSubmit={handleSignup} className="space-y-4 md:space-y-7 items-center"> 
-        {signupError && <p className="text-red-500">{signupError}</p>} {/* Display error message */}
+      <form
+        onSubmit={(e) => handleSignup(e, handleNextStep)}
+        className="space-y-4 md:space-y-7 items-center"
+      >
+        {signupError && <p className="text-red-500">{signupError}</p>}{" "}
+        {/* Display error message */}
         <div className="flex sm:flex-row flex-col justify-between gap-4">
           <div className="w-full">
             <label className="text-clampText">First Name</label>
@@ -49,7 +66,6 @@ const handleSignup = async (e) => {
               value={jsfirstname}
               onChange={(e) => setJsfirstname(e.target.value)}
             />
-            {/* {error.firstname && <p className="text-red-500">{error.firstname}</p>} */}
           </div>
           <div className="w-full">
             <label className="text-clampText">Last Name</label>
@@ -61,7 +77,6 @@ const handleSignup = async (e) => {
             />
           </div>
         </div>
-
         <div className="flex flex-col">
           <label className="text-clampText">Email</label>
           <InputField
@@ -71,7 +86,6 @@ const handleSignup = async (e) => {
             onChange={(e) => setJsemail(e.target.value)}
           />
         </div>
-
         <div className="flex flex-col">
           <label className="text-clampText">Create a password</label>
           <InputField
@@ -81,7 +95,6 @@ const handleSignup = async (e) => {
             onChange={(e) => setJspassword(e.target.value)}
           />
         </div>
-
         <div className="flex flex-col">
           <label className="text-clampText">Confirm password</label>
           <InputField
@@ -92,11 +105,12 @@ const handleSignup = async (e) => {
           />
         </div>
         <div>
-          <Button
+          <button
             type="submit"
-            text="Signup"
             className="w-full bg-primary text-white font-medium py-2 rounded-xl"
-          />
+          >
+            Signup
+          </button>
         </div>
       </form>
 

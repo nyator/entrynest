@@ -1,28 +1,37 @@
 import React, { useState } from "react";
-
 import { fg } from "../constants/assests";
-
 import JobseekerForm from "../components/jobseekerform";
 import EmployerForm from "../components/employerform";
+import { useNavigate } from "react-router-dom";
 
 function SignupPage() {
   const [toggle, setToggle] = useState("jobseeker");
+  const navigate = useNavigate();
 
+  // Job Seeker State
   const [jsfirstname, setJsfirstname] = useState("");
   const [jslastname, setJslastname] = useState("");
   const [jsemail, setJsemail] = useState("");
   const [jspassword, setJspassword] = useState("");
   const [jsconfirmpassword, setJsconfirmpassword] = useState("");
 
+  // Employer State
   const [emfirstname, setEmfirstname] = useState("");
   const [emlastname, setEmlastname] = useState("");
   const [workemail, setWorkemail] = useState("");
   const [empassword, setEmpassword] = useState("");
   const [emconfirmpassword, setEmconfirmpassword] = useState("");
 
+  const handleSignupComplete = () => {
+    if (toggle === "jobseeker") {
+      navigate("/signup-jobseeker"); // Navigate to SignupJobSeeker.jsx
+    } else {
+      navigate("/employer-dashboard"); // Redirect for employer
+    }
+  };
 
   return (
-    <div className="flex  md:flex-row w-full mt-10 justify-center items-center my-10 h-full bg-white rounded-xl">
+    <div className="flex md:flex-row w-full mt-10 justify-center items-center my-10 h-full bg-white rounded-xl">
       <div className="hidden md:flex h-screen w-1/2">
         <img src={fg} className="object-cover h-full w-full rounded-s-xl" />
       </div>
@@ -33,15 +42,17 @@ function SignupPage() {
           <p className="text-clampDesc">WELCOME TO THE NEST</p>
         </div>
 
-        <div className=" flex justify-center items-center">
+        <div className="flex justify-center items-center">
           <div className="flex w-fit rounded-xl">
             <button
-              className={`text-clampText border-[1.5px] border-primaryStroke border-r-0 py-2 px-4 rounded-s-xl  ${
+              className={`text-clampText border-[1.5px] border-primaryStroke border-r-0 py-2 px-4 rounded-s-xl ${
                 toggle === "jobseeker"
                   ? "bg-primary text-white"
                   : "bg-gray-200 text-primaryStroke"
               } transition ease-in-out duration-300`}
-              onClick={() => setToggle("jobseeker")}
+              onClick={() => {
+                setToggle("jobseeker");
+              }}
             >
               Job Seeker
             </button>
@@ -52,7 +63,9 @@ function SignupPage() {
                   ? "bg-primary text-white"
                   : "bg-gray-200 text-primaryStroke"
               } transition ease-in-out duration-300`}
-              onClick={() => setToggle("employer")}
+              onClick={() => {
+                setToggle("employer");
+              }}
             >
               Employer
             </button>
@@ -72,6 +85,7 @@ function SignupPage() {
               setJspassword={setJspassword}
               jsconfirmpassword={jsconfirmpassword}
               setJsconfirmpassword={setJsconfirmpassword}
+              handleSignupComplete={handleSignupComplete}
             />
           ) : (
             <EmployerForm
@@ -85,6 +99,7 @@ function SignupPage() {
               setEmpassword={setEmpassword}
               emconfirmpassword={emconfirmpassword}
               setEmconfirmpassword={setEmconfirmpassword}
+              handleSignupComplete={handleSignupComplete}
             />
           )}
         </div>

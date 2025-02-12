@@ -52,6 +52,10 @@ const router = createBrowserRouter([
         element: <SignupPage />,
       },
       {
+        path: "/signup-jobseeker",
+        element: <SignupJobSeeker />,
+      },
+      {
         path: "/verify-email",
         element: <EmailVerificationPage />,
       },
