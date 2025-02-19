@@ -18,9 +18,9 @@ function LoginPage() {
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
 
-    console.log("Attempting to log in with Email:", email);
-    console.log("Attempting to log in with Password:", password);
-    console.log("Sending request to login API...");
+    // console.log("Attempting to log in with Email:", email);
+    // console.log("Attempting to log in with Password:", password);
+    // console.log("Sending request to login API...");
 
     try {
       const response = await axios.post(
@@ -102,7 +102,7 @@ function LoginPage() {
             <div className="flex justify-center items-center">
               <p className="font-SatoshiMedium ">
                 New to entrynest?{"  "}
-                <Link to="/join_signup">
+                <Link to="/signup">
                   <span className="font-medium underline">Signup</span>
                 </Link>
               </p>

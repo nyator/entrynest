@@ -115,7 +115,7 @@ function EmployerForm({
       <div className="flex justify-center items-center">
         <p className="font-SatoshiMedium ">
           Have an account ?{"  "}
-          <Link to="/join_login">
+          <Link to="/login">
             <span className="font-medium underline">Login</span>
           </Link>
         </p>

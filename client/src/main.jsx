@@ -4,6 +4,7 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ProtectedRoute from "./components/ProtectedRoute";
+import { useAuthStore } from "./store/authStore";
 
 import "./index.css";
 
@@ -74,8 +75,18 @@ const router = createBrowserRouter([
   },
 ]);
 
+// Initialize auth state
+const AuthInitializer = () => {
+  const { checkAuth } = useAuthStore();
+  React.useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+  return null;
+};
+
 ReactDOM.createRoot(document.getElementById("root")).render(
   <>
+    <AuthInitializer />
     <RouterProvider router={router} />
     <ToastContainer
       position="top-right"
