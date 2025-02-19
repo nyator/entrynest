@@ -1,6 +1,7 @@
 import React, { useRef } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { toast } from "react-toastify";
 
 import { fr } from "../constants/assests";
 import InputField from "../elements/inputField";
@@ -13,7 +14,7 @@ function LoginPage() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    
+
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
 
@@ -29,12 +30,16 @@ function LoginPage() {
           password,
         }
       );
-      console.log("Login successful. Response data:", response.data);
+      toast.success("Login successful");
+      // console.log("Login successful. Response data:", response.data)
+
       // Handle successful login
       navigate("/jobs"); // Redirect to the dashboard page
     } catch (error) {
-      console.error("Login failed. Error response:", error.response);
-      alert("Login failed. Please check your email and password."); // User feedback for login error
+      const errorMessage =
+        error.response?.data?.message ||
+        "Login failed. Please check your email and password.";
+      toast.error(errorMessage);
     }
   };
 
@@ -55,10 +60,7 @@ function LoginPage() {
             <form onSubmit={handleLogin} className="space-y-4 md:space-y-6">
               <div className="flex flex-col">
                 <h1 className="text-clampText">Email</h1>
-                <InputField
-                  placeholder="Type email"
-                  ref={emailRef}
-                />
+                <InputField placeholder="Type email" ref={emailRef} />
               </div>
 
               <div className="flex flex-col">
@@ -71,7 +73,12 @@ function LoginPage() {
               </div>
 
               <div>
-                <button type="submit" className="w-full bg-primary text-white font-medium py-2 rounded-xl">Login</button>
+                <button
+                  type="submit"
+                  className="w-full bg-primary text-white font-medium py-2 rounded-xl"
+                >
+                  Login
+                </button>
               </div>
             </form>
 

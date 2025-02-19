@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { Link, NavLink } from "react-router";
+import { useAuthStore } from "../store/authStore";
 
 import { logo } from "../constants/assests";
 import Button from "../elements/button";
+import UserAvatar from "./UserAvatar";
 
 import { IoMenu } from "react-icons/io5";
 import { IoClose } from "react-icons/io5";
@@ -47,17 +49,22 @@ const Navbar = () => {
           })}
         </div>
         <div className="flex gap-2">
-          <Button
-            text="Login"
-            className="text-primaryStroke"
-            Link="/login"
-          />
-
-          <Button
-            text="SignUp"
-            className="text-white bg-primary"
-            Link="/signup"
-          />
+          {useAuthStore.getState().isAuthenticated ? (
+            <UserAvatar />
+          ) : (
+            <>
+              <Button
+                text="Login"
+                className="text-primaryStroke"
+                Link="/login"
+              />
+              <Button
+                text="SignUp"
+                className="text-white bg-primary"
+                Link="/signup"
+              />
+            </>
+          )}
         </div>
       </div>
 
@@ -90,19 +97,24 @@ const Navbar = () => {
 
               <div className="flex flex-col w-11/12 mx-auto">
                 <div className="flex gap-4 justify-end">
-                  <Button
-                    text="Login"
-                    className="text-primary"
-                    Link="/login"
-                    onClick={toggleMenu}
-                  />
-
-                  <Button
-                    text="SignUp"
-                    className="text-white bg-primary"
-                    Link="/signup"
-                    onClick={toggleMenu}
-                  />
+                  {useAuthStore.getState().isAuthenticated ? (
+                    <UserAvatar />
+                  ) : (
+                    <>
+                      <Button
+                        text="Login"
+                        className="text-primary"
+                        Link="/login"
+                        onClick={toggleMenu}
+                      />
+                      <Button
+                        text="SignUp"
+                        className="text-white bg-primary"
+                        Link="/signup"
+                        onClick={toggleMenu}
+                      />
+                    </>
+                  )}
                 </div>
                 {navLinks.map((items) => {
                   return (
