@@ -14,6 +14,7 @@ export const useAuthStore = create((set) => ({
 	message: null,
 
 	signup: async (email, password, firstname, lastname) => {
+    console.log("Attempting to sign up with:", { email, password, firstname, lastname }); // Add this line
 		set({ isLoading: true, error: null });
 		try {
 			const response = await axios.post(`${API_URL}/signup`, { email, password, firstname, lastname });
@@ -24,6 +25,7 @@ export const useAuthStore = create((set) => ({
 		}
 	},
 	login: async (email, password) => {
+    console.log("Attempting to log in with:", { email, password }); // Add this line
 		set({ isLoading: true, error: null });
 		try {
 			const response = await axios.post(`${API_URL}/login`, { email, password });

@@ -11,7 +11,12 @@ import {
 } from "../mailtrap/emails.js";
 
 export const signup = async (req, res) => {
-  const { firstname, lastname, email, password } = req.body;
+  const { firstname, lastname, email, password, role } = req.body;
+
+  // Validate role
+  if (!role || (role !== "jobseeker" && role !== "employer")) {
+    return res.status(400).json({ message: "Invalid role specified" });
+  }
   try {
     if (!firstname || !lastname || !email || !password) {
       return res.status(400).json({ message: "Please fill in all fields" });
@@ -33,6 +38,7 @@ export const signup = async (req, res) => {
       email,
       password: hashedpassword,
       verificationToken,
+      role, // Save the role in the user model
       verificationTokenExpireAt: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
     });
     await user.save();

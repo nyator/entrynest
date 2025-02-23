@@ -3,6 +3,7 @@ import { fg } from "../constants/assests";
 import JobseekerForm from "../components/jobseekerform";
 import EmployerForm from "../components/employerform";
 import { useNavigate } from "react-router-dom";
+import axios from "axios"; // Ensure axios is imported
 
 function SignupPage() {
   const [toggle, setToggle] = useState("jobseeker");
@@ -22,13 +23,24 @@ function SignupPage() {
   const [empassword, setEmpassword] = useState("");
   const [emconfirmpassword, setEmconfirmpassword] = useState("");
 
-  const handleSignupComplete = () => {
-    if (toggle === "jobseeker") {
-      navigate("/signup-jobseeker"); // Navigate to SignupJobSeeker.jsx
-    } else {
-      navigate("/employer-dashboard"); // Redirect for employer
+  const handleSignupComplete = async () => {
+    const role = toggle; // Get the selected role
+    const userData = {
+      firstname: toggle === "jobseeker" ? jsfirstname : emfirstname,
+      lastname: toggle === "jobseeker" ? jslastname : emlastname,
+      email: toggle === "jobseeker" ? jsemail : workemail,
+      password: toggle === "jobseeker" ? jspassword : empassword,
+      role, // Include the role in the signup data
+    };
+
+    // Send signup request to the backend
+    try {
+      await axios.post("http://localhost:3000/api/auth/signup", userData);
+      navigate("/jobs"); // Redirect to jobs page after successful signup
+    } catch (error) {
+      console.error("Signup error:", error.response.data.message);
     }
-  };
+  }; // Ensure the function is properly closed
 
   return (
     <div className="flex md:flex-row w-full mt-10 justify-center items-center my-10 h-full bg-white rounded-xl">
