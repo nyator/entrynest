@@ -18,15 +18,42 @@ export const signup = async (req, res) => {
     return res.status(400).json({ message: "Invalid role specified" });
   }
   try {
-    if (!firstname || !lastname || !email || !password) {
-      return res.status(400).json({ message: "Please fill in all fields" });
+    console.log(`Signup attempt for email: ${email}`);
+    
+    // Validate required fields
+    const requiredFields = { firstname, lastname, email, password };
+    const missingFields = Object.entries(requiredFields)
+      .filter(([_, value]) => !value)
+      .map(([key]) => key);
+
+    if (missingFields.length > 0) {
+      console.warn("Missing required fields:", missingFields);
+      return res.status(400).json({ 
+        success: false,
+        message: `Missing required fields: ${missingFields.join(', ')}`,
+        missingFields
+      });
     }
 
-    const userAlreadyExits = await User.findOne({ email });
-    if (userAlreadyExits) {
-      return res
-        .status(400)
-        .json({ success: false, message: "User already exists" });
+    // Validate password complexity
+    // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+    // if (!passwordRegex.test(password)) {
+    //   console.warn("Password complexity validation failed");
+    //   return res.status(400).json({
+    //     success: false,
+    //     message: "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number"
+    //   });
+    // }
+
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      console.warn(`Signup attempt with existing email: ${email}`);
+      return res.status(400).json({ 
+        success: false, 
+        message: "Email already registered. Please use a different email or login instead.",
+        field: "email"
+      });
     }
 
     const hashedpassword = await bcryptjs.hash(password, 12);
@@ -48,16 +75,22 @@ export const signup = async (req, res) => {
 
     await sendVerificationEmail(user.email, user.firstname, verificationToken);
 
+    console.log(`User created successfully: ${user.email}`);
     res.status(201).json({
       success: true,
-      message: "User Created Successfully",
+      message: "Account created successfully! Please check your email to verify your account.",
       user: {
         ...user._doc,
         password: undefined,
       },
     });
   } catch (error) {
-    res.status(400).json({ success: false, message: error.message });
+    console.error(`Signup error: ${error.message}`, { error });
+    res.status(400).json({ 
+      success: false, 
+      message: error.message || "An unexpected error occurred during signup. Please try again later.",
+      errorDetails: process.env.NODE_ENV === 'development' ? error.stack : undefined
+    });
   }
 };
 
@@ -214,8 +247,10 @@ export const resetPassword = async (req, res) => {
 
 export const checkAuth = async (req, res) => {
 	try {
+		console.log("Checking auth for userId:", req.userId);
 		const user = await User.findById(req.userId).select("-password");
 		if (!user) {
+			console.log("User not found for userId:", req.userId);
 			return res.status(400).json({ success: false, message: "User not found" });
 		}
 

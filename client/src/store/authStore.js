@@ -4,6 +4,7 @@ import axios from "axios";
 const API_URL = import.meta.env.MODE === "development" ? "http://localhost:3000/api/auth" : "/api/auth";
 
 axios.defaults.withCredentials = true;
+axios.defaults.baseURL = import.meta.env.MODE === "development" ? "http://localhost:3000" : "";
   
 export const useAuthStore = create((set) => ({
 	user: null,
@@ -13,17 +14,17 @@ export const useAuthStore = create((set) => ({
 	isCheckingAuth: true,
 	message: null,
 
-	signup: async (email, password, firstname, lastname) => {
-    console.log("Attempting to sign up with:", { email, password, firstname, lastname }); // Add this line
+	signup: async (email, password, firstname, lastname, role) => {
+		console.log("Attempting to sign up with:", { email, password, firstname, lastname, role }); // Add this line
 		set({ isLoading: true, error: null });
 		try {
-			const response = await axios.post(`${API_URL}/signup`, { email, password, firstname, lastname });
-			set({ user: response.data.user, isAuthenticated: true, isLoading: false });
+		  const response = await axios.post(`${API_URL}/signup`, { email, password, firstname, lastname, role });
+		  set({ user: response.data.user, isAuthenticated: true, isLoading: false });
 		} catch (error) {
-			set({ error: error.response.data.message || "Error signing up", isLoading: false });
-			throw error;
+		  set({ error: error.response.data.message || "Error signing up", isLoading: false });
+		  throw error;
 		}
-	},
+	  },
 	login: async (email, password) => {
     console.log("Attempting to log in with:", { email, password }); // Add this line
 		set({ isLoading: true, error: null });

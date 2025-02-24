@@ -1,13 +1,15 @@
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 import { fg } from "../constants/assests";
 import JobseekerForm from "../components/jobseekerform";
 import EmployerForm from "../components/employerform";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; // Ensure axios is imported
+import { useAuthStore } from "../store/authStore"; // Import useAuthStore
 
 function SignupPage() {
   const [toggle, setToggle] = useState("jobseeker");
   const navigate = useNavigate();
+  const { signup } = useAuthStore(); // Get signup function from useAuthStore
 
   // Job Seeker State
   const [jsfirstname, setJsfirstname] = useState("");
@@ -23,6 +25,8 @@ function SignupPage() {
   const [empassword, setEmpassword] = useState("");
   const [emconfirmpassword, setEmconfirmpassword] = useState("");
 
+  const [error, setError] = useState(null);
+
   const handleSignupComplete = async () => {
     const role = toggle; // Get the selected role
     const userData = {
@@ -31,16 +35,31 @@ function SignupPage() {
       email: toggle === "jobseeker" ? jsemail : workemail,
       password: toggle === "jobseeker" ? jspassword : empassword,
       role, // Include the role in the signup data
+      confirmPassword: toggle === "jobseeker" ? jsconfirmpassword : emconfirmpassword
     };
-
+    
+    // Validate password match
+    if (userData.password !== userData.confirmPassword) {
+      setError("Passwords do not match");
+      toast.error("Passwords do not match");
+      return;
+    }
+    
     // Send signup request to the backend
     try {
-      await axios.post("http://localhost:3000/api/auth/signup", userData);
+      console.log(userData);
+      setError(null);
+      console.log("Sending signup request with data:", userData);
+      await signup(userData.email, userData.password, userData.firstname, userData.lastname, userData.role);
+      toast.success("Signup successful! Please check your email for verification.");
       navigate("/jobs"); // Redirect to jobs page after successful signup
     } catch (error) {
-      console.error("Signup error:", error.response.data.message);
+      console.error("Signup error:", error.response?.data?.message);
+      const errorMessage = error.response?.data?.message || "Signup failed. Please try again.";
+      setError(errorMessage);
+      toast.error(errorMessage);
     }
-  }; // Ensure the function is properly closed
+  };
 
   return (
     <div className="flex md:flex-row w-full mt-10 justify-center items-center my-10 h-full bg-white rounded-xl">
@@ -84,6 +103,11 @@ function SignupPage() {
           </div>
         </div>
 
+        {error && (
+          <div className="text-red-500 text-center mb-4">
+            {error}
+          </div>
+        )}
         <div className="flex justify-center">
           {toggle === "jobseeker" ? (
             <JobseekerForm
@@ -97,7 +121,7 @@ function SignupPage() {
               setJspassword={setJspassword}
               jsconfirmpassword={jsconfirmpassword}
               setJsconfirmpassword={setJsconfirmpassword}
-              handleSignupComplete={handleSignupComplete}
+              handleSignupComplete={() => handleSignupComplete()}
             />
           ) : (
             <EmployerForm
@@ -111,7 +135,7 @@ function SignupPage() {
               setEmpassword={setEmpassword}
               emconfirmpassword={emconfirmpassword}
               setEmconfirmpassword={setEmconfirmpassword}
-              handleSignupComplete={handleSignupComplete}
+              handleSignupComplete={() => handleSignupComplete()}
             />
           )}
         </div>
