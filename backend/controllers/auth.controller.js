@@ -169,22 +169,22 @@ export const login = async (req, res) => {
   }
 };
 
-export const checkAuth = async (req, res) => {
-  try {
-    console.log("Checking auth for userId:", req.userId);
-    const user = await User.findById(req.userId).select("-password");
+// export const checkAuth = async (req, res) => {
+//   try {
+//     console.log("Checking auth for userId:", req.userId);
+//     const user = await User.findById(req.userId).select("-password");
     
-    if (!user) {
-      console.log("User not found for userId:", req.userId);
-      return res.status(400).json({ success: false, message: "User not found" });
-    }
+//     if (!user) {
+//       console.log("User not found for userId:", req.userId);
+//       return res.status(400).json({ success: false, message: "User not found" });
+//     }
 
-    res.status(200).json({ success: true, user });
-  } catch (error) {
-    console.log("Error in checkAuth ", error);
-    res.status(400).json({ success: false, message: error.message });
-  }
-};
+//     res.status(200).json({ success: true, user });
+//   } catch (error) {
+//     console.log("Error in checkAuth ", error);
+//     res.status(400).json({ success: false, message: error.message });
+//   }
+// };
 
 
 
@@ -263,19 +263,19 @@ export const resetPassword = async (req, res) => {
 	}
 };
 
-// export const checkAuth = async (req, res) => {
-// 	try {
-// 		console.log("Checking auth for userId:", req.userId);
-// 		const user = await User.findById(req.userId).select("-password");
+export const checkAuth = async (req, res) => {
+	try {
+		console.log("Checking auth for userId:", req.userId);
+		const user = await User.findById(req.userId).select("-password");
     
-// 		if (!user) {
-// 			console.log("User not found for userId:", req.userId);
-// 			return res.status(400).json({ success: false, message: "User not found" });
-// 		}
+		if (!user) {
+			console.log("User not found for userId:", req.userId);
+			return res.status(400).json({ success: false, message: "User not found" });
+		}
 
-// 		res.status(200).json({ success: true, user });
-// 	} catch (error) {
-// 		console.log("Error in checkAuth ", error);
-// 		res.status(400).json({ success: false, message: error.message });
-// 	}
-// };
+		res.status(200).json({ success: true, user });
+	} catch (error) {
+		console.log("Error in checkAuth ", error);
+		res.status(400).json({ success: false, message: error.message });
+	}
+};
