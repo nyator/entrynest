@@ -11,7 +11,7 @@ import {
 } from "../mailtrap/emails.js";
 
 export const signup = async (req, res) => {
-  const { firstname, lastname, email, password, role } = req.body;
+  const { email, password, firstname, lastname, role } = req.body;
 
   // Validate role
   if (!role || (role !== "jobseeker" && role !== "employer")) {
@@ -36,14 +36,14 @@ export const signup = async (req, res) => {
     }
 
     // Validate password complexity
-    // const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
-    // if (!passwordRegex.test(password)) {
-    //   console.warn("Password complexity validation failed");
-    //   return res.status(400).json({
-    //     success: false,
-    //     message: "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number"
-    //   });
-    // }
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+    if (!passwordRegex.test(password)) {
+      console.warn("Password complexity validation failed");
+      return res.status(400).json({
+        success: false,
+        message: "Password must be at least 8 characters long and contain at least one uppercase letter, one lowercase letter, and one number"
+      });
+    }
 
     // Check if user already exists
     const existingUser = await User.findOne({ email });
@@ -71,9 +71,10 @@ export const signup = async (req, res) => {
     await user.save();
 
     // JWT COOKIE
+    console.log("Saved user ID:", user._id);
     generateTokenAndSetCookie(res, user._id);
-
-    await sendVerificationEmail(user.email, user.firstname, verificationToken);
+    
+    // await sendVerificationEmail(user.email, user.firstname, verificationToken);
 
     console.log(`User created successfully: ${user.email}`);
     res.status(201).json({
@@ -118,6 +119,7 @@ export const verifyEmail = async (req, res) => {
     await sendWelcomeEmail(user.email, user.firstname);
 
     res.status(200).json({
+      redirectUrl: "/jobs", // Redirect to jobs page after login
       success: true,
       message: "Email verified successfully",
       user: {

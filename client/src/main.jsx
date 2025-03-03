@@ -75,18 +75,8 @@ const router = createBrowserRouter([
   },
 ]);
 
-// Initialize auth state
-const AuthInitializer = () => {
-  const { checkAuth } = useAuthStore();
-  React.useEffect(() => {
-    checkAuth();
-  }, [checkAuth]);
-  return null;
-};
-
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <>
-    <AuthInitializer />
+  <React.StrictMode>
     <RouterProvider router={router} />
     <ToastContainer
       position="top-right"
@@ -100,5 +90,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       pauseOnHover
       theme="light"
     />
-  </>
+  </React.StrictMode>
 );

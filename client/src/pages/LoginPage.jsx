@@ -34,7 +34,8 @@ function LoginPage() {
       // console.log("Login successful. Response data:", response.data)
 
       // Handle successful login
-      navigate("/jobs"); // Redirect to the dashboard page
+      const redirectUrl = response.data.redirectUrl || "/jobs"; // Use redirectUrl from response or default to /jobs
+      navigate(redirectUrl);
     } catch (error) {
       const errorMessage =
         error.response?.data?.message ||

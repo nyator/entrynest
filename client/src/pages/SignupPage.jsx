@@ -40,7 +40,7 @@ function SignupPage() {
     
     // Validate password match
     if (userData.password !== userData.confirmPassword) {
-      setError("Passwords do not match");
+      setError("Passwords do not match. Please ensure both passwords are identical.");
       toast.error("Passwords do not match");
       return;
     }
@@ -51,7 +51,7 @@ function SignupPage() {
       setError(null);
       console.log("Sending signup request with data:", userData);
       await signup(userData.email, userData.password, userData.firstname, userData.lastname, userData.role);
-      toast.success("Signup successful! Please check your email for verification.");
+      toast.success("Signup successful! Please check your email for verification. If you do not see it, please check your spam folder.");
       navigate("/jobs"); // Redirect to jobs page after successful signup
     } catch (error) {
       console.error("Signup error:", error.response?.data?.message);
