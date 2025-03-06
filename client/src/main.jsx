@@ -89,7 +89,6 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <ToastContainer
       position="top-right"
       autoClose={5000}
-      transition={Zoom}
       hideProgressBar={false}
       newestOnTop={false}
       closeOnClick
@@ -98,6 +97,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
       draggable
       pauseOnHover
       theme="light"
+      transition={Zoom}
     />
   </React.StrictMode>
 );

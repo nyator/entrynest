@@ -59,7 +59,6 @@ function EmployerForm({
 
     try {
       await signup(emfirstname, emlastname, workemail, empassword, "employer");
-      console.log("Signup successful, navigating to jobs");
       toast.success(
         "Signup successful! Check your email for verification Code."
       );

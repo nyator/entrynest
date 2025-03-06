@@ -16,7 +16,7 @@ function LoginPage() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLoading(true); // Set loading to true
+    setLoading(false); // Set loading to true
 
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
@@ -32,12 +32,13 @@ function LoginPage() {
       toast.success("Login successful");
 
       const redirectUrl = response.data.redirectUrl || "/jobs";
+      toast.success("Login successful!");
       navigate(redirectUrl);
     } catch (error) {
-      const errorMessage =
         error.response?.data?.message ||
         "Login failed. Please check your email and password.";
-      toast.error(errorMessage);
+        toast.error(error.response?.data?.message || "Login failed");
+      
     } finally {
       setLoading(false); // Set loading to false
     }
