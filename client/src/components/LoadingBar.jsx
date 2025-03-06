@@ -1,12 +1,14 @@
 import React from "react";
-import { CircularProgress } from "@mui/material";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const LoadingBar = () => {
-  return (
-    <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-50 z-50">
-      <CircularProgress />
-    </div>
-  );
+  React.useEffect(() => {
+    const id = toast.loading("Loading...");
+    return () => toast.dismiss(id);
+  }, []);
+
+  return <ToastContainer />;
 };
 
 export default LoadingBar;
