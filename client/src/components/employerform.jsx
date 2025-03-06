@@ -2,8 +2,23 @@ import React, { useState } from "react";
 import InputField from "../elements/inputField";
 import Button from "../elements/button";
 import { FcGoogle } from "react-icons/fc";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
 
-import { Link } from "react-router-dom";
+async function signup(firstname, lastname, email, password, role) {
+  try {
+    const response = await axios.post("/signup", {
+      firstname,
+      lastname,
+      email,
+      password,
+      role,
+    });
+    return response.data;
+  } catch (error) {
+    throw error;
+  }
+}
 
 function EmployerForm({
   emfirstname,
@@ -17,13 +32,32 @@ function EmployerForm({
   emconfirmpassword,
   setEmconfirmpassword,
 }) {
-  const handleSubmit = (e, handleNextStep) => {
+  const [signupError, setSignupError] = useState(""); // Initialize signupError state
+  const navigate = useNavigate(); // Add useNavigate hook
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Logic to handle multi-page form submission
-    if (currentStep < totalSteps) {
-      handleNextStep();
-    } else {
-      // Final submission logic
+    console.log("Form submitted with:", {
+      emfirstname,
+      emlastname,
+      workemail,
+      empassword,
+      emconfirmpassword,
+    });
+
+    // Final submission logic
+    if (empassword !== emconfirmpassword) {
+      setSignupError("Passwords do not match.");
+      return;
+    }
+
+    try {
+      await signup(emfirstname, emlastname, workemail, empassword, "employer");
+      console.log("Signup successful, navigating to jobs");
+      navigate("/jobs"); // Navigate to jobs page
+    } catch (error) {
+      setSignupError(error.response?.data?.message || "Signup failed"); // Set error message
+      console.log("Signup error:", error);
     }
   };
 
@@ -32,7 +66,7 @@ function EmployerForm({
       <form
         id="2"
         className="space-y-4 md:space-y-7 items-center"
-        onSubmit={(e) => handleSubmit(e, handleNextStep)}
+        onSubmit={handleSubmit}
       >
         <div className="flex sm:flex-row flex-col justify-between gap-4">
           <div className="w-full">

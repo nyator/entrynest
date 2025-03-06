@@ -5,11 +5,12 @@ import JobseekerForm from "../components/jobseekerform";
 import EmployerForm from "../components/employerform";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
+import axios from "axios";
 
 function SignupPage() {
   const [toggle, setToggle] = useState("jobseeker");
   const navigate = useNavigate();
-  const  signup  = useAuthStore(); 
+  const signup = useAuthStore();
 
   // Job Seeker State
   const [jsfirstname, setJsfirstname] = useState("");
@@ -34,28 +35,32 @@ function SignupPage() {
       lastname: toggle === "jobseeker" ? jslastname : emlastname,
       email: toggle === "jobseeker" ? jsemail : workemail,
       password: toggle === "jobseeker" ? jspassword : empassword,
-      confirmPassword: toggle === "jobseeker" ? jsconfirmpassword : emconfirmpassword,
-      role // Include the role in the signup data
+      confirmPassword:
+        toggle === "jobseeker" ? jsconfirmpassword : emconfirmpassword,
+      role, // Include the role in the signup data
     };
-    
+
     // Validate password match
-    // if (userData.password !== userData.confirmPassword) {
-    //   setError("Passwords do not match. Please ensure both passwords are identical.");
-    //   toast.error("Passwords do not match");
-    //   return;
-    // }
+    if (userData.password !== userData.confirmPassword) {
+      setError(
+        "Passwords do not match. Please ensure both passwords are identical."
+      );
+      toast.error("Passwords do not match");
+      return;
+    }
 
     // Send signup request to the backend
     try {
-      // console.log(userData);
-      // setError(null);
-      await signup(userData.email, userData.password, userData.firstname, userData.lastname, userData.role);
-      console.log("Sending signup request with data:", userData);
-      toast.success("Signup successful! Please check your email for verification. If you do not see it, please check your spam folder.");
+      const response = await axios.post("/api/auth/signup", userData);
+      setError("");
+      toast.success(
+        "Signup successful! Please check your email for verification. If you do not see it, please check your spam folder."
+      );
       navigate("/jobs"); // Redirect to jobs page after successful signup
     } catch (error) {
       console.error("Signup error:", error.response?.data?.message);
-      const errorMessage = error.response?.data?.message || "Signup failed. Please try again.";
+      const errorMessage =
+        error.response?.data?.message || "Signup failed. Please try again.";
       setError(errorMessage);
       toast.error(errorMessage);
     }
@@ -103,11 +108,7 @@ function SignupPage() {
           </div>
         </div>
 
-        {error && (
-          <div className="text-red-500 text-center mb-4">
-            {error}
-          </div>
-        )}
+        {error && <div className="text-red-500 text-center mb-4">{error}</div>}
         <div className="flex justify-center">
           {toggle === "jobseeker" ? (
             <JobseekerForm

@@ -5,6 +5,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useAuthStore } from "./store/authStore";
+import axios from "axios";
 
 import "./index.css";
 
@@ -21,6 +22,13 @@ import SignupJobSeeker from "./pages/SignupJobSeeker";
 import EmailVerificationPage from "./pages/EmailVerificationPage";
 import JobPage from "./pages/JobPage";
 
+// Set the base URL for Axios
+const API_URL =
+  import.meta.env.MODE === "development"
+    ? "http://localhost:3000/api/auth"
+    : "/api/auth";
+axios.defaults.baseURL = API_URL;
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -34,7 +42,7 @@ const router = createBrowserRouter([
       {
         path: "/jobs",
         element: (
-          <ProtectedRoute allowedRoles={['jobseeker']}>
+          <ProtectedRoute allowedRoles={["jobseeker"]}>
             <JobPage />
           </ProtectedRoute>
         ),

@@ -74,7 +74,7 @@ export const signup = async (req, res) => {
     console.log("Saved user ID:", user._id);
     generateTokenAndSetCookie(res, user._id);
     
-    // await sendVerificationEmail(user.email, xuser.firstname, verificationToken);
+    // await sendVerificationEmail(user.email, user.firstname, verificationToken);
 
     console.log(`User created successfully: ${user.email}`);
     res.status(201).json({
