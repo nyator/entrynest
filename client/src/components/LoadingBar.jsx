@@ -1,0 +1,14 @@
+import React from "react";
+import { ToastContainer, toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
+const LoadingBar = () => {
+  React.useEffect(() => {
+    const id = toast.loading("Loading...");
+    return () => toast.dismiss(id);
+  }, []);
+
+  return <ToastContainer />;
+};
+
+export default LoadingBar;

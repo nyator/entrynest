@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
+import { Flip, ToastContainer, Zoom } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useAuthStore } from "./store/authStore";
@@ -89,6 +89,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
     <ToastContainer
       position="top-right"
       autoClose={5000}
+      transition={Zoom}
       hideProgressBar={false}
       newestOnTop={false}
       closeOnClick
