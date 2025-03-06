@@ -15,7 +15,8 @@ const Layout = () => {
         <Outlet />
         {location.pathname !== "/login" &&
           location.pathname !== "/signup" &&
-          location.pathname !== "/verify-email" && <Footer />}
+          location.pathname !== "/verify-email" &&
+          location.pathname !== "/forgot-password" && <Footer />}
       </main>
     </>
   );

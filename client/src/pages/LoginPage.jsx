@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { fr } from "../constants/assests";
 import InputField from "../elements/inputField";
 import { FcGoogle } from "react-icons/fc";
-import LoadingBar from "../components/LoadingBar"; // Import the LoadingBar component
+import LoadingBar from "../components/LoadingToast"; // Import the LoadingBar component
 
 function LoginPage() {
   const emailRef = useRef(null);

@@ -5,7 +5,7 @@ import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import LoadingBar from "../components/LoadingBar"; // Import the LoadingBar component
+import LoadingBar from "./LoadingToast"; // Import the LoadingBar component
 
 async function signup(firstname, lastname, email, password, role) {
   try {

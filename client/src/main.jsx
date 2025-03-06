@@ -1,12 +1,12 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
+import axios from "axios";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { Flip, ToastContainer, Zoom } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useAuthStore } from "./store/authStore";
-import axios from "axios";
+import {  ToastContainer, Zoom } from "react-toastify";
 
+import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 
 import LandingPage from "../src/pages/LandingPage"; //ALSO JOB_SEARCH PAGE
@@ -14,6 +14,7 @@ import Layout from "./Layout";
 import NotFoundPage from "./pages/notFoundPage";
 import FindTalentPage from "./pages/FIndTalentPage";
 import CommunityPage from "./pages/CommunityPage";
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 
 import LoginPage from "../src/pages/LoginPage";
 import SignupPage from "../src/pages/SignupPage";
@@ -75,10 +76,10 @@ const router = createBrowserRouter([
         path: "/verify-email",
         element: <EmailVerificationPage />,
       },
-      // {
-      //   path: "/forgot-password",
-      //   element: <ForgotPasswordPage />,
-      // },
+      {
+        path: "/forgot-password",
+        element: <ForgotPasswordPage />,
+      },
     ],
   },
 ]);
