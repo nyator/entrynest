@@ -4,12 +4,12 @@ import { fg } from "../constants/assests";
 import JobseekerForm from "../components/jobseekerform";
 import EmployerForm from "../components/employerform";
 import { useNavigate } from "react-router-dom";
-import { useAuthStore } from "../store/authStore"; // Import useAuthStore
+import { useAuthStore } from "../store/authStore";
 
 function SignupPage() {
   const [toggle, setToggle] = useState("jobseeker");
   const navigate = useNavigate();
-  const { signup } = useAuthStore(); // Get signup function from useAuthStore
+  const  signup  = useAuthStore(); 
 
   // Job Seeker State
   const [jsfirstname, setJsfirstname] = useState("");
@@ -34,23 +34,23 @@ function SignupPage() {
       lastname: toggle === "jobseeker" ? jslastname : emlastname,
       email: toggle === "jobseeker" ? jsemail : workemail,
       password: toggle === "jobseeker" ? jspassword : empassword,
-      role, // Include the role in the signup data
-      confirmPassword: toggle === "jobseeker" ? jsconfirmpassword : emconfirmpassword
+      confirmPassword: toggle === "jobseeker" ? jsconfirmpassword : emconfirmpassword,
+      role // Include the role in the signup data
     };
     
     // Validate password match
-    if (userData.password !== userData.confirmPassword) {
-      setError("Passwords do not match. Please ensure both passwords are identical.");
-      toast.error("Passwords do not match");
-      return;
-    }
-    
+    // if (userData.password !== userData.confirmPassword) {
+    //   setError("Passwords do not match. Please ensure both passwords are identical.");
+    //   toast.error("Passwords do not match");
+    //   return;
+    // }
+
     // Send signup request to the backend
     try {
-      console.log(userData);
-      setError(null);
-      console.log("Sending signup request with data:", userData);
+      // console.log(userData);
+      // setError(null);
       await signup(userData.email, userData.password, userData.firstname, userData.lastname, userData.role);
+      console.log("Sending signup request with data:", userData);
       toast.success("Signup successful! Please check your email for verification. If you do not see it, please check your spam folder.");
       navigate("/jobs"); // Redirect to jobs page after successful signup
     } catch (error) {

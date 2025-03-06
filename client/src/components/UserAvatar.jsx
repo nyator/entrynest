@@ -13,6 +13,10 @@ const UserAvatar = () => {
     try {
       await logout();
       navigate('/');
+      useAuthStore.setState({ isCheckingAuth: false });
+      useAuthStore.setState({ isAuthenticated: false });
+      useAuthStore.setState({ user: null });
+
     } catch (error) {
       console.error('Logout failed:', error);
     }

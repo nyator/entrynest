@@ -34,7 +34,7 @@ export const signup = async (req, res) => {
         missingFields
       });
     }
-
+  
     // Validate password complexity
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
     if (!passwordRegex.test(password)) {
@@ -74,7 +74,7 @@ export const signup = async (req, res) => {
     console.log("Saved user ID:", user._id);
     generateTokenAndSetCookie(res, user._id);
     
-    await sendVerificationEmail(user.email, xuser.firstname, verificationToken);
+    // await sendVerificationEmail(user.email, xuser.firstname, verificationToken);
 
     console.log(`User created successfully: ${user.email}`);
     res.status(201).json({

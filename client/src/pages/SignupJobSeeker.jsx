@@ -5,9 +5,21 @@ import { useAuthStore } from "../store/authStore";
 
 function SignupJobSeeker() {
   const { signup } = useAuthStore();
+  const [role, setRole] = useState('jobseeker'); // Default role
+  const [firstname, setFirstname] = useState('');
+  const [lastname, setLastname] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
 
   const handleSignup = async(e) => {
     e.preventDefault();
+    const userData = { firstname, lastname, email, password };
+    try {
+      await signup(userData);
+      toast.success("Signup successful!");
+    } catch (error) {
+      toast.error("Signup failed. Please try again.");
+    }
   }
 
   return (
@@ -28,19 +40,22 @@ function SignupJobSeeker() {
           <div className="md:space-y-2">
             <h1 className="text-clampText">Last Name</h1>
             <InputField
-              placeholder="Last Name" 
+              placeholder="First Name" 
+              onChange={(e) => setFirstname(e.target.value)}
             />
           </div>
           <div className="md:space-y-2">
             <h1 className="text-clampText">Last Name</h1>
             <InputField
               placeholder="Last Name" 
+              onChange={(e) => setLastname(e.target.value)}
             />
           </div>
           <div className="md:space-y-2">
             <h1 className="text-clampText">Last Name</h1>
             <InputField
-              placeholder="Last Name" 
+              placeholder="Email" 
+              onChange={(e) => setEmail(e.target.value)}
             />
           </div>
         </div>
@@ -49,7 +64,9 @@ function SignupJobSeeker() {
           <div className="md:space-y-2">
             <h1 className="text-clampText">Last Name</h1>
             <InputField
-              placeholder="Last Name" //onChange={handlePasswordChange}
+              placeholder="Password" 
+              type="password"
+              onChange={(e) => setPassword(e.target.value)}
             />
           </div>
           <div className="md:space-y-2">
@@ -68,7 +85,7 @@ function SignupJobSeeker() {
       </div>
 
       <div>
-        <Button text="Complete Setup" className="text-white bg-primary" />
+        <Button text="Complete Setup" className="text-white bg-primary" onClick={handleSignup} />
       </div>
     </div>
   );

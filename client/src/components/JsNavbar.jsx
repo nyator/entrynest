@@ -1,6 +1,7 @@
 import React from "react";
 import { Link, NavLink } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
+import UserAvatar from "./UserAvatar";
 
 const navLinks = [
   { title: "Jobs & Mentors", href: "/jobs", id: 1 },
@@ -36,6 +37,9 @@ const JsNavbar = () => {
               </NavLink>
             </div>
           ))}
+        </div>
+        <div>
+          <UserAvatar />
         </div>
       </div>
 
