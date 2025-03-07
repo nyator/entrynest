@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { fr } from "../constants/assests";
 import InputField from "../elements/inputField";
 import { FcGoogle } from "react-icons/fc";
-import LoadingBar from "../components/LoadingBar"; // Import the LoadingBar component
+import LoadingBar from "../components/LoadingToast";
 
 function LoginPage() {
   const emailRef = useRef(null);
@@ -21,6 +21,14 @@ function LoginPage() {
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
 
+    if (!email || !password) {
+      toast.error("Please fill in all fields");
+      setLoading(false);
+      return;
+    }
+
+    const loadingToastId = toast.loading("Processing...");
+
     try {
       const response = await axios.post(
         "http://localhost:3000/api/auth/login",
@@ -34,22 +42,18 @@ function LoginPage() {
       const redirectUrl = response.data.redirectUrl || "/jobs";
       navigate(redirectUrl);
     } catch (error) {
-      const errorMessage =
-        error.response?.data?.message ||
-        "Login failed. Please check your email and password.";
-      toast.error(errorMessage);
+      toast.error(error.response?.data?.message || "Login failed");
     } finally {
       setLoading(false); // Set loading to false
+      toast.dismiss(loadingToastId); // Dismiss only the loading toast
     }
   };
 
   return (
     <div className="flex md:flex-row w-full mt-10 justify-center items-center my-10 h-full bg-white rounded-xl">
-      {loading && <LoadingBar />} {/* Conditionally render the loading bar */}
       <div className="hidden md:flex h-screen w-1/2">
         <img src={fr} className="object-cover h-full w-full rounded-s-xl" />
       </div>
-
       <div className="flex flex-col w-full md:w-1/2 h-1/2 py-8">
         <div className="leading-tight justify-center text-center mb-10">
           <h1 className="font-bold text-clampHeadSm">LOGIN</h1>

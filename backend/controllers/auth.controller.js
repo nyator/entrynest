@@ -69,7 +69,7 @@ export const signup = async (req, res) => {
       return res.status(400).json({
         success: false,
         message:
-          "Email already registered. Please use a different email or login instead.",
+          "Email already registered. Use a different email or login instead.",
         field: "email",
       });
     }

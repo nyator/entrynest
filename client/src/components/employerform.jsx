@@ -5,7 +5,7 @@ import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import LoadingBar from "../components/LoadingBar"; // Import the LoadingBar component
+import LoadingBar from "./LoadingToast"; // Import the LoadingBar component
 
 async function signup(firstname, lastname, email, password, role) {
   try {
@@ -41,15 +41,13 @@ function EmployerForm({
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true); // Set loading to true
-    console.log("Form submitted with:", {
-      emfirstname,
-      emlastname,
-      workemail,
-      empassword,
-      emconfirmpassword,
-    });
 
-    // Final submission logic
+    if (!emfirstname || !emlastname || !workemail || !empassword || !emconfirmpassword) {
+      toast.error("Please fill in all fields");
+      setLoading(false);
+      return;
+    }
+
     if (empassword !== emconfirmpassword) {
       setSignupError("Passwords do not match.");
       toast.error("Passwords do not match");
@@ -57,9 +55,10 @@ function EmployerForm({
       return;
     }
 
+    const loadingToastId = toast.loading("Processing...");
+
     try {
       await signup(emfirstname, emlastname, workemail, empassword, "employer");
-      console.log("Signup successful, navigating to jobs");
       toast.success(
         "Signup successful! Check your email for verification Code."
       );
@@ -70,12 +69,12 @@ function EmployerForm({
       toast.error(error.response?.data?.message || "Signup failed");
     } finally {
       setLoading(false); // Set loading to false
+      toast.dismiss(loadingToastId); // Dismiss only the loading toast
     }
   };
 
   return (
     <div className="space-y-4 md:space-y-7 w-4/5 items-center">
-      {loading && <LoadingBar />} {/* Show loading bar when loading */}
       <form
         id="2"
         className="space-y-4 md:space-y-7 items-center"

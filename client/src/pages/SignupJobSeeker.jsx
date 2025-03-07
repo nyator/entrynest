@@ -3,7 +3,7 @@ import InputField from "../elements/inputField";
 import Button from "../elements/button";
 import { useAuthStore } from "../store/authStore";
 import { toast } from "react-toastify";
-import LoadingBar from "../components/LoadingBar"; // Import the LoadingBar component
+import LoadingBar from "../components/LoadingToast"; // Import the LoadingBar component
 
 function SignupJobSeeker() {
   const { signup } = useAuthStore();
