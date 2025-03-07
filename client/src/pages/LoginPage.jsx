@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 import { fr } from "../constants/assests";
 import InputField from "../elements/inputField";
 import { FcGoogle } from "react-icons/fc";
-import LoadingBar from "../components/LoadingToast"; // Import the LoadingBar component
+import LoadingBar from "../components/LoadingToast";
 
 function LoginPage() {
   const emailRef = useRef(null);
@@ -16,10 +16,18 @@ function LoginPage() {
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setLoading(false); // Set loading to true
+    setLoading(true); // Set loading to true
 
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
+
+    if (!email || !password) {
+      toast.error("Please fill in all fields");
+      setLoading(false);
+      return;
+    }
+
+    const loadingToastId = toast.loading("Processing...");
 
     try {
       const response = await axios.post(
@@ -32,25 +40,20 @@ function LoginPage() {
       toast.success("Login successful");
 
       const redirectUrl = response.data.redirectUrl || "/jobs";
-      toast.success("Login successful!");
       navigate(redirectUrl);
     } catch (error) {
-        error.response?.data?.message ||
-        "Login failed. Please check your email and password.";
-        toast.error(error.response?.data?.message || "Login failed");
-      
+      toast.error(error.response?.data?.message || "Login failed");
     } finally {
       setLoading(false); // Set loading to false
+      toast.dismiss(loadingToastId); // Dismiss only the loading toast
     }
   };
 
   return (
     <div className="flex md:flex-row w-full mt-10 justify-center items-center my-10 h-full bg-white rounded-xl">
-      {loading && <LoadingBar />} {/* Conditionally render the loading bar */}
       <div className="hidden md:flex h-screen w-1/2">
         <img src={fr} className="object-cover h-full w-full rounded-s-xl" />
       </div>
-
       <div className="flex flex-col w-full md:w-1/2 h-1/2 py-8">
         <div className="leading-tight justify-center text-center mb-10">
           <h1 className="font-bold text-clampHeadSm">LOGIN</h1>

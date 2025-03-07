@@ -41,15 +41,13 @@ function JobseekerForm({
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true); // Set loading to true
-    console.log("Form submitted with:", {
-      jsfirstname,
-      jslastname,
-      jsemail,
-      jspassword,
-      jsconfirmpassword,
-    });
 
-    // Final submission logic
+    if (!jsfirstname || !jslastname || !jsemail || !jspassword || !jsconfirmpassword) {
+      toast.error("Please fill in all fields");
+      setLoading(false);
+      return;
+    }
+
     if (jspassword !== jsconfirmpassword) {
       setSignupError("Passwords do not match.");
       toast.error("Passwords do not match");
@@ -57,9 +55,10 @@ function JobseekerForm({
       return;
     }
 
+    const loadingToastId = toast.loading("Processing...");
+
     try {
-      await signup(jsfirstname,jslastname, jsemail, jspassword, "jobseeker");
-      console.log("Signup successful, navigating to jobs");
+      await signup(jsfirstname, jslastname, jsemail, jspassword, "jobseeker");
       toast.success(
         "Signup successful! Check your email for verification Code."
       );
@@ -70,12 +69,12 @@ function JobseekerForm({
       toast.error(error.response?.data?.message || "Signup failed");
     } finally {
       setLoading(false); // Set loading to false
+      toast.dismiss(loadingToastId); // Dismiss only the loading toast
     }
   };
 
   return (
     <div className="space-y-4 md:space-y-7 w-4/5 items-center">
-      {loading && <LoadingBar />} {/* Conditionally render the loading bar */}
       <form
         id="2"
         className="space-y-4 md:space-y-7 items-center"

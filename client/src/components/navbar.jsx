@@ -1,10 +1,12 @@
 import React, { useState } from "react";
-import { Link, NavLink } from "react-router";
+import { Link, NavLink } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 
 import { logo } from "../constants/assests";
 import Button from "../elements/button";
 import UserAvatar from "./UserAvatar";
+import JsNavbar from "./JsNavbar";
+import EmNavbar from "./EmNavbar";
 
 import { IoMenu } from "react-icons/io5";
 import { IoClose } from "react-icons/io5";
@@ -18,10 +20,19 @@ const navLinks = [
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
+  const { user } = useAuthStore();
 
   const toggleMenu = () => {
     setOpen((prevOpen) => !prevOpen);
   };
+
+  if (user) {
+    if (user.role === "jobseeker") {
+      return <JsNavbar />;
+    } else if (user.role === "employer") {
+      return <EmNavbar />;
+    }
+  }
 
   return (
     <>
@@ -123,7 +134,6 @@ const Navbar = () => {
                       className="items-center justify-start border-b-[1px] border-[#e3e3e3] py-5"
                     >
                       <a href={items.href} className="text-xl">
-
                         <div className="py-3">{items.title}</div>
                       </a>
                     </div>

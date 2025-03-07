@@ -104,4 +104,6 @@ export const useAuthStore = create((set) => ({
 			throw error;
 		}
 	},
+	setUser: (user) => set({ user, isAuthenticated: !!user }),
+	clearUser: () => set({ user: null, isAuthenticated: false }),
 }));
