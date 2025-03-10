@@ -5,6 +5,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import ProtectedRoute from "./components/ProtectedRoute";
 import { useAuthStore } from "./store/authStore";
 import { ToastContainer, Zoom } from "react-toastify";
+import { AuthProvider } from "./context/AuthContext";
+import AuthRedirect from "./components/AuthRedirect";
 
 import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
@@ -22,7 +24,6 @@ import SupportPage from "./pages/SupportPage";
 import SignupJobSeeker from "./pages/SignupJobSeeker";
 import EmailVerificationPage from "./pages/EmailVerificationPage";
 import JobPage from "./pages/JobPage";
-import { AuthProvider } from "./context/AuthContext";
 
 // Set the base URL for Axios
 const API_URL =
@@ -88,7 +89,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById("root")).render(
   <React.StrictMode>
     <AuthProvider>
-      <RouterProvider router={router} />
+      <RouterProvider router={router}>
+        <AuthRedirect />
+      </RouterProvider>
       <ToastContainer
         position="top-right"
         autoClose={5000}
