@@ -14,7 +14,7 @@ import "./index.css";
 import LandingPage from "../src/pages/LandingPage"; //ALSO JOB_SEARCH PAGE
 import Layout from "./Layout";
 import NotFoundPage from "./pages/notFoundPage";
-import FindTalentPage from "./pages/FIndTalentPage";
+import FindTalentPage from "./pages/FindTalentPage";
 import CommunityPage from "./pages/CommunityPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 
@@ -24,6 +24,7 @@ import SupportPage from "./pages/SupportPage";
 import SignupJobSeeker from "./pages/SignupJobSeeker";
 import EmailVerificationPage from "./pages/EmailVerificationPage";
 import JobPage from "./pages/JobPage";
+import ProfilePage from "./pages/ProfilePage"; // Import ProfilePage
 
 // Set the base URL for Axios
 const API_URL =
@@ -81,6 +82,15 @@ const router = createBrowserRouter([
       {
         path: "/forgot-password",
         element: <ForgotPasswordPage />,
+      },
+      {
+        path: "/profile",
+        // element: <ProfilePage />,
+        element: (
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        ),
       },
     ],
   },

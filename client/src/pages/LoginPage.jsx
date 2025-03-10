@@ -1,4 +1,4 @@
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -7,12 +7,20 @@ import { fr } from "../constants/assests";
 import InputField from "../elements/inputField";
 import { FcGoogle } from "react-icons/fc";
 import LoadingBar from "../components/LoadingToast";
+import { useAuthStore } from "../store/authStore";
 
 function LoginPage() {
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const navigate = useNavigate();
+  const { isAuthenticated } = useAuthStore();
   const [loading, setLoading] = useState(false); // Add loading state
+
+  useEffect(() => {
+    if (isAuthenticated) {
+      navigate("/"); // Redirect to home page if already authenticated
+    }
+  }, [isAuthenticated, navigate]);
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -22,6 +30,7 @@ function LoginPage() {
     const password = passwordRef.current.value;
 
     if (!email || !password) {
+      toast.dismiss(); // Dismiss any existing toasts
       toast.error("Please fill in all fields");
       setLoading(false);
       return;
@@ -37,11 +46,13 @@ function LoginPage() {
           password,
         }
       );
+      toast.dismiss(); // Dismiss any existing toasts
       toast.success("Login successful");
 
       const redirectUrl = response.data.redirectUrl || "/jobs";
       navigate(redirectUrl);
     } catch (error) {
+      toast.dismiss(); // Dismiss any existing toasts
       toast.error(error.response?.data?.message || "Login failed");
     } finally {
       setLoading(false); // Set loading to false

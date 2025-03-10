@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
+import { toast } from 'react-toastify';
 
 const UserAvatar = () => {
 
@@ -16,6 +17,7 @@ const UserAvatar = () => {
       useAuthStore.setState({ isCheckingAuth: false });
       useAuthStore.setState({ isAuthenticated: false });
       useAuthStore.setState({ user: null });
+      toast.success('Logout successful');
 
     } catch (error) {
       console.error('Logout failed:', error);

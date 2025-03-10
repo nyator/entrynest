@@ -11,6 +11,7 @@ const ProtectedRoute = ({ allowedRoles }) => {
   }
 
   if (!isAuthenticated) {
+    toast.dismiss(); // Dismiss any existing toasts
     toast.error('Please login to access this page');
     return <Navigate to="/login" replace />;
   }

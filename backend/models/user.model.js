@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-
 const userSchema = new mongoose.Schema(
   {
     firstname: {
@@ -37,9 +36,29 @@ const userSchema = new mongoose.Schema(
     resetPasswordExpireAt: Date,
     verificationToken: String,
     verificationTokenExpireAt: Date,
+    name: {
+      type: String,
+    },
+    avatar: {
+      type: String,
+    },
+    companyName: {
+      type: String,
+    },
+    biography: {
+      type: String,
+    },
+    location: {
+      type: String,
+    },
+    telNumber: {
+      type: String,
+    },
+    skills: {
+      type: [String],
+    },
   },
   { timestamps: true }
 ); //createAt and updateAt will be added automatically cus of the timestamp
-
 
 export const User = mongoose.model("User", userSchema);
