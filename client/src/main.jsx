@@ -46,7 +46,7 @@ const router = createBrowserRouter([
       {
         path: "/jobs",
         element: (
-          <ProtectedRoute allowedRoles={"jobseeker"}>
+          <ProtectedRoute allowedRoles={["jobseeker"]}>
             <JobPage />
           </ProtectedRoute>
         ),
@@ -86,7 +86,7 @@ const router = createBrowserRouter([
       {
         path: "/profile",
         element: (
-          <ProtectedRoute allowedRoles={["employer", "jobseeker"]}>//
+          <ProtectedRoute allowedRoles={["jobseeker", "employer"]}>
             <ProfilePage />
           </ProtectedRoute>
         ),

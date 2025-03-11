@@ -18,9 +18,11 @@ const ProfilePage = () => {
     skills: user?.skills || [],
   });
   const [avatarPreview, setAvatarPreview] = useState(user?.avatar || "");
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (user) {
+      console.log("User data loaded:", user);
       setProfileData({
         firstname: user.firstname || "",
         lastname: user.lastname || "",
@@ -33,6 +35,7 @@ const ProfilePage = () => {
         skills: user.skills || [],
       });
       setAvatarPreview(user.avatar || "");
+      setLoading(false);
     }
   }, [user]);
 
@@ -85,11 +88,18 @@ const ProfilePage = () => {
     }
   };
 
+  if (loading) {
+    console.log("Loading user data...");
+    return <div>Loading...</div>; // Add a loading state
+  }
+
+  console.log("ProfilePage rendered");
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Edit Profile</h1>
       <form onSubmit={handleSubmit}>
-        {user?.role === "jobseeker" && (
+        {user.role === "jobseeker" && (
           <>
             <div className="mb-4">
               <label className="block text-gray-700">First Name</label>
@@ -129,7 +139,7 @@ const ProfilePage = () => {
             </div>
           </>
         )}
-        {user?.role === "employer" && (
+        {user.role === "employer" && (
           <div className="mb-4">
             <label className="block text-gray-700">Company Name</label>
             <input
