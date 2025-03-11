@@ -3,6 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthStore } from '../store/authStore';
 import { toast } from 'react-toastify';
 
+import { hover } from '../constants/styles';
+
 const UserAvatar = () => {
 
   const [isOpen, setIsOpen] = useState(false);
@@ -32,7 +34,7 @@ const UserAvatar = () => {
         onClick={toggleDropdown}
         className="flex items-center gap-2 focus:outline-none"
       >
-        <div className="w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white">
+        <div className={`w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white ${hover}`}>
           {user?.firstname?.charAt(0) || 'U'}
         </div>
       </button>

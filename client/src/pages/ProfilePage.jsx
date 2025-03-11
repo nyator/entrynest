@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuthStore } from "../store/authStore";
 
@@ -7,17 +7,34 @@ const skillsList = ["JavaScript", "React", "Node.js", "Python", "Java", "C++", "
 const ProfilePage = () => {
   const { user, setUser } = useAuthStore();
   const [profileData, setProfileData] = useState({
-    firstname: user.firstname || "",
-    lastname: user.lastname || "",
-    email: user.email || "",
-    avatar: user.avatar || "",
-    companyName: user.companyName || "",
-    biography: user.biography || "",
-    location: user.location || "",
-    telNumber: user.telNumber || "",
-    skills: user.skills || [],
+    firstname: user?.firstname || "",
+    lastname: user?.lastname || "",
+    email: user?.email || "",
+    avatar: user?.avatar || "",
+    companyName: user?.companyName || "",
+    biography: user?.biography || "",
+    location: user?.location || "",
+    telNumber: user?.telNumber || "",
+    skills: user?.skills || [],
   });
-  const [avatarPreview, setAvatarPreview] = useState(user.avatar || "");
+  const [avatarPreview, setAvatarPreview] = useState(user?.avatar || "");
+
+  useEffect(() => {
+    if (user) {
+      setProfileData({
+        firstname: user.firstname || "",
+        lastname: user.lastname || "",
+        email: user.email || "",
+        avatar: user.avatar || "",
+        companyName: user.companyName || "",
+        biography: user.biography || "",
+        location: user.location || "",
+        telNumber: user.telNumber || "",
+        skills: user.skills || [],
+      });
+      setAvatarPreview(user.avatar || "");
+    }
+  }, [user]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -72,7 +89,7 @@ const ProfilePage = () => {
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Edit Profile</h1>
       <form onSubmit={handleSubmit}>
-        {user.role === "jobseeker" && (
+        {user?.role === "jobseeker" && (
           <>
             <div className="mb-4">
               <label className="block text-gray-700">First Name</label>
@@ -112,7 +129,7 @@ const ProfilePage = () => {
             </div>
           </>
         )}
-        {user.role === "employer" && (
+        {user?.role === "employer" && (
           <div className="mb-4">
             <label className="block text-gray-700">Company Name</label>
             <input
