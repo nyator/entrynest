@@ -13,10 +13,6 @@ const navLinks = [
 const JsNavbar = () => {
   const { isAuthenticated } = useAuthStore.getState();
 
-  // if (!isAuthenticated) {
-  //   return null; // Do not render the navbar if not authenticated
-  // }
-
   return (
     <>
       <div className="md:flex hidden items-center justify-between">

@@ -6,6 +6,7 @@ import cors from "cors";
 import { connectDB } from "./db/connectDB.js";
 import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js"; // Import user routes
+import jobRoutes from "./routes/job.routes.js"; // Import job routes
 
 dotenv.config();
 
@@ -22,6 +23,7 @@ app.use("/uploads", express.static("uploads")); // Serve uploaded files statical
 
 app.use("/api/auth", authRoutes); // allows  to parse incoming requests from user
 app.use("/api/user", userRoutes); // Add user routes
+app.use("/api/jobs", jobRoutes); // Add job routes
 
 app.listen(PORT, () => {
   connectDB();

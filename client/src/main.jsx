@@ -25,12 +25,13 @@ import SignupJobSeeker from "./pages/SignupJobSeeker";
 import EmailVerificationPage from "./pages/EmailVerificationPage";
 import JobPage from "./pages/JobPage";
 import ProfilePage from "./pages/ProfilePage"; // Import ProfilePage
+import EmployerDashboard from "./pages/EmployerDashboard"; // Import EmployerDashboard
 
 // Set the base URL for Axios
 const API_URL =
   import.meta.env.MODE === "development"
-    ? "http://localhost:3000/api/auth"
-    : "/api/auth";
+    ? "http://localhost:3000/api"
+    : "/api";
 axios.defaults.baseURL = API_URL;
 
 const router = createBrowserRouter([
@@ -91,12 +92,27 @@ const router = createBrowserRouter([
           </ProtectedRoute>
         ),
       },
+      {
+        path: "/dashboard",
+        element: (
+          <ProtectedRoute allowedRoles={["employer"]}>
+            <EmployerDashboard />
+          </ProtectedRoute>
+        ),
+      },
     ],
   },
 ]);
 
-ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+const App = () => {
+  const { checkAuth } = useAuthStore();
+
+  React.useEffect(() => {
+    console.log("Calling checkAuth to set authentication state");
+    checkAuth();
+  }, [checkAuth]);
+
+  return (
     <AuthProvider>
       <RouterProvider router={router}>
         <AuthRedirect />
@@ -115,5 +131,7 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         transition={Zoom}
       />
     </AuthProvider>
-  </React.StrictMode>
-);
+  );
+};
+
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);

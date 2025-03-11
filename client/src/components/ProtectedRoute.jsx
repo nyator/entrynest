@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import { toast } from "react-toastify";
@@ -6,45 +6,29 @@ import { toast } from "react-toastify";
 const ProtectedRoute = ({ allowedRoles }) => {
   const { isAuthenticated, user, isCheckingAuth } = useAuthStore();
 
-  useEffect(() => {
-    if (!isCheckingAuth && !isAuthenticated) {
-      toast.dismiss(); // Dismiss any existing toasts
-      toast.error("Please login to access this page");
-    } else if (
-      !isCheckingAuth &&
-      allowedRoles &&
-      !allowedRoles.includes(user?.role)
-    ) {
-      toast.dismiss(); // Dismiss any existing toasts
-      toast.error("You do not have permission to access this page");
-    }
-  }, [isCheckingAuth, isAuthenticated, allowedRoles, user]);
+  console.log("ProtectedRoute - isCheckingAuth:", isCheckingAuth);
+  console.log("ProtectedRoute - isAuthenticated:", isAuthenticated);
+  console.log("ProtectedRoute - user:", user);
 
+  // Add this check first
   if (isCheckingAuth) {
-    console.log("Checking authentication...");
-    return <div>Loading...</div>; // or loading spinner
+    return <div>Loading...</div>;
   }
 
+  // Handle authentication
   if (!isAuthenticated) {
-    console.log("User is not authenticated");
+    toast.error("Please login to access this page");
     return <Navigate to="/login" replace />;
   }
 
+  // Handle authorization
   if (allowedRoles && !allowedRoles.includes(user?.role)) {
-    console.log(
-      `User does not have permission to access this page. User role: ${user?.role}`
-    );
     toast.error("You do not have permission to access this page");
     return <Navigate to="/" replace />;
   }
 
-  console.log("User is authenticated and has permission to access this page");
-  return (
-    <>
-      <Outlet />
-      {console.log("Outlet rendered")}
-    </>
-  );
+  // Return outlet for nested routes
+  return <Outlet />;
 };
 
 export default ProtectedRoute;

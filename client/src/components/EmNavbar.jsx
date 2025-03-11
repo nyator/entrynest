@@ -1,5 +1,3 @@
-
-
 import React, { useState } from "react";
 import { Link, NavLink } from "react-router";
 import { useAuthStore } from "../store/authStore";
@@ -12,11 +10,11 @@ import { IoMenu } from "react-icons/io5";
 import { IoClose } from "react-icons/io5";
 
 const navLinks = [
-    { title: "Dashboard", href: "/dashboard", id: 1 },
-    { title: "Manage Jobs", href: "/manage-jobs", id: 2 },
-    { title: "Profile", href: "/profile", id: 3 },
-    //   { title: "Support", href: "/support", id: 4 },
-  ];
+  { title: "Dashboard", href: "/dashboard", id: 1 },
+  { title: "Manage Jobs", href: "/manage-jobs", id: 2 },
+  { title: "Profile", href: "/profile", id: 3 },
+  //   { title: "Support", href: "/support", id: 4 },
+];
 
 const EMNavbar = () => {
   const [open, setOpen] = useState(false);
@@ -30,7 +28,7 @@ const EMNavbar = () => {
       {/* DESKTOP */}
       <div className="md:flex hidden items-center justify-between">
         <Link to="/">
-          <img src={logo} alt="logo" />
+          <img src="/logo.svg" alt="logo" />
         </Link>
 
         <div className="flex flex-row gap-8">
@@ -125,7 +123,6 @@ const EMNavbar = () => {
                       className="items-center justify-start border-b-[1px] border-[#e3e3e3] py-5"
                     >
                       <a href={items.href} className="text-xl">
-
                         <div className="py-3">{items.title}</div>
                       </a>
                     </div>
