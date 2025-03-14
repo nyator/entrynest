@@ -13,7 +13,7 @@ function LoginPage() {
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuthStore();
+  const { isAuthenticated, setAuthenticated } = useAuthStore(); // Add setAuthenticated
   const [loading, setLoading] = useState(false); // Add loading state
 
   useEffect(() => {
@@ -49,7 +49,9 @@ function LoginPage() {
       toast.dismiss(); // Dismiss any existing toasts
       toast.success("Login successful");
 
-      const redirectUrl = response.data.redirectUrl || "/jobs";
+      // isAuthenticated(true); // Set authenticated to true
+
+      const redirectUrl = response.data.redirectUrl || "/dashboard";
       navigate(redirectUrl);
     } catch (error) {
       toast.dismiss(); // Dismiss any existing toasts

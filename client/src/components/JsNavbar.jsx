@@ -11,7 +11,7 @@ const navLinks = [
 ];
 
 const JsNavbar = () => {
-  const { isAuthenticated } = useAuthStore.getState();
+  const { isAuthenticated } = useAuthStore(); // Use hook directly
 
   return (
     <>
@@ -35,7 +35,7 @@ const JsNavbar = () => {
           ))}
         </div>
         <div>
-          <UserAvatar />
+          {isAuthenticated ? <UserAvatar /> : <Link to="/login">Login</Link>}
         </div>
       </div>
 

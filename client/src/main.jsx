@@ -2,7 +2,6 @@ import * as React from "react";
 import * as ReactDOM from "react-dom/client";
 import axios from "axios";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import ProtectedRoute from "./components/ProtectedRoute";
 import { useAuthStore } from "./store/authStore";
 import { ToastContainer, Zoom } from "react-toastify";
 import { AuthProvider } from "./context/AuthContext";
@@ -29,9 +28,7 @@ import EmployerDashboard from "./pages/EmployerDashboard"; // Import EmployerDas
 
 // Set the base URL for Axios
 const API_URL =
-  import.meta.env.MODE === "development"
-    ? "http://localhost:3000/api"
-    : "/api";
+  import.meta.env.MODE === "development" ? "http://localhost:3000/api" : "/api";
 axios.defaults.baseURL = API_URL;
 
 const router = createBrowserRouter([
@@ -43,14 +40,6 @@ const router = createBrowserRouter([
       {
         path: "/",
         element: <LandingPage />,
-      },
-      {
-        path: "/jobs",
-        element: (
-          <ProtectedRoute allowedRoles={["jobseeker"]}>
-            <JobPage />
-          </ProtectedRoute>
-        ),
       },
       {
         path: "/find_talent",
@@ -85,20 +74,16 @@ const router = createBrowserRouter([
         element: <ForgotPasswordPage />,
       },
       {
+        path: "/jobs",
+        element: <JobPage />,
+      },
+      {
         path: "/profile",
-        element: (
-          <ProtectedRoute allowedRoles={["jobseeker", "employer"]}>
-            <ProfilePage />
-          </ProtectedRoute>
-        ),
+        element: <ProfilePage />,
       },
       {
         path: "/dashboard",
-        element: (
-          <ProtectedRoute allowedRoles={["employer"]}>
-            <EmployerDashboard />
-          </ProtectedRoute>
-        ),
+        element: <EmployerDashboard />,
       },
     ],
   },

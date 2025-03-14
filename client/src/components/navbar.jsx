@@ -20,7 +20,7 @@ const navLinks = [
 
 const Navbar = () => {
   const [open, setOpen] = useState(false);
-  const { user } = useAuthStore();
+  const { user } = useAuthStore(); // Use hook directly
 
   const toggleMenu = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -60,6 +60,10 @@ const Navbar = () => {
           })}
         </div>
         <div className="flex gap-2">
+          {user ? (
+            <UserAvatar />
+          ) : (
+            <>
               <Button
                 text="Login"
                 className="text-primaryStroke"
@@ -70,7 +74,8 @@ const Navbar = () => {
                 className="text-white bg-primary"
                 Link="/signup"
               />
-          
+            </>
+          )}
         </div>
       </div>
 
@@ -103,6 +108,10 @@ const Navbar = () => {
 
               <div className="flex flex-col w-11/12 mx-auto">
                 <div className="flex gap-4 justify-end">
+                  {user ? (
+                    <UserAvatar />
+                  ) : (
+                    <>
                       <Button
                         text="Login"
                         className="text-primary"
@@ -115,6 +124,8 @@ const Navbar = () => {
                         Link="/signup"
                         onClick={toggleMenu}
                       />
+                    </>
+                  )}
                 </div>
                 {navLinks.map((items) => {
                   return (

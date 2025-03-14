@@ -13,7 +13,7 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000; // But PORT 5000 is already taken by macos
 app.use(cors({
-  origin: "http://localhost:5173", // Specify the frontend origin
+  origin: ["http://localhost:5173"], // Allow both frontend origins
   credentials: true // Allow credentials to be sent
 }));
 

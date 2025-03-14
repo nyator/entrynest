@@ -6,9 +6,11 @@ const API_URL =
     ? "http://localhost:3000/api/auth"
     : "/api/auth";
 
+
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL =
   import.meta.env.MODE === "development" ? "http://localhost:3000" : "";
+
 
 export const useAuthStore = create((set) => ({
   user: null,
