@@ -5,9 +5,10 @@ import { input, button } from "../constants/styles";
 
 const EmployerDashboard = () => {
   const [jobTitle, setJobTitle] = useState("");
-  const [jobDescription, setJobDescription] = useState("");
+  const [jobStyle, setJobStyle] = useState("");
   const [jobLocation, setJobLocation] = useState("");
   const [jobType, setJobType] = useState("");
+  const [jobDescription, setJobDescription] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,7 +37,7 @@ const EmployerDashboard = () => {
     }
   };
 
-  console.log("EmployerDashboard rendered");
+  // console.log("EmployerDashboard rendered");
 
   return (
     <div className="container mx-auto p-4">
@@ -58,15 +59,52 @@ const EmployerDashboard = () => {
 
             <div className="mb-4">
               <label className="block text-gray-700">Location</label>
-              <input
-                type="text"
+              <select
                 value={jobLocation}
                 onChange={(e) => setJobLocation(e.target.value)}
                 className={`${input}`}
-                placeholder="Location"
                 required
-              />
+              >
+                <option value="">Select Job Location </option>
+                <option value="Greater Accra Region">
+                  Greater Accra Region
+                </option>
+                <option value="Ashanti Region">Ashanti Region </option>
+                <option value="Central Region">Central Region </option>
+                <option value="Eastern Region">Eastern Region </option>
+                <option value="Brong Ahafo Region">Brong Ahafo Region </option>
+                <option value="NorthernRegion">NorthernRegion </option>
+                <option value="Upper East Region">Upper East Region </option>
+                <option value="Upper West Region">Upper West Region </option>
+                <option value="Western North Region">
+                  Western North Region
+                </option>
+                <option value="North East Region">North East Region </option>
+                <option value="Oti Region">Oti Region </option>
+                <option value="Bono East Region">Bono East Region </option>
+                <option value="Ahafo Region">Ahafo Region </option>
+                <option value="Savannah Region">Savannah Region </option>
+                <option value="Volta Region">Volta Region </option>
+                <option value="Western Region">Western Region </option>
+                <option value="Worldwide">Worldwide </option>
+              </select>
             </div>
+
+            <div className="mb-4">
+              <label className="block text-gray-700">Jobs Style</label>
+              <select
+                value={jobStyle}
+                onChange={(e) => setJobStyle(e.target.value)}
+                className={`${input}`}
+                required
+              >
+                <option value="">Select Job Location</option>
+                <option value="Remote">Remote</option>
+                <option value="On-site">On-site</option>
+                <option value="On-site">Hybrid</option>
+              </select>
+            </div>
+
             <div className="mb-4">
               <label className="block text-gray-700">Job Type</label>
               <select
@@ -76,11 +114,11 @@ const EmployerDashboard = () => {
                 required
               >
                 <option value="">Select Job Type</option>
-                <option value="Full-time">Full-time</option>
-                <option value="Part-time">Part-time</option>
-                <option value="Contract">Contract</option>
-                <option value="Temporary">Temporary</option>
                 <option value="Internship">Internship</option>
+                <option value="Internship">Mentorship</option>
+                <option value="Full-time">Full-time</option>
+                <option value="Contract">Contract</option>
+                <option value="Part-time">Part-time</option>
               </select>
             </div>
           </div>
@@ -89,18 +127,20 @@ const EmployerDashboard = () => {
             <div className="mb-4">
               <label className="block text-gray-700">Tags</label>
               <select
-                type="text"
                 value={jobTitle}
                 onChange={(e) => setJobTitle(e.target.value)}
                 className={`${input}`}
                 required
               >
                 <option value="">Select Job Tags</option>
-                <option value="Full-time">Full-time</option>
-                <option value="Part-time">Part-time</option>
-                <option value="Contract">Contract</option>
-                <option value="Temporary">Temporary</option>
-                <option value="Internship">Internship</option>
+                <option value="Sales & Marketing">Sales & Marketing</option>
+                <option value="Aerospace">Aerospace</option>
+                <option value="Agriculture">Agriculture</option>
+                <option value="Development & IT">Development & IT</option>
+                <option value="Hospitality">Hospitality</option>
+                <option value="Finance & Accounting">
+                  Finance & Accounting
+                </option>
               </select>
             </div>
             <div className="mb-4">
