@@ -23,7 +23,7 @@ import SignupPage from "../src/pages/SignupPage";
 import SupportPage from "./pages/SupportPage";
 import SignupJobSeeker from "./pages/SignupJobSeeker";
 import EmailVerificationPage from "./pages/EmailVerificationPage";
-import JobPage from "./pages/JobPage";
+import JobPage from "./pages/JobPage"; // Import JobPage
 import ProfilePage from "./pages/ProfilePage"; // Import ProfilePage
 import EmployerDashboard from "./pages/EmployerDashboard"; // Import EmployerDashboard
 

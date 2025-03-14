@@ -75,7 +75,7 @@ const ProfilePage = () => {
     formData.append("skills", profileData.skills);
 
     try {
-      const response = await axios.put("/api/user/profile", formData, {
+      const response = await axios.put("/api/profile", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -98,9 +98,11 @@ const ProfilePage = () => {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Edit Profile</h1>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit}> 
         {user.role === "jobseeker" && (
           <>
+
+          
             <div className="mb-4">
               <label className="block text-gray-700">First Name</label>
               <input
@@ -140,6 +142,7 @@ const ProfilePage = () => {
           </>
         )}
         {user.role === "employer" && (
+          
           <div className="mb-4">
             <label className="block text-gray-700">Company Name</label>
             <input
@@ -148,7 +151,7 @@ const ProfilePage = () => {
               value={profileData.companyName}
               onChange={handleChange}
               className="mt-1 p-2 border border-gray-300 rounded w-full"
-            />
+              />
           </div>
         )}
         <div className="mb-4">
@@ -160,7 +163,7 @@ const ProfilePage = () => {
             onChange={handleChange}
             className="mt-1 p-2 border border-gray-300 rounded w-full text-black/40"
             disabled
-          />
+            />
         </div>
         <div className="mb-4">
           <label className="block text-gray-700">Avatar</label>
@@ -170,12 +173,12 @@ const ProfilePage = () => {
             accept="image/*"
             onChange={handleAvatarChange}
             className="mt-1 p-2 border border-gray-300 rounded w-full"
-          />
+            />
           {avatarPreview && (
             <img
-              src={avatarPreview}
-              alt="Avatar Preview"
-              className="mt-2 w-32 h-32 rounded-full"
+            src={avatarPreview}
+            alt="Avatar Preview"
+            className="mt-2 w-32 h-32 rounded-full"
             />
           )}
         </div>
@@ -186,7 +189,7 @@ const ProfilePage = () => {
             value={profileData.biography}
             onChange={handleChange}
             className="mt-1 p-2 border border-gray-300 rounded w-full"
-          />
+            />
         </div>
         <div className="mb-4">
           <label className="block text-gray-700">Location</label>
@@ -196,7 +199,7 @@ const ProfilePage = () => {
             value={profileData.location}
             onChange={handleChange}
             className="mt-1 p-2 border border-gray-300 rounded w-full"
-          />
+            />
         </div>
         <div className="mb-4">
           <label className="block text-gray-700">Telephone Number</label>
@@ -206,12 +209,12 @@ const ProfilePage = () => {
             value={profileData.telNumber}
             onChange={handleChange}
             className="mt-1 p-2 border border-gray-300 rounded w-full"
-          />
+            />
         </div>
         <button
           type="submit"
           className="bg-blue-500 text-white p-2 rounded hover:bg-blue-700"
-        >
+          >
           Save Profile
         </button>
       </form>

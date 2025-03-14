@@ -1,34 +1,36 @@
-import React from "react";
-import { Navigate, Outlet } from "react-router-dom";
-import { useAuthStore } from "../store/authStore";
-import { toast } from "react-toastify";
+// import React from "react";
+// import { Navigate, Outlet } from "react-router-dom";
+// import { useAuthStore } from "../store/authStore";
+// import { toast } from "react-toastify";
 
-const ProtectedRoute = ({ allowedRoles }) => {
-  const { isAuthenticated, user, isCheckingAuth } = useAuthStore();
+// const ProtectedRoute = ({ allowedRoles }) => {
+//   const { isAuthenticated, user, isCheckingAuth } = useAuthStore();
 
-  console.log("ProtectedRoute - isCheckingAuth:", isCheckingAuth);
-  console.log("ProtectedRoute - isAuthenticated:", isAuthenticated);
-  console.log("ProtectedRoute - user:", user);
+//   if (isCheckingAuth) {
+//     return <div>Loading...</div>;
+//   }
 
-  // Add this check first
-  if (isCheckingAuth) {
-    return <div>Loading...</div>;
-  }
+//   if (!isAuthenticated) {
+//     toast.error("Please login to access this page");
+//     return <Navigate to="/login" replace />;
+//   }
 
-  // Handle authentication
-  if (!isAuthenticated) {
-    toast.error("Please login to access this page");
-    return <Navigate to="/login" replace />;
-  }
+//   if (allowedRoles && !allowedRoles.includes(user?.role)) {
+//     toast.error("You do not have permission to access this page");
+//     return <Navigate to="/" replace />;
+//   }
 
-  // Handle authorization
-  if (allowedRoles && !allowedRoles.includes(user?.role)) {
-    toast.error("You do not have permission to access this page");
-    return <Navigate to="/" replace />;
-  }
+//   return <Outlet />;
+// };
 
-  // Return outlet for nested routes
-  return <Outlet />;
-};
+// export default ProtectedRoute;
 
-export default ProtectedRoute;
+import React from 'react'
+import { Navigate, Outlet } from 'react-router'
+
+const ProtectedRoute = () => {
+  const user = null
+  return user ? Outlet : Navigate('/login')
+}
+
+export default ProtectedRoute

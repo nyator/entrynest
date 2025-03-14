@@ -3,6 +3,8 @@ import { Job } from "../models/job.model.js";
 export const createJob = async (req, res) => {
   const { title, description, location, type } = req.body;
 
+  console.log("createJob - Request body:", req.body);
+
   try {
     const job = new Job({
       title,
@@ -13,6 +15,8 @@ export const createJob = async (req, res) => {
     });
 
     await job.save();
+
+    console.log("Job posted successfully:", job);
 
     res.status(201).json({
       success: true,

@@ -10,6 +10,7 @@ const EmployerDashboard = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("Submitting job:", { jobTitle, jobDescription, jobLocation, jobType });
     try {
       const response = await axios.post("/api/jobs", {
         title: jobTitle,
@@ -22,11 +23,14 @@ const EmployerDashboard = () => {
       setJobDescription("");
       setJobLocation("");
       setJobType("");
+      console.log("Job posted successfully:", response.data.job);
     } catch (error) {
       console.error("Error posting job:", error);
       toast.error("Failed to post job.");
     }
   };
+
+  console.log("EmployerDashboard rendered");
 
   return (
     <div className="container mx-auto p-4">
