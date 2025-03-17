@@ -25,6 +25,7 @@ import EmailVerificationPage from "./pages/EmailVerificationPage";
 import JobPage from "./pages/JobPage"; // Import JobPage
 import ProfilePage from "./pages/ProfilePage"; // Import ProfilePage
 import EmployerDashboard from "./pages/EmployerDashboard"; // Import EmployerDashboard
+import PostJob from "./pages/PostJob";
 
 // Set the base URL for Axios
 const API_URL =
@@ -72,6 +73,10 @@ const router = createBrowserRouter([
       {
         path: "/forgot-password",
         element: <ForgotPasswordPage />,
+      },
+      {
+        path: "/create-job",
+        element: <PostJob />,
       },
       {
         path: "/jobs",

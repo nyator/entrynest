@@ -10,8 +10,8 @@ import { IoMenu } from "react-icons/io5";
 import { IoClose } from "react-icons/io5";
 
 const navLinks = [
-  { title: "Dashboard", href: "/dashboard", id: 1 },
-  { title: "Manage Jobs", href: "/manage-jobs", id: 2 },
+  { title: "Manage Jobs", href: "/dashboard", id: 1 },
+  { title: "View Applicants", href: "/applicants", id: 2 },
   { title: "Profile", href: "/profile", id: 3 },
   //   { title: "Support", href: "/support", id: 4 },
 ];
