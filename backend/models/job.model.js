@@ -14,11 +14,11 @@ const jobSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    tag: {
+    type: {
       type: String,
       required: true,
     },
-    type: {
+    tag: {
       type: String,
       required: true,
     },
