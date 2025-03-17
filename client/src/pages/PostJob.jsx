@@ -11,7 +11,7 @@ const PostJob = () => {
   const [jobStyle, setJobStyle] = useState("");
   const [jobLocation, setJobLocation] = useState("");
   const [jobType, setJobType] = useState("");
-  const [jobTags, setJobTags] = useState("");
+  const [jobTag, setJobTag] = useState("");
   const [jobDescription, setJobDescription] = useState("");
   const navigate = useNavigate(); // Initialize useNavigate
 
@@ -22,7 +22,7 @@ const PostJob = () => {
       jobDescription,
       jobLocation,
       jobType,
-      jobTags,
+      jobTag,
     });
     try {
       const response = await axios.post("/api/jobs", {
@@ -30,14 +30,14 @@ const PostJob = () => {
         description: jobDescription,
         location: jobLocation,
         type: jobType,
-        tags: jobTags.join(", "),
+        Tag: jobTag,
       });
       toast.success("Job posted successfully!");
       setJobTitle("");
       setJobDescription("");
       setJobLocation("");
       setJobType("");
-      setJobTags("");
+      setJobTag("");
       console.log("Job posted successfully:", response.data.job);
     } catch (error) {
       console.error("Error posting job:", error);
@@ -50,7 +50,7 @@ const PostJob = () => {
     setJobStyle("");
     setJobLocation("");
     setJobType("");
-    setJobTags("");
+    setJobTag("");
     setJobDescription("");
   };
 
@@ -146,13 +146,15 @@ const PostJob = () => {
 
           <div className="w-full">
             <div className="mb-4">
-              <label className="block text-gray-700">Tags</label>
+              <label className="block text-gray-700">Tag</label>
               <select
-                value={jobTags}
-                onChange={(e) => setJobTags(e.target.value)}
+                value={jobTag}
+                onChange={(e) => setJobTag(e.target.value)}
                 className={`${input}`}
                 required
+
               >
+                <option value="">Select a Tag</option>
                 <option value="Sales & Marketing">Sales & Marketing</option>
                 <option value="Aerospace">Aerospace</option>
                 <option value="Agriculture">Agriculture</option>

@@ -23,7 +23,7 @@ app.use("/uploads", express.static("uploads")); // Serve uploaded files statical
 
 app.use("/api/auth", authRoutes); // allows  to parse incoming requests from user
 app.use("/api/user", userRoutes); // Add user routes
-app.use("/api/jobs", jobRoutes); // Add job routes
+app.use("/api/jobs", jobRoutes); // Add job routes with /api/jobs prefix
 
 app.listen(PORT, () => {
   connectDB();

@@ -10,6 +10,7 @@ export const createJob = async (req, res) => {
       title,
       description,
       location,
+      tag,
       type,
       postedBy: req.userId,
     });
