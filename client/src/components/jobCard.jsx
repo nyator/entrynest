@@ -7,7 +7,18 @@ import { HiLocationMarker } from "react-icons/hi";
 import { PiBuildingOfficeFill } from "react-icons/pi";
 import { RiCoinsFill } from "react-icons/ri";
 
-const JobCard = ({}) => {
+const JobCard = ({
+  type,
+  timePosted,
+  postedBy,
+  avatar,
+  location,
+  style,
+  salary,
+  position,
+  tag,
+  onClick,
+}) => {
   return (
     <div
       className={`${cardBStyle} w-fit h-fit p-10 rounded-[35px] font-SatoshiRegular space-y-4`}
@@ -48,8 +59,12 @@ const JobCard = ({}) => {
         </div>
       </div>
       <div className="text-center weight-400 space-y-4">
-        <h1>posted by entrynest 3rd party</h1>
-        <button className={`${cardButton} rounded-full`}>View Details</button>
+        <h1>
+          posted by <span>entrynest 3rd party</span>
+        </h1>
+        <button className={`${cardButton} rounded-full`} onClick={onClick}>
+          View Details
+        </button>
       </div>
     </div>
   );
