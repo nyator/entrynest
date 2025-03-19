@@ -1,9 +1,10 @@
 import { Job } from "../models/job.model.js";
 
 export const createJob = async (req, res) => {
-  const { title, description, location, type } = req.body;
+  const { title, description, location, tag, type } = req.body;
 
   console.log("createJob - Request body:", req.body);
+  console.log("createJob - User ID:", req.userId);
 
   try {
     const job = new Job({
@@ -26,6 +27,7 @@ export const createJob = async (req, res) => {
     });
   } catch (error) {
     console.error("Error posting job:", error);
+    console.error("Error details:", error);
     res.status(500).json({
       success: false,
       message: "Failed to post job",

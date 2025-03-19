@@ -17,28 +17,25 @@ const PostJob = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("Submitting job:", {
-      jobTitle,
-      jobDescription,
-      jobLocation,
-      jobType,
-      jobTag,
-    });
     try {
-      const response = await axios.post("/api/jobs", {
+      const response = await axios.post('http://localhost:3000/api/jobs', {
         title: jobTitle,
         description: jobDescription,
         location: jobLocation,
         type: jobType,
-        Tag: jobTag,
+        tag: jobTag,
+      }, {
+        withCredentials: true // Ensure cookies are sent with the request
       });
       toast.success("Job posted successfully!");
       setJobTitle("");
       setJobDescription("");
       setJobLocation("");
       setJobType("");
+      setJobStyle("");
       setJobTag("");
       console.log("Job posted successfully:", response.data.job);
+      navigate("/dashboard")
     } catch (error) {
       console.error("Error posting job:", error);
       toast.error("Failed to post job.");
@@ -53,7 +50,6 @@ const PostJob = () => {
     setJobTag("");
     setJobDescription("");
   };
-
 
   return (
     <div className="container mx-auto p-4">
@@ -166,7 +162,7 @@ const PostJob = () => {
               </select>
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700">Job Description</label>
+              <label className="block text-gray-700">Job Description / Requirement</label>
               <textarea
                 value={jobDescription}
                 onChange={(e) => setJobDescription(e.target.value)}
@@ -194,3 +190,5 @@ const PostJob = () => {
 };
 
 export default PostJob;
+
+
