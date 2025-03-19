@@ -1,7 +1,4 @@
-import { useEffect, useState } from 'react';
 import axios from 'axios';
-
-import jobCard from "../components/jobCard.jsx";
 
 const JobSeekerDashboard = () => {
   const [jobs, setJobs] = useState([]);
@@ -32,7 +29,6 @@ const JobSeekerDashboard = () => {
       <div className="grid grid-cols-1 gap-4">
         {jobs.map((job) => (
           <div key={job._id} className="p-4 border rounded shadow">
-
             <h2 className="text-xl font-bold">{job.title}</h2>
 
             <button
