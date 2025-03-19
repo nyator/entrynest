@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuthStore } from "../store/authStore";
 
-const JobPage = () => {
+const JsDashboard = () => {
   const { user } = useAuthStore();
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -48,4 +48,4 @@ const JobPage = () => {
   );
 };
 
-export default JobPage;
+export default JsDashboard;

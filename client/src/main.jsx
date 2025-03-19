@@ -22,11 +22,10 @@ import SignupPage from "../src/pages/SignupPage";
 import SupportPage from "./pages/SupportPage";
 import SignupJobSeeker from "./pages/SignupJobSeeker";
 import EmailVerificationPage from "./pages/EmailVerificationPage";
-import JobPage from "./pages/JobPage"; // Import JobPage
+import JsDashboard from "./pages/JsDashboard.jsx"; // Import JsDashboard
 import ProfilePage from "./pages/ProfilePage"; // Import ProfilePage
-import EmployerDashboard from "./pages/EmployerDashboard"; // Import EmployerDashboard
+import EmDashboard from "./pages/EmDashboard.jsx"; // Import EmDashboard
 import PostJob from "./pages/PostJob";
-import JobSeekerDashboard from "./pages/JobSeekerDashboard"; // Import JobSeekerDashboard
 
 // Set the base URL for Axios
 const API_URL =
@@ -81,7 +80,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/jobs",
-        element: <JobPage />,
+        element: <JsDashboard />,
       },
       {
         path: "/profile",
@@ -89,11 +88,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/em-dashboard",
-        element: <EmployerDashboard />,
-      },
-      {
-        path: "/js-dashboard",
-        element: <JobSeekerDashboard />,
+        element: <EmDashboard />,
       },
     ],
   },

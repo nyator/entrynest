@@ -7,7 +7,7 @@ import { Link } from "react-router";
 
 
 
-const EmployerDashboard = () => {
+const EmDashboard = () => {
 
   return (
     <div className="container mx-auto p-4">
@@ -17,5 +17,5 @@ const EmployerDashboard = () => {
   );
 };
 
-export default EmployerDashboard;
+export default EmDashboard;
 
