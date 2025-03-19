@@ -23,6 +23,7 @@ import SupportPage from "./pages/SupportPage";
 import SignupJobSeeker from "./pages/SignupJobSeeker";
 import EmailVerificationPage from "./pages/EmailVerificationPage";
 import JsDashboard from "./pages/JsDashboard.jsx"; // Import JsDashboard
+import JobDetails from "./pages/JobDetails.jsx"; // Import JobDetails
 import ProfilePage from "./pages/ProfilePage"; // Import ProfilePage
 import EmDashboard from "./pages/EmDashboard.jsx"; // Import EmDashboard
 import PostJob from "./pages/PostJob";
@@ -81,6 +82,10 @@ const router = createBrowserRouter([
       {
         path: "/jobs",
         element: <JsDashboard />,
+      },
+      {
+        path: "/jobs/:jobId",
+        element: <JobDetails />,
       },
       {
         path: "/profile",
