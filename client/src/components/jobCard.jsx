@@ -26,9 +26,9 @@ const JobCard = ({
     >
       <div className="space-y-4 rounded-[25px] bg-red-200 p-4 ">
         <div className="flex justify-between items-center">
-          <div className={`${cardBStyle}`}>{type || "Internship"}</div>
-          <div className={`${cardBStyle}`}>
-            {timePosted || "Posted one month ago"}
+          <div className={`${cardBStyle} rounded-full`}>{type || "Internship"}</div>
+          <div className={`${cardBStyle} rounded-full`}>
+            {new Date(timePosted).toLocaleDateString() || "Posted one month ago"}
           </div>
         </div>
         <div className="flex justify-between items-center">
@@ -78,3 +78,4 @@ const JobCard = ({
 };
 
 export default JobCard;
+
