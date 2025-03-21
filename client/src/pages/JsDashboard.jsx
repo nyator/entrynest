@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
@@ -39,6 +39,7 @@ const JsDashboard = () => {
             company={job.company}
             location={job.location}
             type={job.type}
+            description={job.description}
             timePosted={job.updatedAt || job.createdAt} // Pass the createdAt field
             onViewDetails={() => handleViewDetails(job._id)}
           />
