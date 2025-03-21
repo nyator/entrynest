@@ -36,9 +36,11 @@ const JsDashboard = () => {
             key={job._id}
             id={job._id}
             position={job.title}
-            company={job.company}
+            company={`${job.postedBy.firstname} ${job.postedBy.lastname}`} // Pass the name of the person who posted the job
+            avatar={job.postedBy.avatar} // Pass the avatar of the person who posted the job
             location={job.location}
             type={job.type}
+            tag={job.tag}
             description={job.description}
             timePosted={job.updatedAt || job.createdAt} // Pass the createdAt field
             onViewDetails={() => handleViewDetails(job._id)}

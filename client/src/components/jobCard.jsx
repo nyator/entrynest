@@ -18,13 +18,11 @@ const JobCard = ({
   salary,
   position,
   tag,
-                   onViewDetails,
-    id,
+  onViewDetails,
 }) => {
   return (
     <div
       className={`${cardBStyle} w-fit h-fit p-10 rounded-[35px] font-SatoshiRegular space-y-4`}
-      id={id}
     >
       <div className="space-y-4 rounded-[25px] bg-red-200 p-4 ">
         <div className="flex justify-between items-center">
@@ -77,23 +75,6 @@ const JobCard = ({
       </div>
     </div>
   );
-};
-
-import PropTypes from "prop-types";
-
-JobCard.propTypes = {
-  type: PropTypes.string,
-  timePosted: PropTypes.string,
-  company: PropTypes.string,
-  postedBy: PropTypes.string,
-  avatar: PropTypes.string,
-  location: PropTypes.string,
-  style: PropTypes.string,
-  salary: PropTypes.string,
-  position: PropTypes.string,
-  tag: PropTypes.string,
-  onViewDetails: PropTypes.func.isRequired,
-  id: PropTypes.string,
 };
 
 export default JobCard;

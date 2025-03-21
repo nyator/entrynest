@@ -21,6 +21,14 @@ const jobSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  style: {
+    type: String,
+    required: true,
+  },
+  salary: {
+    type: String,
+    required: true,
+  },
   postedBy: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
