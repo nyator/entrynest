@@ -1,4 +1,5 @@
 import React from "react";
+import { formatDistanceToNow } from "date-fns"; 
 
 import { fr } from "../constants/assests";
 import { cardButton, cardBStyle, cardTag } from "../constants/styles";
@@ -28,7 +29,7 @@ const JobCard = ({
         <div className="flex justify-between items-center">
           <div className={`${cardBStyle} rounded-full`}>{type || "Internship"}</div>
           <div className={`${cardBStyle} rounded-full`}>
-            {new Date(timePosted).toLocaleDateString() || "Posted one month ago"}
+            {formatDistanceToNow(new Date(timePosted), { addSuffix: true }) || "Posted one month ago"}
           </div>
         </div>
         <div className="flex justify-between items-center">
