@@ -8,25 +8,36 @@ import { IoMdArrowRoundBack } from "react-icons/io";
 
 const PostJob = () => {
   const [jobTitle, setJobTitle] = useState("");
-  const [jobStyle, setJobStyle] = useState("");
   const [jobLocation, setJobLocation] = useState("");
-  const [jobType, setJobType] = useState("");
   const [jobTag, setJobTag] = useState("");
+  const [jobType, setJobType] = useState("");
+  const [jobStyle, setJobStyle] = useState("");
   const [jobDescription, setJobDescription] = useState("");
+  const [salaryRange, setSalaryRange] = useState("");
   const navigate = useNavigate(); // Initialize useNavigate
+
+  const handleSalaryRangeChange = (e) => {
+    setSalaryRange(e.target.value);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/api/jobs', {
-        title: jobTitle,
-        description: jobDescription,
-        location: jobLocation,
-        type: jobType,
-        tag: jobTag,
-      }, {
-        withCredentials: true // Ensure cookies are sent with the request
-      });
+      const response = await axios.post(
+        "http://localhost:3000/api/jobs",
+        {
+          title: jobTitle,
+          description: jobDescription,
+          location: jobLocation,
+          type: jobType,
+          tag: jobTag,
+          style: jobStyle,
+          salaryRange: salaryRange,
+        },
+        {
+          withCredentials: true, // Ensure cookies are sent with the request
+        }
+      );
       toast.success("Job posted successfully!");
       setJobTitle("");
       setJobDescription("");
@@ -34,8 +45,9 @@ const PostJob = () => {
       setJobType("");
       setJobStyle("");
       setJobTag("");
+      setSalaryRange("");
       console.log("Job posted successfully:", response.data.job);
-      navigate("/dashboard")
+      navigate("/dashboard");
     } catch (error) {
       console.error("Error posting job:", error);
       toast.error("Failed to post job.");
@@ -49,6 +61,7 @@ const PostJob = () => {
     setJobType("");
     setJobTag("");
     setJobDescription("");
+    setSalaryRange("");
   };
 
   return (
@@ -90,7 +103,7 @@ const PostJob = () => {
                 <option value="Central Region">Central Region </option>
                 <option value="Eastern Region">Eastern Region </option>
                 <option value="Brong Ahafo Region">Brong Ahafo Region </option>
-                <option value="NorthernRegion">NorthernRegion </option>
+                <option value="NorthernRegion">Northern Region </option>
                 <option value="Upper East Region">Upper East Region </option>
                 <option value="Upper West Region">Upper West Region </option>
                 <option value="Western North Region">
@@ -135,7 +148,6 @@ const PostJob = () => {
                 <option value="Mentorship">Mentorship</option>
                 <option value="Full-time">Full-time</option>
                 <option value="Contract">Contract</option>
-                <option value="Part-time">Part-time</option>
               </select>
             </div>
           </div>
@@ -148,7 +160,6 @@ const PostJob = () => {
                 onChange={(e) => setJobTag(e.target.value)}
                 className={`${input}`}
                 required
-
               >
                 <option value="">Select a Tag</option>
                 <option value="Sales & Marketing">Sales & Marketing</option>
@@ -162,13 +173,31 @@ const PostJob = () => {
               </select>
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700">Job Description / Requirement</label>
+              <label className="block text-gray-700">
+                Job Description / Requirement
+              </label>
               <textarea
                 value={jobDescription}
                 onChange={(e) => setJobDescription(e.target.value)}
                 className={`${input}`}
                 required
               />
+            </div>
+            <div className="mb-4">
+              <label className="block text-gray-700">Salary Range</label>
+              <select
+                id="salaryRange"
+                value={salaryRange}
+                onChange={handleSalaryRangeChange}
+                className={`${input}`}
+                required
+              >
+                <option value="">Select Salary Range</option>
+                <option value="0-1k">₵0 - ₵1k</option>
+                <option value="1k-3k">₵1k - ₵3k</option>
+                <option value="3k-5k">₵3k - ₵5k</option>
+                <option value="confidential">Confidential</option>
+              </select>
             </div>
           </div>
         </div>
@@ -190,5 +219,3 @@ const PostJob = () => {
 };
 
 export default PostJob;
-
-

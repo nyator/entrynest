@@ -16,20 +16,24 @@ const JobCard = ({
   avatar,
   location,
   style,
-  salary,
   position,
   tag,
   onViewDetails,
+  salaryRange,
 }) => {
+  const isValidDate = (date) => {
+    return !isNaN(Date.parse(date));
+  };
+
   return (
     <div
-      className={`${cardBStyle} w-fit h-fit p-10 rounded-[35px] font-SatoshiRegular space-y-4`}
+      className={`${cardBStyle}  w-4/5 h-fit p-10 rounded-[35px] font-SatoshiRegular space-y-4`}
     >
-      <div className="space-y-4 rounded-[25px] bg-red-200 p-4 ">
+      <div className="space-y-4 rounded-[25px] bg-primary/20 p-4 ">
         <div className="flex justify-between items-center">
-          <div className={`${cardBStyle} rounded-full`}>{type || "Internship"}</div>
+          <div className={`${cardBStyle} rounded-full`}>{type || "NaN"}</div>
           <div className={`${cardBStyle} rounded-full`}>
-            {formatDistanceToNow(new Date(timePosted), { addSuffix: true }) || "Posted one month ago"}
+            {isValidDate(timePosted) ? ["posted ", formatDistanceToNow(new Date(timePosted), { addSuffix: true })] : "NaN"}
           </div>
         </div>
         <div className="flex justify-between items-center">
@@ -42,33 +46,33 @@ const JobCard = ({
             className="rounded-full w-[43px] h-[43px] ring-2 ring-black/20 "
           />
         </div>
-        <div className="flex justify-between gap-4 items-center">
-          <p className="flex items-center gap-1 text-black/40">
+        <div className="flex justify-between gap-4 items-center text-clampSm">
+          <p className="flex items-center gap-1 text-black/40 text-nowrap">
             <HiLocationMarker />
-            {location || "Greater Accra Region"}
+            {location || "NaN"}
           </p>
-          <p className="flex items-center gap-1 text-black/40">
+          <p className="flex items-center gap-1 text-black/40 text-nowrap">
             <PiBuildingOfficeFill />
-            {style || "On-site"}
+            {style || "NaN"}
           </p>
-          <p className="flex items-center gap-1 text-black/40">
+          <p className="flex items-center gap-1 text-black/40 text-nowrap">
             <RiCoinsFill />
-            {salary || "confidential"}
+            {salaryRange || "NaN"}
           </p>
         </div>
         <div>
           <h1 className="font-SatoshiMedium text-lg">
-            {position || "Position"}
+            {position || "NaN"}
           </h1>
         </div>
         <div className="w-full bg-black/40 h-[1.5px]"></div>
         <div>
-          <p className={`${cardTag}`}>{tag || "Sales & Marketing"}</p>
+          <p className={`${cardTag}`}>{tag || "NaN"}</p>
         </div>
       </div>
       <div className="text-center weight-400 space-y-4">
         <h1>
-          posted by <span>{postedBy || "entrynest 3rd party"}</span>
+          posted by <span>{postedBy || "NaN"}</span>
         </h1>
         <button className={`${cardButton} rounded-full`} onClick={onViewDetails}>
           View Details

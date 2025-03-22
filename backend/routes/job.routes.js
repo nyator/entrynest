@@ -1,12 +1,11 @@
 import express from "express";
-import { verifyToken } from "../middleware/verifyToken.js";
 import { createJob, getJobs, getJobById } from "../controllers/job.controller.js";
+import { verifyToken } from "../middleware/verifyToken.js"; // Import authentication middleware
 
 const router = express.Router();
 
-// Define routes without an extra /api prefix
-router.post("/", verifyToken, createJob);
+router.post("/", verifyToken, createJob); // Protect the route
 router.get("/", getJobs);
-router.get("/:id", getJobById); // Add this line to get a job by its ID
+router.get("/:id", getJobById);
 
 export default router;

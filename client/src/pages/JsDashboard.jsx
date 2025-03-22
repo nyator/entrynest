@@ -24,25 +24,28 @@ const JsDashboard = () => {
   }, []);
 
   const handleViewDetails = (jobId) => {
-    navigate(`/jobs/${jobId}`);
+    navigate(`/jobs/${jobId}`); // Ensure the URL matches the route for job details
   };
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Job Seeker Dashboard</h1>
-      <div className="grid grid-cols-3 justify-between">
+      <div className="grid grid-cols-3 justify-between space-y-4">
         {jobs.map((job) => (
           <JobCard
             key={job._id}
             id={job._id}
             position={job.title}
-            company={`${job.postedBy.firstname} ${job.postedBy.lastname}`} // Pass the name of the person who posted the job
+            company={`${job.postedBy.firstname} ${job.postedBy.lastname}` || "NaN"} // Pass the name of the person who posted the job
             avatar={job.postedBy.avatar} // Pass the avatar of the person who posted the job
             location={job.location}
-            type={job.type}
             tag={job.tag}
+            type={job.type}
+            style={job.style}
             description={job.description}
             timePosted={job.updatedAt || job.createdAt} // Pass the createdAt field
+            postedBy={`${job.postedBy.firstname} ${job.postedBy.lastname}` } // Pass the first & last name of the person who posted the job
+            salaryRange={job.salaryRange}
             onViewDetails={() => handleViewDetails(job._id)}
           />
         ))}

@@ -1,18 +1,20 @@
 import { Job } from "../models/job.model.js";
 
 export const createJob = async (req, res) => {
-  const { title, description, location, tag, type } = req.body;
+  const { salaryRange, title, description, location, tag, type, style } = req.body;
 
   console.log("createJob - Request body:", req.body);
   console.log("createJob - User ID:", req.userId);
 
   try {
     const job = new Job({
+      salaryRange,
       title,
       description,
       location,
       tag,
       type,
+      style,
       postedBy: req.userId,
     });
 
@@ -27,7 +29,7 @@ export const createJob = async (req, res) => {
     });
   } catch (error) {
     console.error("Error posting job:", error);
-    console.error("Error details:", error);
+    console.error("Error details:", error.message); // Log the error message
     res.status(500).json({
       success: false,
       message: "Failed to post job",
@@ -45,6 +47,7 @@ export const getJobs = async (req, res) => {
     });
   } catch (error) {
     console.error("Error fetching jobs:", error);
+    console.error("Error details:", error);
     res.status(500).json({
       success: false,
       message: "Failed to fetch jobs",
@@ -62,6 +65,7 @@ export const getJobById = async (req, res) => {
     res.status(200).json({ success: true, job });
   } catch (error) {
     console.error("Error fetching job:", error);
+    console.error("Error details:", error);
     res.status(500).json({
       success: false,
       message: "Failed to fetch job",
