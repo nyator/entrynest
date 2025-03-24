@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { cardBStyle, cardHover, cardButton } from "../constants/styles";
+import { cardButton } from "../constants/styles";
+
 import { fr } from "../constants/assests";
+import LoadingScreen from "../components/LoadingScreen"; // Import LoadingScreen component
 import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const ViewEmployersPage = () => {
   const [employers, setEmployers] = useState([]);
+  const [loading, setLoading] = useState(true); // Add loading state
   const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
@@ -16,13 +19,21 @@ const ViewEmployersPage = () => {
           (job) => `${job.postedBy.firstname} ${job.postedBy.lastname}`
         );
         setEmployers([...new Set(employerNames)]); // Remove duplicates
+        setLoading(false); // Set loading to false after fetching employers
       })
-      .catch((error) => console.error("Error fetching employers:", error));
+      .catch((error) => {
+        console.error("Error fetching employers:", error);
+        setLoading(false); // Set loading to false in case of error
+      });
   }, []);
 
   const handleEmployerClick = (employer) => {
     navigate(`/jobs?employer=${encodeURIComponent(employer)}`);
   };
+
+  if (loading) {
+    return <LoadingScreen />; // Display loading screen while fetching jobs
+  }
 
   return (
     <div className="container mx-auto p-4">
