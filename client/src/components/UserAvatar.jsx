@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import { toast } from "react-toastify";
@@ -8,8 +8,8 @@ import { hover } from "../constants/styles";
 const UserAvatar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, logout } = useAuthStore();
-
   const navigate = useNavigate();
+  const dropdownRef = useRef(null);
 
   const handleLogout = async () => {
     try {
@@ -26,8 +26,25 @@ const UserAvatar = () => {
 
   const toggleDropdown = () => setIsOpen(!isOpen);
 
+  const handleClickOutside = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isOpen]);
+
   return (
-    <div className="relative">
+    <div className="relative" ref={dropdownRef}>
       <button
         onClick={toggleDropdown}
         className="flex items-center gap-2 focus:outline-none"
@@ -43,7 +60,7 @@ const UserAvatar = () => {
         <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
           <div className="">
             <button
-              onClick={handleLogout}
+              onClick={() => navigate("/profile")}
               className="block rounded-t-md w-full px-4 py-4 text-sm text-gray-700 hover:bg-primary/20 transform-all ease-in-out duration-300 border-b border-gray/40"
             >
               Profile
