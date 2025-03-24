@@ -27,6 +27,7 @@ import JobDetails from "./pages/JobDetails.jsx"; // Import JobDetails
 import ProfilePage from "./pages/ProfilePage"; // Import ProfilePage
 import EmDashboard from "./pages/EmDashboard.jsx"; // Import EmDashboard
 import PostJob from "./pages/PostJob";
+import ViewEmployersPage from "./pages/ViewEmployersPage.jsx";
 
 // Set the base URL for Axios
 const API_URL =
@@ -78,6 +79,10 @@ const router = createBrowserRouter([
       {
         path: "/create-job",
         element: <PostJob />,
+      },
+      {
+        path: "/view-employers",
+        element: <ViewEmployersPage />,
       },
       {
         path: "/jobs",
