@@ -4,7 +4,7 @@ import { useAuthStore } from "../store/authStore";
 import UserAvatar from "./UserAvatar";
 
 const navLinks = [
-  { title: "Browse Jobs", href: "/jobs", id: 1 },
+  { title: "Browse All Jobs", href: "/jobs", id: 1 },
   { title: "View Employers", href: "/view-employers", id: 2 },
   { title: "Resources", href: "/resources", id: 3 },
   //   { title: "Support", href: "/support", id: 4 },

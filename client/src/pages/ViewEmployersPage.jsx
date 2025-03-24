@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { cardBStyle } from "../constants/styles";
+import { cardBStyle, cardHover, cardButton } from "../constants/styles";
 import { fr } from "../constants/assests";
+import { useNavigate } from "react-router-dom"; // Import useNavigate
 
 const ViewEmployersPage = () => {
   const [employers, setEmployers] = useState([]);
+  const navigate = useNavigate(); // Initialize useNavigate
 
   useEffect(() => {
     // Fetch employers who have posted jobs
@@ -18,26 +20,48 @@ const ViewEmployersPage = () => {
       .catch((error) => console.error("Error fetching employers:", error));
   }, []);
 
+  const handleEmployerClick = (employer) => {
+    navigate(`/jobs?employer=${encodeURIComponent(employer)}`);
+  };
+
   return (
-    <div>
-      <h1>Employers Who Have Posted Jobs</h1>
-      <ul>
-        {employers.map((employer, index) => (
-          <div
-            key={index}
-            className={`${cardBStyle}bg-primary/20 p-4 mb-4 w-1/3 rounded-xl`}
-          >
-            <div className="flex justify-between items-center">
-              <li>{employer}</li>
-              <img
-                src={fr}
-                alt="avatar"
-                className="rounded-full w-[43px] h-[43px] ring-2 ring-black/20 "
-              />
+    <div className="container mx-auto p-4">
+      <div>
+        <h1 className="text-2xl font-bold mb-4">
+          Employers Who Have Posted Jobs
+        </h1>
+        <ul>
+          {employers.map((employer, index) => (
+            <div
+              key={index}
+              className={`shadow-lg p-4 mb-4 w-1/4 rounded-xl space-y-4 hover:ring-[1.5px] ring-primary/10`}
+            >
+              <div className="flex space-x-5 justify-center items-center ">
+                <img
+                  src={fr}
+                  alt="avatar"
+                  className="rounded-full w-[63px] h-[63px] ring-1 ring-black/20"
+                />
+
+                <div>
+                  <p className="uppercase font-bold ">{employer}</p>
+                  <p className="font-SatoshiRegular">Industry</p>
+                  <p className="font-SatoshiRegular">Nö Jobs Posted</p>
+                </div>
+              </div>
+
+              <div className="flex items-center justify-center">
+                <button
+                  className={`${cardButton} bg-primary/90 hover:bg-primary rounded-full`}
+                  onClick={() => handleEmployerClick(employer)}
+                >
+                  View Details
+                </button>
+              </div>
             </div>
-          </div>
-        ))}
-      </ul>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };
