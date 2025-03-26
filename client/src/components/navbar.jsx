@@ -31,6 +31,15 @@ const Navbar = () => {
       return <JsNavbar />;
     } else if (user.role === "employer") {
       return <EmNavbar />;
+    } else if (user.role === "admin") {
+      return (
+        <div className="flex gap-2">
+          <Link to="/admin-dashboard" className="text-primary">
+            Admin Dashboard
+          </Link>
+          <UserAvatar />
+        </div>
+      );
     }
   }
 

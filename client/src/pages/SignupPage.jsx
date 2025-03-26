@@ -94,7 +94,7 @@ function SignupPage() {
             </button>
 
             <button
-              className={`text-clampText border-[1.5px] border-primaryStroke py-2 px-4 ${
+              className={`text-clampText border-[1.5px] border-l-0 border-primaryStroke py-2 px-4 rounded-r-xl ${
                 toggle === "employer"
                   ? "bg-primary text-white"
                   : "bg-gray-200 text-primaryStroke"
@@ -105,18 +105,6 @@ function SignupPage() {
             >
               Employer
             </button>
-            {/* <button
-              className={`text-clampText border-[1.5px] border-l-0 border-primaryStroke py-2 px-4 rounded-r-xl ${
-                toggle === "mentor"
-                  ? "bg-primary text-white"
-                  : "bg-gray-200 text-primaryStroke"
-              } transition ease-in-out duration-300`}
-              onClick={() => {
-                setToggle("mentor");
-              }}
-            >
-              Mentor
-            </button> */}
           </div>
         </div>
 
@@ -150,23 +138,7 @@ function SignupPage() {
               setEmconfirmpassword={setEmconfirmpassword}
               handleSignupComplete={() => handleSignupComplete()}
             />
-          )
-          //  (
-          //   <EmployerForm
-          //     emfirstname={emfirstname}
-          //     setEmfirstname={setEmfirstname}
-          //     emlastname={emlastname}
-          //     setEmlastname={setEmlastname}
-          //     workemail={workemail}
-          //     setWorkemail={setWorkemail}
-          //     empassword={empassword}
-          //     setEmpassword={setEmpassword}
-          //     emconfirmpassword={emconfirmpassword}
-          //     setEmconfirmpassword={setEmconfirmpassword}
-          //     handleSignupComplete={() => handleSignupComplete()}
-          //   />
-          // )
-          }
+          )}
         </div>
       </div>
     </div>

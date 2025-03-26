@@ -9,7 +9,7 @@ import LoadingBar from "./LoadingToast"; // Import the LoadingBar component
 
 async function signup(firstname, lastname, email, password, role) {
   try {
-    const response = await axios.post("/signup", {
+    const response = await axios.post("/auth/signup", { // Ensure the URL is correct
       firstname,
       lastname,
       email,

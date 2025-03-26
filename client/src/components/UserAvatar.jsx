@@ -5,6 +5,9 @@ import { toast } from "react-toastify";
 
 import { hover } from "../constants/styles";
 
+import { IoPersonCircleSharp } from "react-icons/io5";
+import { TbLogout2 } from "react-icons/tb";
+
 const UserAvatar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const { user, logout } = useAuthStore();
@@ -57,18 +60,26 @@ const UserAvatar = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5">
-          <div className="">
+        <div className="absolute right-0 mt-2 w-60 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 ">
+          <div className="block px-4 py-2 pb-4 text-sm text-black/70 leading-tight">
+            <p>
+              {user?.firstname} {user?.lastname}
+            </p>
+            <p className=" text-clampSm text-black/50">{user?.email}</p>
+          </div>
+          <div className="border border-gray/40">
             <button
               onClick={() => navigate("/profile")}
-              className="block rounded-t-md w-full px-4 py-4 text-sm text-gray-700 hover:bg-primary/20 transform-all ease-in-out duration-300 border-b border-gray/40"
+              className="block text-start w-full px-4 py-4 text-sm text-gray-700 hover:bg-primary/20 transform-all ease-in-out duration-300 border-b border-gray/40"
             >
-              Profile
+              <IoPersonCircleSharp className="inline-block mr-2 size-6 text-black/50" />
+              Edit Profile
             </button>
             <button
               onClick={handleLogout}
-              className="block rounded-b-md w-full px-4 py-4 text-sm text-gray-700 hover:bg-primary/20 transform-all ease-in-out duration-300"
+              className="block text-start rounded-b-md w-full px-4 py-4 text-sm text-gray-700 hover:bg-primary/20 transform-all ease-in-out duration-300"
             >
+              <TbLogout2 className="inline-block mr-2 size-6 text-black/50" />
               Logout
             </button>
           </div>

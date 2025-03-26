@@ -1,5 +1,6 @@
 import express from "express";
 import multer from "multer";
+import { getAllEmployers, deleteEmployer, getEmployerById } from "../controllers/user.controller.js";
 
 const router = express.Router();
 const upload = multer({ dest: "uploads/" });
@@ -29,5 +30,9 @@ router.put("/profile", upload.single("avatar"), (req, res) => {
   // Respond with the updated user data
   res.json({ user: updatedUser });
 });
+
+router.get("/employers", getAllEmployers); // Add this route
+router.delete("/employers/:id", deleteEmployer); // Add this route
+router.get("/employers/:id", getEmployerById); // Add this route
 
 export default router;

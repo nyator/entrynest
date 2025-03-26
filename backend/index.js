@@ -21,7 +21,7 @@ app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static("uploads"));
 
-app.use("/api/auth", authRoutes);
+app.use("/api/auth", authRoutes); // Ensure this line is present
 app.use("/api/user", userRoutes);
 app.use("/api/jobs", jobRoutes); // Use job routes
 
