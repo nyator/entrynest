@@ -16,7 +16,7 @@ export const signup = async (req, res) => {
   const { email, password, firstname, lastname, role } = req.body;
 
   // Validate role
-  if (!role || (role !== "jobseeker" && role !== "employer")) {
+  if (!role || (role !== "jobseeker" && role !== "employer" && role !== "admin")) {
     return res.status(400).json({
       success: false,
       message: "Invalid role specified",

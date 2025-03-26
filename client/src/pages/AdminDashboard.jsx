@@ -3,6 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import LoadingScreen from "../components/LoadingScreen";
+import { shadowBox, verified, notVerified } from "../constants/styles";
 
 const AdminDashboard = () => {
   const [employers, setEmployers] = useState([]);
@@ -39,7 +40,7 @@ const AdminDashboard = () => {
   };
 
   if (loading) {
-    return <LoadingScreen/>;
+    return <LoadingScreen />;
   }
 
   return (
@@ -48,14 +49,22 @@ const AdminDashboard = () => {
       <div className="w-full bg-gray/40 p-4 rounded border border-gray/20">
         <ul>
           {employers.map((employer) => (
-            <li key={employer._id} className="bg-white mb-4 py-5 px-3 flex justify-between items-center rounded-sm shadow">
-              <div>
+            <li
+              key={employer._id}
+              className="bg-white mb-4 py-5 px-3 flex justify-between items-center rounded-sm shadow"
+            >
+              <div className="flex flex-col items-start">
+                {employer.verified ? (
+                  <p className={`${verified}`}>Verified</p>
+                ) : (
+                  <p className={`${notVerified}`}> Not Verified</p>
+                )}
                 {employer.firstname} {employer.lastname} - {employer.email}
               </div>
               <div>
                 <button
                   onClick={() => handleViewProfile(employer._id)}
-                  className="bg-blue-500 text-white px-4 py-2 rounded mr-2"
+                  className={`bg-primary text-white px-4 py-2 rounded mr-2 ${shadowBox}`}
                 >
                   View Profile
                 </button>

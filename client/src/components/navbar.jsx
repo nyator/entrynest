@@ -10,6 +10,7 @@ import EmNavbar from "./EmNavbar";
 
 import { IoMenu } from "react-icons/io5";
 import { IoClose } from "react-icons/io5";
+import AdminNavbar from "./AdminNavbar";
 
 const navLinks = [
   { title: "Find Job", href: "/", id: 1 },
@@ -32,14 +33,7 @@ const Navbar = () => {
     } else if (user.role === "employer") {
       return <EmNavbar />;
     } else if (user.role === "admin") {
-      return (
-        <div className="flex gap-2">
-          <Link to="/admin-dashboard" className="text-primary">
-            Admin Dashboard
-          </Link>
-          <UserAvatar />
-        </div>
-      );
+      return <AdminNavbar />;
     }
   }
 
