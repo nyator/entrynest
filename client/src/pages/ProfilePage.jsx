@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuthStore } from "../store/authStore";
+import LoadingScreen from "../components/LoadingScreen";
 
 const skillsList = ["JavaScript", "React", "Node.js", "Python", "Java", "C++", "Ruby", "PHP"];
 
@@ -75,7 +76,7 @@ const ProfilePage = () => {
     formData.append("skills", profileData.skills);
 
     try {
-      const response = await axios.put("/api/profile", formData, {
+      const response = await axios.put("/profile", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
@@ -89,8 +90,7 @@ const ProfilePage = () => {
   };
 
   if (loading) {
-    console.log("Loading user data...");
-    return <div>Loading...</div>; // Add a loading state
+    return < LoadingScreen/> // Add a loading state
   }
 
   console.log("ProfilePage rendered");
