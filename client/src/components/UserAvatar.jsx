@@ -60,7 +60,7 @@ const UserAvatar = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-60 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 ">
+        <div className="absolute right-0 mt-2 w-60 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10 ">
           <div className="block px-4 py-2 pb-4 text-sm text-black/70 leading-tight">
             <p>
               {user?.firstname} {user?.lastname}
