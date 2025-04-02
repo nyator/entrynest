@@ -3,7 +3,19 @@ import axios from "axios";
 import { useAuthStore } from "../store/authStore";
 import LoadingScreen from "../components/LoadingScreen";
 
-const skillsList = ["JavaScript", "React", "Node.js", "Python", "Java", "C++", "Ruby", "PHP"];
+import { IoPersonCircleOutline } from "react-icons/io5";
+import { HiPlusCircle } from "react-icons/hi2";
+
+const skillsList = [
+  "JavaScript",
+  "React",
+  "Node.js",
+  "Python",
+  "Java",
+  "C++",
+  "Ruby",
+  "PHP",
+];
 
 const ProfilePage = () => {
   const { user, setUser } = useAuthStore();
@@ -90,19 +102,54 @@ const ProfilePage = () => {
   };
 
   if (loading) {
-    return < LoadingScreen/> // Add a loading state
+    return <LoadingScreen />; // Add a loading state
   }
 
   console.log("ProfilePage rendered");
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Edit Profile</h1>
-      <form onSubmit={handleSubmit}> 
+      <h1 className="text-2xl font-bold mb-4">Profile</h1>
+      <form onSubmit={handleSubmit}>
+        <div className="flex items-center justify-center">
+          <div className="rounded-full bg-slate-200 w-fit relative">
+            {avatarPreview ? (
+              <img
+                src={avatarPreview}
+                alt="Avatar Preview"
+                className="size-20 rounded-full object-cover border-4 border-gray-300 transition-opacity ease-in-out duration-300"
+                onError={(e) => {
+                  e.target.onerror = null; // Prevents infinite loop
+                }}
+                onLoad={(e) => {
+                  e.target.style.opacity = 1; // Fade-in effect
+                }}
+                onClick={() => document.getElementById("avatarInput").click()}
+                onMouseEnter={(e) => (e.currentTarget.style.cursor = "pointer")}
+                onMouseLeave={(e) => (e.currentTarget.style.cursor = "default")}
+              />
+            ) : (
+              <IoPersonCircleOutline className="text-gray-500 size-20" />
+            )}
+            <button
+              type="button"
+              onClick={() => document.getElementById("avatarInput").click()}
+              className="absolute bottom-0 right-0 bg-blue-500 text-white rounded-full hover:bg-blue-600"
+            >
+              <HiPlusCircle className="text-xl" />
+            </button>
+            <input
+              type="file"
+              id="avatarInput"
+              accept="image/*"
+              onChange={handleAvatarChange}
+              className="hidden"
+            />
+          </div>
+        </div>
+
         {user.role === "jobseeker" && (
           <>
-
-          
             <div className="mb-4">
               <label className="block text-gray-700">First Name</label>
               <input
@@ -141,8 +188,8 @@ const ProfilePage = () => {
             </div>
           </>
         )}
+
         {user.role === "employer" && (
-          
           <div className="mb-4">
             <label className="block text-gray-700">Company Name</label>
             <input
@@ -151,9 +198,10 @@ const ProfilePage = () => {
               value={profileData.companyName}
               onChange={handleChange}
               className="mt-1 p-2 border border-gray-300 rounded w-full"
-              />
+            />
           </div>
         )}
+
         <div className="mb-4">
           <label className="block text-gray-700">Email</label>
           <input
@@ -163,25 +211,9 @@ const ProfilePage = () => {
             onChange={handleChange}
             className="mt-1 p-2 border border-gray-300 rounded w-full text-black/40"
             disabled
-            />
+          />
         </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Avatar</label>
-          <input
-            type="file"
-            name="avatar"
-            accept="image/*"
-            onChange={handleAvatarChange}
-            className="mt-1 p-2 border border-gray-300 rounded w-full"
-            />
-          {avatarPreview && (
-            <img
-            src={avatarPreview}
-            alt="Avatar Preview"
-            className="mt-2 w-32 h-32 rounded-full"
-            />
-          )}
-        </div>
+
         <div className="mb-4">
           <label className="block text-gray-700">Biography</label>
           <textarea
@@ -189,7 +221,7 @@ const ProfilePage = () => {
             value={profileData.biography}
             onChange={handleChange}
             className="mt-1 p-2 border border-gray-300 rounded w-full"
-            />
+          />
         </div>
         <div className="mb-4">
           <label className="block text-gray-700">Location</label>
@@ -199,7 +231,7 @@ const ProfilePage = () => {
             value={profileData.location}
             onChange={handleChange}
             className="mt-1 p-2 border border-gray-300 rounded w-full"
-            />
+          />
         </div>
         <div className="mb-4">
           <label className="block text-gray-700">Telephone Number</label>
@@ -209,12 +241,12 @@ const ProfilePage = () => {
             value={profileData.telNumber}
             onChange={handleChange}
             className="mt-1 p-2 border border-gray-300 rounded w-full"
-            />
+          />
         </div>
         <button
           type="submit"
           className="bg-blue-500 text-white p-2 rounded hover:bg-blue-700"
-          >
+        >
           Save Profile
         </button>
       </form>
