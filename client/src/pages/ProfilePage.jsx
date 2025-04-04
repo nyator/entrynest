@@ -88,7 +88,7 @@ const ProfilePage = () => {
     formData.append("skills", profileData.skills);
 
     try {
-      const response = await axios.put("/profile", formData, {
+      const response = await axios.put("/user", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

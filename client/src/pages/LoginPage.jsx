@@ -51,8 +51,10 @@ function LoginPage() {
       const user = response.data.user;
       if (user.role === "admin") {
         navigate("/admin-dashboard");
+      } else if (user.role === "employer") {
+        navigate("/em-dashboard");
       } else {
-        navigate("/dashboard");
+        navigate("/jobs");
       }
     } catch (error) {
       toast.dismiss(); // Dismiss any existing toasts
