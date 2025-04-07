@@ -131,7 +131,10 @@ const AdminDashboard = () => {
     },
     {
       name: "Posted Date",
-      selector: (row) => new Date(row.timePosted || row.createdAt || row.updatedAt).toLocaleDateString(),
+      selector: (row) =>
+        new Date(
+          row.timePosted || row.createdAt || row.updatedAt
+        ).toLocaleDateString(),
       sortable: true,
     },
     {
@@ -158,11 +161,13 @@ const AdminDashboard = () => {
   return (
     <div className="flex">
       {/* Sidebar */}
-      <div className="w-fit bg-gray-200 h-fit p-4 rounded-2xl bg-gray/40 my-4 font-SatoshiMedium">
+      <div className="w-fit bg-gray-200 h-fit p-4 rounded-2xl bg-gray/10 my-4 font-SatoshiMedium border-gray/20 border">
         <ul className="space-y-3">
           <li
             className={`cursor-pointer px-6 py-2 ${
-              activeTab === "Employees" ? "bg-white rounded-lg transition-all ease-linear duration-150" : "hover:bg-white rounded-lg transition-all ease-linear duration-150 "
+              activeTab === "Employees"
+                ? "bg-white rounded-lg transition-all ease-linear duration-150 border-gray/90 border"
+                : "hover:bg-white/50 rounded-lg transition-all ease-linear duration-150 border-gray/20 border "
             }`}
             onClick={() => setActiveTab("Employees")}
           >
@@ -170,7 +175,9 @@ const AdminDashboard = () => {
           </li>
           <li
             className={`cursor-pointer px-6 py-2 ${
-              activeTab === "Jobs" ? "bg-white rounded-lg transition-all ease-linear duration-150" : "hover:bg-white rounded-lg transition-all ease-linear duration-150 "
+              activeTab === "Jobs"
+                ? "bg-white rounded-lg transition-all ease-linear duration-150 border-gray/90 border"
+                : "hover:bg-white/50 rounded-lg transition-all ease-linear duration-150 border-gray/20 border "
             }`}
             onClick={() => setActiveTab("Jobs")}
           >
@@ -178,8 +185,10 @@ const AdminDashboard = () => {
           </li>
           <li
             className={`cursor-pointer px-6 py-2 ${
-              activeTab === "post_job" ? "bg-white rounded-lg transition-all ease-linear duration-150" : "hover:bg-primary/90 bg-primary text-white rounded-lg transition-all ease-linear duration-150 "
-            }`} 
+              activeTab === "post_job"
+                ? "bg-white rounded-lg transition-all ease-linear duration-150 border-primary/20 border"
+                : "hover:bg-primary/90 bg-primary text-white rounded-lg transition-all ease-linear duration-150 border-primaryStroke/90 border "
+            }`}
             onClick={() => setActiveTab("post_job")}
           >
             Post Job
@@ -190,33 +199,29 @@ const AdminDashboard = () => {
       {/* Main Content */}
       <div className="w-3/4 container mx-auto p-4 min-h-[500px]">
         {activeTab === "Employees" && (
-          <>
-            <div className="w-full bg-gray/40 p-4 rounded border border-gray/20">
-              <DataTable
-                columns={employerColumns}
-                data={employers}
-                pagination
-                highlightOnHover
-                striped
-              />
-            </div>
-          </>
+          <div className="w-full bg-gray/40 p-4 rounded-2xl border border-gray/20">
+            <DataTable
+              columns={employerColumns}
+              data={employers}
+              pagination
+              highlightOnHover
+              striped
+            />
+          </div>
         )}
         {activeTab === "Jobs" && (
-          <div>
-            <div className="w-full bg-gray/40 p-4 rounded border border-gray/20">
-              <DataTable
-                columns={jobColumns}
-                data={jobs}
-                pagination
-                highlightOnHover
-                striped
-              />
-            </div>
+          <div className="w-full bg-gray/40 p-4 rounded-2xl border border-gray/20">
+            <DataTable
+              columns={jobColumns}
+              data={jobs}
+              pagination
+              highlightOnHover
+              striped
+            />
           </div>
         )}
         {activeTab === "post_job" && (
-          <div>
+          <div className="w-full bg-gray/40 p-4 rounded-2xl border border-gray/20">
             <h1 className="text-2xl font-bold mb-4">Post Job</h1>
             <PostJob />
           </div>
