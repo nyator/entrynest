@@ -29,15 +29,32 @@ const JobDetails = () => {
     fetchJob();
   }, [jobId]);
 
-  const handleApply = (e) => {
+  const handleApply = async (e) => {
     e.preventDefault();
     if (!cv) {
       alert("Please upload your CV.");
       return;
     }
-    // Simulate submitting the application
-    console.log("Application submitted:", { cv, message });
-    alert("Your application has been submitted!");
+
+    const formData = new FormData();
+    formData.append("cv", cv);
+    formData.append("message", message);
+
+    try {
+      await axios.post(`/jobs/${jobId}/apply`, formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          Authorization: `Bearer ${localStorage.getItem("token")}`, // Ensure token is sent
+        },
+        withCredentials: true,
+      });
+      alert("Your application has been submitted!");
+      navigate(-1); // Redirect to the previous page after submission
+    } catch (error) {
+      console.error("Error submitting application:", error);
+      const errorMessage = error.response?.data?.message || "Failed to submit application.";
+      alert(`Error: ${errorMessage}`);
+    }
   };
 
   if (!job) {

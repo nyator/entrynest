@@ -1,5 +1,11 @@
 import mongoose from "mongoose";
 
+const applicationSchema = new mongoose.Schema({
+  user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+  message: { type: String },
+  cvUrl: { type: String, required: true },
+});
+
 const jobSchema = new mongoose.Schema(
   {
     title: {
@@ -35,9 +41,9 @@ const jobSchema = new mongoose.Schema(
       ref: "User",
       required: true,
     },
+    applications: { type: [applicationSchema], default: [] }, // Add applications field
   },
   { timestamps: true }
 );
-// Add the timestamps option to the schema
 
 export const Job = mongoose.model("Job", jobSchema);

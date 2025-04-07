@@ -1,29 +1,35 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { input, button } from "../constants/styles";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 
 const EmDashboard = () => {
-  const [applications, setApplications] = useState([
-    {
-      id: 1,
-      name: "John Doe",
-      message: "I am very interested in this position.",
-      cv: "john_doe_cv.pdf",
-    },
-    {
-      id: 2,
-      name: "Jane Smith",
-      message: "Looking forward to contributing to your team.",
-      cv: "jane_smith_cv.pdf",
-    },
-  ]);
+  const [applications, setApplications] = useState([]);
 
-  const handleDownload = (cv) => {
-    // Simulate downloading the CV
-    console.log("Downloading CV:", cv);
-    alert(`Downloading ${cv}`);
+  useEffect(() => {
+    const fetchApplications = async () => {
+      try {
+        const response = await axios.get("/jobs/employer/applications", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`, // Include token in headers
+          },
+          withCredentials: true,
+        });
+        setApplications(response.data.applications);
+      } catch (error) {
+        console.error("Error fetching applications:", error);
+        toast.error("Failed to fetch applications");
+      }
+    };
+
+    fetchApplications();
+  }, []);
+
+  const handleDownload = (cvUrl) => {
+    const link = document.createElement("a");
+    link.href = cvUrl;
+    link.download = cvUrl.split("/").pop(); // Extract file name from URL
+    link.click();
   };
 
   return (
@@ -40,22 +46,25 @@ const EmDashboard = () => {
       <p className="mb-4">
         Here are the applications you have received for your job postings.
       </p>
-      <p className="mb-4">
-        You can view the details of each application and download the CVs.
-      </p>
 
       {applications.length === 0 ? (
         <p>No applications yet.</p>
       ) : (
         <div className="space-y-4">
           {applications.map((app) => (
-            <div key={app.id} className="border rounded p-4 shadow-md bg-white">
-              <h2 className="text-lg font-bold">{app.name}</h2>
+            <div key={app._id} className="border rounded p-4 shadow-md bg-white">
+              <h2 className="text-lg font-bold">{app.user.firstname} {app.user.lastname}</h2>
+              <p className="mb-2">
+                <strong>Email:</strong> {app.user.email}
+              </p>
+              <p className="mb-2">
+                <strong>Job Title:</strong> {app.jobTitle}
+              </p>
               <p className="mb-2">
                 <strong>Message:</strong> {app.message}
               </p>
               <button
-                onClick={() => handleDownload(app.cv)}
+                onClick={() => handleDownload(app.cvUrl)}
                 className="px-4 py-2 bg-blue-500 text-white rounded"
               >
                 Download CV

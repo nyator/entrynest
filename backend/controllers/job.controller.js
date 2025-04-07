@@ -93,3 +93,74 @@ export const deleteJob = async (req, res) => {
     });
   }
 };
+
+export const applyToJob = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { message } = req.body;
+    const cv = req.file?.path; // Ensure multer is configured correctly
+
+    if (!cv) {
+      console.error("CV file is missing in the request.");
+      return res.status(400).json({ success: false, message: "CV is required" });
+    }
+
+    const job = await Job.findById(id);
+
+    if (!job) {
+      console.error(`Job with ID ${id} not found.`);
+      return res.status(404).json({ success: false, message: "Job not found" });
+    }
+
+    const application = {
+      user: req.userId, // Ensure `req.userId` is populated by the authentication middleware
+      message,
+      cvUrl: cv,
+    };
+
+    if (!req.userId) {
+      console.error("User ID is missing in the request. Ensure authentication middleware is working.");
+      return res.status(401).json({ success: false, message: "Unauthorized" });
+    }
+
+    job.applications.push(application);
+    await job.save();
+
+    res.status(201).json({ success: true, message: "Application submitted successfully" });
+  } catch (error) {
+    console.error("Error applying to job:", error.message);
+    console.error("Stack trace:", error.stack);
+    res.status(500).json({
+      success: false,
+      message: "Failed to apply to job",
+      errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
+    });
+  }
+};
+
+export const getEmployerApplications = async (req, res) => {
+  try {
+    const jobs = await Job.find({ postedBy: req.userId }).populate("applications.user", "firstname lastname email");
+
+    if (!jobs || jobs.length === 0) {
+      return res.status(404).json({ success: false, message: "No jobs found for this employer" });
+    }
+
+    const applications = jobs.flatMap((job) => 
+      job.applications.map((app) => ({
+        jobId: job._id,
+        jobTitle: job.title,
+        ...app.toObject(),
+      }))
+    );
+
+    res.status(200).json({ success: true, applications });
+  } catch (error) {
+    console.error("Error fetching employer applications:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch applications",
+      errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
+    });
+  }
+};
