@@ -6,7 +6,6 @@ import { IoLocationOutline } from "react-icons/io5";
 import { BsFilePersonFill } from "react-icons/bs";
 import { LiaIndustrySolid } from "react-icons/lia";
 
-import { fr } from "../constants/assests";
 
 const JobDetails = () => {
   const { jobId } = useParams();
