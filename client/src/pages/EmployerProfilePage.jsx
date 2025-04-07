@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom"; // Added useNavigate
 import axios from "axios";
 import { toast } from "react-toastify";
 import LoadingScreen from "../components/LoadingScreen";
@@ -7,6 +7,7 @@ import DataTable from "react-data-table-component"; // Import react-data-table-c
 
 const EmployerProfilePage = () => {
   const { userId } = useParams(); // Get userId from URL
+  const navigate = useNavigate(); // Initialize navigate
   const [profileData, setProfileData] = useState(null);
   const [jobs, setJobs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -26,6 +27,10 @@ const EmployerProfilePage = () => {
 
     fetchProfile();
   }, [userId]);
+
+  const handleViewJobDetails = (id) => {
+    navigate(`/job-details/${id}`); // Fixed navigation
+  };
 
   const handleDeleteJob = async (jobId) => {
     try {
@@ -69,12 +74,20 @@ const EmployerProfilePage = () => {
     {
       name: "Actions",
       cell: (row) => (
-        <button
-          onClick={() => handleDeleteJob(row._id)}
-          className="bg-red-500 text-white px-4 py-2 rounded"
-        >
-          Delete Job
-        </button>
+        <>
+          <button
+            onClick={() => handleViewJobDetails(row._id)}
+            className="text-blue-600/80 mr-4 text-sm"
+          >
+            View Details
+          </button>
+          <button
+            onClick={() => handleDeleteJob(row._id)}
+            className="bg-red-500 text-white px-4 py-2 rounded"
+          >
+            Delete Job
+          </button>
+        </>
       ),
     },
   ];

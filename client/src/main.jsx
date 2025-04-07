@@ -31,6 +31,7 @@ import ViewEmployersPage from "./pages/ViewEmployersPage.jsx";
 import ResourcePage from "./pages/ResourcePage.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx"; // Import AdminDashboard
 import EmployerProfilePage from "./pages/EmployerProfilePage.jsx"; // Import EmployerProfilePage
+import AdminJobDetails from "./pages/AdminJobDetails.jsx";
 
 // Set the base URL for Axios
 const API_URL =
@@ -52,6 +53,14 @@ const router = createBrowserRouter([
         element: <FindTalentPage />,
       },
       {
+        path: "/profile",
+        element: <ProfilePage />,
+      },
+      {
+        path: "/resources",
+        element: <ResourcePage />,
+      },
+      {
         path: "/community",
         element: <CommunityPage />,
       },
@@ -59,6 +68,9 @@ const router = createBrowserRouter([
         path: "/support",
         element: <SupportPage />,
       },
+
+
+
       {
         path: "/login",
         element: <LoginPage />,
@@ -87,25 +99,26 @@ const router = createBrowserRouter([
         path: "/view-employers",
         element: <ViewEmployersPage />,
       },
-      {
-        path: "/jobs",
-        element: <JsDashboard />,
-      },
+      
+
+
       {
         path: "/jobs/:jobId",
         element: <JobDetails />,
       },
       {
-        path: "/employer-profile/:userId", // Add this route
+        path: "/job-details/:jobId",
+        element: <AdminJobDetails />,
+      },
+      {
+        path: "/employer-profile/:userId",
         element: <EmployerProfilePage />,
       },
+
+
       {
-        path: "/profile", // Update this route
-        element: <ProfilePage />,
-      },
-      {
-        path: "/resources",
-        element: <ResourcePage />,
+        path: "/jobs",
+        element: <JsDashboard />,
       },
       {
         path: "/em-dashboard",
@@ -113,7 +126,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/admin-dashboard",
-        element: <AdminDashboard />, // Add this route
+        element: <AdminDashboard />,
       },
     ],
   },

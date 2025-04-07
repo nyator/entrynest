@@ -47,7 +47,7 @@ const PostJob = () => {
       setJobTag("");
       setSalaryRange("");
       console.log("Job posted successfully:", response.data.job);
-      navigate("/dashboard");
+      navigate(-1);
     } catch (error) {
       console.error("Error posting job:", error);
       toast.error("Failed to post job.");
@@ -65,12 +65,12 @@ const PostJob = () => {
   };
 
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4 ">Employer Dashboard</h1>
+    <div className="container mx-auto p-4 font-SatoshiMedium text-sm">
+      {/* <h1 className="text-2xl font-bold mb-4 ">Employer Dashboard</h1>
       <IoMdArrowRoundBack
         className="mb-4 cursor-pointer"
         onClick={() => navigate(-1)}
-      />
+      /> */}
 
       <form onSubmit={handleSubmit}>
         <div className="flex ">
@@ -81,8 +81,10 @@ const PostJob = () => {
                 type="text"
                 value={jobTitle}
                 onChange={(e) => setJobTitle(e.target.value)}
-                className={`${input}`}
+                className={`${input} text-sm font-SatoshiMedium`}
                 placeholder="Job Title"
+                pattern="[A-Za-z\s]+"
+                title="Job title should only contain letters and spaces."
                 required
               />
             </div>
@@ -92,7 +94,7 @@ const PostJob = () => {
               <select
                 value={jobLocation}
                 onChange={(e) => setJobLocation(e.target.value)}
-                className={`${input}`}
+                className={`${input} text-sm font-SatoshiMedium`}
                 required
               >
                 <option value="">Select Job Location </option>
@@ -125,7 +127,7 @@ const PostJob = () => {
               <select
                 value={jobStyle}
                 onChange={(e) => setJobStyle(e.target.value)}
-                className={`${input}`}
+                className={`${input} text-sm font-SatoshiMedium`}
                 required
               >
                 <option value="">Select Job Location</option>
@@ -140,7 +142,7 @@ const PostJob = () => {
               <select
                 value={jobType}
                 onChange={(e) => setJobType(e.target.value)}
-                className={`${input}`}
+                className={`${input} text-sm font-SatoshiMedium`}
                 required
               >
                 <option value="">Select Job Type</option>
@@ -158,7 +160,7 @@ const PostJob = () => {
               <select
                 value={jobTag}
                 onChange={(e) => setJobTag(e.target.value)}
-                className={`${input}`}
+                className={`${input} text-sm font-SatoshiMedium`}
                 required
               >
                 <option value="">Select a Tag</option>
@@ -173,23 +175,12 @@ const PostJob = () => {
               </select>
             </div>
             <div className="mb-4">
-              <label className="block text-gray-700">
-                Job Description / Requirement
-              </label>
-              <textarea
-                value={jobDescription}
-                onChange={(e) => setJobDescription(e.target.value)}
-                className={`${input}`}
-                required
-              />
-            </div>
-            <div className="mb-4">
               <label className="block text-gray-700">Salary Range</label>
               <select
                 id="salaryRange"
                 value={salaryRange}
                 onChange={handleSalaryRangeChange}
-                className={`${input}`}
+                className={`${input} text-sm font-SatoshiMedium`}
                 required
               >
                 <option value="">Select Salary Range</option>
@@ -199,15 +190,30 @@ const PostJob = () => {
                 <option value="confidential">Confidential</option>
               </select>
             </div>
+
+            <div className="mb-4">
+              <label className="block text-gray-700">
+                Job Description / Requirement
+              </label>
+              <textarea
+                value={jobDescription}
+                onChange={(e) => setJobDescription(e.target.value)}
+                className={`${input} text-sm font-SatoshiMedium`}
+                required
+              />
+            </div>
           </div>
         </div>
         <div className="flex space-x-3">
-          <button type="submit" className={`${button}`}>
+          <button
+            type="submit"
+            className={`${button} text-sm font-SatoshiMedium`}
+          >
             Post Job
           </button>
           <button
             type="button"
-            className={`font-normal text-primary`}
+            className={`font-normal text-primary text-sm font-SatoshiMedium`}
             onClick={handleClear}
           >
             Clear
