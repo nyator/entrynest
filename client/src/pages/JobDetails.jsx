@@ -86,27 +86,21 @@ const JobDetails = () => {
       <div className="leading-none mt-6">
         <h1 className="text-clampText font-SatoshiBold ">About this Role</h1>
         <p className="text-black/70 leading-relaxed font-SatoshiRegular">
-          efkmfakfndfk
+          {job.aboutRole || "No details provided."}
         </p>
       </div>
 
       <div className="leading-none mt-6">
         <h1 className="text-clampText font-SatoshiBold">Qualification</h1>
         <p className="text-black/70 leading-relaxed font-SatoshiRegular">
-          <li>efkmfakfndfk</li>
-          <li>efkmfakfndfk</li>
-          <li>efkmfakfndfk</li>
-          <li>efkmfakfndfk</li>
+          {job.qualification || "No details provided."}
         </p>
       </div>
 
       <div className="leading-none mt-6">
-        <h1 className="text-clampText font-SatoshiBold">Responsible</h1>
+        <h1 className="text-clampText font-SatoshiBold">Responsibility</h1>
         <p className="text-black/70 leading-relaxed font-SatoshiRegular">
-          <li>efkmfakfndfk</li>
-          <li>efkmfakfndfk</li>
-          <li>efkmfakfndfk</li>
-          <li>efkmfakfndfk</li>
+          {job.responsibility || "No details provided."}
         </p>
       </div>
 

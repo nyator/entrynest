@@ -1,52 +1,71 @@
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { input, button } from "../constants/styles";
-import { useNavigate } from "react-router-dom"; // Import useNavigate
+import { button } from "../constants/styles"; // Removed `input` import
+import { useNavigate } from "react-router-dom";
 
 import { IoMdArrowRoundBack } from "react-icons/io";
+import { TbLocationFilled } from "react-icons/tb";
+import { HiOfficeBuilding } from "react-icons/hi";
+import { PiOfficeChairFill } from "react-icons/pi";
+import { IoIosCloseCircle } from "react-icons/io";
+import { FaCediSign } from "react-icons/fa6";
+import { IoMdPricetags } from "react-icons/io";
+
+import CustomDropdown from "../components/CustomDropdown";
 
 const PostJob = () => {
   const [jobTitle, setJobTitle] = useState("");
   const [jobLocation, setJobLocation] = useState("");
-  const [jobTag, setJobTag] = useState("");
+  const [jobTags, setJobTags] = useState([]);
   const [jobType, setJobType] = useState("");
   const [jobStyle, setJobStyle] = useState("");
-  const [jobDescription, setJobDescription] = useState("");
+  const [aboutRole, setAboutRole] = useState("");
+  const [qualification, setQualification] = useState("");
+  const [responsibility, setResponsibility] = useState("");
   const [salaryRange, setSalaryRange] = useState("");
-  const navigate = useNavigate(); // Initialize useNavigate
+  const navigate = useNavigate();
 
-  const handleSalaryRangeChange = (e) => {
-    setSalaryRange(e.target.value);
+  const handleAddTag = (tag) => {
+    if (!jobTags.includes(tag)) {
+      setJobTags([...jobTags, tag]);
+    }
+  };
+
+  const handleRemoveTag = (tag) => {
+    setJobTags(jobTags.filter((t) => t !== tag));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(
+      await axios.post(
         "http://localhost:3000/api/jobs",
         {
           title: jobTitle,
-          description: jobDescription,
           location: jobLocation,
           type: jobType,
-          tag: jobTag,
+          tags: jobTags,
           style: jobStyle,
-          salaryRange: salaryRange,
+          aboutRole,
+          qualification,
+          responsibility,
+          salaryRange,
         },
         {
-          withCredentials: true, // Ensure cookies are sent with the request
+          withCredentials: true,
         }
       );
       toast.success("Job posted successfully!");
       setJobTitle("");
-      setJobDescription("");
       setJobLocation("");
       setJobType("");
       setJobStyle("");
-      setJobTag("");
+      setJobTags([]);
+      setAboutRole("");
+      setQualification("");
+      setResponsibility("");
       setSalaryRange("");
-      console.log("Job posted successfully:", response.data.job);
       navigate(-1);
     } catch (error) {
       console.error("Error posting job:", error);
@@ -59,21 +78,49 @@ const PostJob = () => {
     setJobStyle("");
     setJobLocation("");
     setJobType("");
-    setJobTag("");
-    setJobDescription("");
+    setJobTags([]);
+    setAboutRole("");
+    setQualification("");
+    setResponsibility("");
     setSalaryRange("");
   };
 
+  const locations = [
+    "Greater Accra Region",
+    "Ashanti Region",
+    "Central Region",
+    "Eastern Region",
+    "Brong Ahafo Region",
+    "Northern Region",
+    "Upper East Region",
+    "Upper West Region",
+    "Western North Region",
+    "North East Region",
+    "Oti Region",
+    "Bono East Region",
+    "Ahafo Region",
+    "Savannah Region",
+    "Volta Region",
+    "Western Region",
+    "Worldwide",
+  ];
+
+  const workStyles = ["Remote", "On-site", "Hybrid"];
+  const jobTypes = ["Internship", "Mentorship", "Full-time", "Contract"];
+  const tags = [
+    "Sales & Marketing",
+    "Aerospace",
+    "Agriculture",
+    "Development & IT",
+    "Hospitality",
+    "Finance & Accounting",
+  ];
+  const salaryRanges = ["0 - 1k", "1k - 3k", "3k - 5k", "Confidential"];
+
   return (
     <div className="container mx-auto p-4 font-SatoshiMedium text-sm">
-      {/* <h1 className="text-2xl font-bold mb-4 ">Employer Dashboard</h1>
-      <IoMdArrowRoundBack
-        className="mb-4 cursor-pointer"
-        onClick={() => navigate(-1)}
-      /> */}
-
       <form onSubmit={handleSubmit}>
-        <div className="flex ">
+        <div className="flex flex-col md:flex-row justify-between items-start mb-4">
           <div className="w-full mr-4">
             <div className="mb-4">
               <label className="block text-gray-700">Job Title</label>
@@ -81,9 +128,8 @@ const PostJob = () => {
                 type="text"
                 value={jobTitle}
                 onChange={(e) => setJobTitle(e.target.value)}
-                className={`${input} text-sm font-SatoshiMedium`}
+                className="w-full border-[1px] border-grayStroke rounded-lg p-2 text-black/70"
                 placeholder="Job Title"
-                pattern="[A-Za-z\s]+"
                 title="Job title should only contain letters and spaces."
                 required
               />
@@ -91,114 +137,107 @@ const PostJob = () => {
 
             <div className="mb-4">
               <label className="block text-gray-700">Location</label>
-              <select
+              <CustomDropdown
+                options={locations}
                 value={jobLocation}
-                onChange={(e) => setJobLocation(e.target.value)}
-                className={`${input} text-sm font-SatoshiMedium`}
-                required
-              >
-                <option value="">Select Job Location </option>
-                <option value="Greater Accra Region">
-                  Greater Accra Region
-                </option>
-                <option value="Ashanti Region">Ashanti Region </option>
-                <option value="Central Region">Central Region </option>
-                <option value="Eastern Region">Eastern Region </option>
-                <option value="Brong Ahafo Region">Brong Ahafo Region </option>
-                <option value="NorthernRegion">Northern Region </option>
-                <option value="Upper East Region">Upper East Region </option>
-                <option value="Upper West Region">Upper West Region </option>
-                <option value="Western North Region">
-                  Western North Region
-                </option>
-                <option value="North East Region">North East Region </option>
-                <option value="Oti Region">Oti Region </option>
-                <option value="Bono East Region">Bono East Region </option>
-                <option value="Ahafo Region">Ahafo Region </option>
-                <option value="Savannah Region">Savannah Region </option>
-                <option value="Volta Region">Volta Region </option>
-                <option value="Western Region">Western Region </option>
-                <option value="Worldwide">Worldwide </option>
-              </select>
+                onChange={setJobLocation}
+                placeholder="Select Job Location"
+                icon={<TbLocationFilled className="text-black/50" />}
+              />
             </div>
 
             <div className="mb-4">
               <label className="block text-gray-700">Work Style</label>
-              <select
+              <CustomDropdown
+                options={workStyles}
                 value={jobStyle}
-                onChange={(e) => setJobStyle(e.target.value)}
-                className={`${input} text-sm font-SatoshiMedium`}
-                required
-              >
-                <option value="">Select Job Location</option>
-                <option value="Remote">Remote</option>
-                <option value="On-site">On-site</option>
-                <option value="Hybrid">Hybrid</option>
-              </select>
+                onChange={setJobStyle}
+                placeholder="Select Work Style"
+                icon={<PiOfficeChairFill className="text-black/50" />}
+              />
             </div>
 
             <div className="mb-4">
               <label className="block text-gray-700">Job Type</label>
-              <select
+              <CustomDropdown
+                options={jobTypes}
                 value={jobType}
-                onChange={(e) => setJobType(e.target.value)}
-                className={`${input} text-sm font-SatoshiMedium`}
-                required
-              >
-                <option value="">Select Job Type</option>
-                <option value="Internship">Internship</option>
-                <option value="Mentorship">Mentorship</option>
-                <option value="Full-time">Full-time</option>
-                <option value="Contract">Contract</option>
-              </select>
+                onChange={setJobType}
+                placeholder="Select Job Type"
+                icon={<HiOfficeBuilding className="text-black/50" />}
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-gray-700">Salary Range {"(GH₵)"}</label>
+              <CustomDropdown
+                options={salaryRanges}
+                value={salaryRange}
+                onChange={setSalaryRange}
+                placeholder="Select Salary Range"
+                icon={<FaCediSign className="text-black/50" />}
+              />
             </div>
           </div>
 
           <div className="w-full">
             <div className="mb-4">
-              <label className="block text-gray-700">Tag</label>
-              <select
-                value={jobTag}
-                onChange={(e) => setJobTag(e.target.value)}
-                className={`${input} text-sm font-SatoshiMedium`}
-                required
-              >
-                <option value="">Select a Tag</option>
-                <option value="Sales & Marketing">Sales & Marketing</option>
-                <option value="Aerospace">Aerospace</option>
-                <option value="Agriculture">Agriculture</option>
-                <option value="Development & IT">Development & IT</option>
-                <option value="Hospitality">Hospitality</option>
-                <option value="Finance & Accounting">
-                  Finance & Accounting
-                </option>
-              </select>
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700">Salary Range</label>
-              <select
-                id="salaryRange"
-                value={salaryRange}
-                onChange={handleSalaryRangeChange}
-                className={`${input} text-sm font-SatoshiMedium`}
-                required
-              >
-                <option value="">Select Salary Range</option>
-                <option value="0-1k">₵0 - ₵1k</option>
-                <option value="1k-3k">₵1k - ₵3k</option>
-                <option value="3k-5k">₵3k - ₵5k</option>
-                <option value="confidential">Confidential</option>
-              </select>
+              <label className="block text-gray-700">Tags</label>
+              <CustomDropdown
+                options={tags}
+                value=""
+                onChange={handleAddTag}
+                placeholder="Select a Tag"
+                icon={<IoMdPricetags className="text-black/50" />}
+              />
+              <div className="flex flex-wrap mt-2 gap-2">
+                {jobTags.map((tag, index) => (
+                  <div
+                    key={index}
+                    className="hover:translate-y-[0.5px] flex items-center border border-gray shadow-sm bg-white text-blue-500 px-3 py-1 rounded-full"
+                  >
+                    {tag}
+                    <button
+                      type="button"
+                      className="ml-2 textblack/50"
+                      onClick={() => handleRemoveTag(tag)}
+                    >
+                      <IoIosCloseCircle className="text-black/60" />
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
 
             <div className="mb-4">
-              <label className="block text-gray-700">
-                Job Description / Requirement
-              </label>
+              <label className="block text-gray-700">About Role</label>
               <textarea
-                value={jobDescription}
-                onChange={(e) => setJobDescription(e.target.value)}
-                className={`${input} text-sm font-SatoshiMedium`}
+                value={aboutRole}
+                onChange={(e) => setAboutRole(e.target.value)}
+                className="w-full border-[1px] border-grayStroke rounded-lg p-2 text-black/70"
+                placeholder="Describe the role"
+                required
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-gray-700">Qualification</label>
+              <textarea
+                value={qualification}
+                onChange={(e) => setQualification(e.target.value)}
+                className="w-full border-[1px] border-grayStroke rounded-lg p-2 text-black/70"
+                placeholder="List the qualifications"
+                required
+              />
+            </div>
+
+            <div className="mb-4">
+              <label className="block text-gray-700">Responsibility</label>
+              <textarea
+                value={responsibility}
+                onChange={(e) => setResponsibility(e.target.value)}
+                className="w-full border-[1px] border-grayStroke rounded-lg p-2 text-black/70"
+                placeholder="List the responsibilities"
                 required
               />
             </div>

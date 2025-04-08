@@ -48,6 +48,7 @@ export default {
         clampSm: "clamp(0.4rem, 2vw, 0.7rem)",
         clampText: "clamp(0.8rem, 2vw, 1rem)",
         clampInputText: "clamp(0.8rem, 1vw, 18px)", 
+        breadcrumb: "clamp(0.6rem, 2vw, 0.8rem)",
       },
 
       backgroundImage: {

@@ -53,7 +53,7 @@ const UserAvatar = () => {
         className="flex items-center gap-2 focus:outline-none"
       >
         <div
-          className={`w-10 h-10 rounded-full bg-primary flex items-center justify-center text-white ${hover}`}
+          className={`w-10 h-10 rounded-full  shadow-sm bg-primary flex items-center justify-center text-white ${hover}`}
         >
           {[user?.firstname?.charAt(0), user?.lastname?.charAt(0)] || "U"}
         </div>

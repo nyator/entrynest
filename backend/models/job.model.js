@@ -1,10 +1,18 @@
 import mongoose from "mongoose";
 
-const applicationSchema = new mongoose.Schema({
-  user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
-  message: { type: String },
-  cvUrl: { type: String, required: true },
-});
+const applicationSchema = new mongoose.Schema(
+  {
+    user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
+    message: { type: String },
+    cvUrl: { type: String, required: true },
+    status: {
+      type: String,
+      enum: ["pending", "approved", "declined"],
+      default: "pending",
+    },
+  },
+  { timestamps: true }
+);
 
 const jobSchema = new mongoose.Schema(
   {
@@ -20,8 +28,8 @@ const jobSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    tag: {
-      type: String,
+    tags: {
+      type: [String], // Update to allow multiple tags
       required: true,
     },
     type: {
@@ -33,6 +41,18 @@ const jobSchema = new mongoose.Schema(
       required: true,
     },
     salaryRange: {
+      type: String,
+      required: true,
+    },
+    aboutRole: {
+      type: String,
+      required: true,
+    },
+    qualification: {
+      type: String,
+      required: true,
+    },
+    responsibility: {
       type: String,
       required: true,
     },

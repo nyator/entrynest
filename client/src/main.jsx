@@ -32,6 +32,8 @@ import ResourcePage from "./pages/ResourcePage.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx"; // Import AdminDashboard
 import EmployerProfilePage from "./pages/EmployerProfilePage.jsx"; // Import EmployerProfilePage
 import AdminJobDetails from "./pages/AdminJobDetails.jsx";
+import EditJob from "./pages/EditJob"; // Import EditJob
+import JobApplications from "./pages/JobApplications"; // Import JobApplications
 
 // Set the base URL for Axios
 const API_URL =
@@ -114,6 +116,10 @@ const router = createBrowserRouter([
         path: "/employer-profile/:userId",
         element: <EmployerProfilePage />,
       },
+      {
+        path: "/edit-job/:jobId",
+        element: <EditJob />, // Add route for editing a job
+      },
 
 
       {
@@ -127,6 +133,10 @@ const router = createBrowserRouter([
       {
         path: "/admin-dashboard",
         element: <AdminDashboard />,
+      },
+      {
+        path: "/em-dashboard/applications/:jobId",
+        element: <JobApplications />, // Add route for job applications
       },
     ],
   },
