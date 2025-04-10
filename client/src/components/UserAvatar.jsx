@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
+import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/authStore";
 import { toast } from "react-toastify";
@@ -52,20 +53,28 @@ const UserAvatar = () => {
         onClick={toggleDropdown}
         className="flex items-center gap-2 focus:outline-none"
       >
-        <div
-          className={`w-10 h-10 rounded-full  shadow-sm bg-primary flex items-center justify-center text-white ${hover}`}
-        >
-          {[user?.firstname?.charAt(0), user?.lastname?.charAt(0)] || "U"}
-        </div>
+        {user?.avatar ? (
+          <img
+            src={`${axios.defaults.baseURL}${user.avatar}`} // Use the avatar URL
+            alt="User Avatar"
+            className="w-10 h-10 rounded-full object-cover border border-gray-300"
+          />
+        ) : (
+          <div
+            className={`w-10 h-10 rounded-full shadow-sm bg-primary flex items-center justify-center text-white ${hover}`}
+          >
+            {[user?.firstname?.charAt(0), user?.lastname?.charAt(0)] || "U"}
+          </div>
+        )}
       </button>
 
       {isOpen && (
-        <div className="absolute right-0 mt-2 w-60 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10 ">
+        <div className="absolute right-0 mt-2 w-60 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
           <div className="block px-4 py-2 pb-4 text-sm text-black/70 leading-tight">
             <p>
               {user?.firstname} {user?.lastname}
             </p>
-            <p className=" text-clampSm text-black/50">{user?.email}</p>
+            <p className="text-clampSm text-black/50">{user?.email}</p>
           </div>
           <div className="border border-gray/40">
             <button
@@ -79,7 +88,10 @@ const UserAvatar = () => {
               Edit Profile
             </button>
             <button
-              onClick={() => { handleLogout(); setIsOpen(false); }}
+              onClick={() => {
+                handleLogout();
+                setIsOpen(false);
+              }}
               className="block text-start rounded-b-md w-full px-4 py-4 text-sm text-gray-700 hover:bg-black/10 transform-all ease-in-out duration-300"
             >
               <TbLogout2 className="inline-block mr-2 size-5 text-black/50" />

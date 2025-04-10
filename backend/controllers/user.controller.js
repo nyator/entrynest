@@ -16,8 +16,12 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 export const updateProfile = async (req, res) => {
-  const { name, email, companyName, biography, location, telNumber, skills, firstname, lastname } = req.body;
-  const avatar = req.file ? req.file.path : null;
+  const { firstname, lastname, email, companyName, biography, location, telNumber, skills } = req.body;
+  let avatar = null;
+
+  if (req.file) {
+    avatar = `/uploads/${req.file.filename}`; // Ensure the correct path is set
+  }
 
   try {
     const user = await User.findById(req.userId);
@@ -26,17 +30,16 @@ export const updateProfile = async (req, res) => {
       return res.status(404).json({ success: false, message: "User not found" });
     }
 
-    user.name = name || user.name;
+    user.firstname = firstname || user.firstname;
+    user.lastname = lastname || user.lastname;
     user.email = email || user.email;
     user.companyName = companyName || user.companyName;
     user.biography = biography || user.biography;
     user.location = location || user.location;
     user.telNumber = telNumber || user.telNumber;
     user.skills = skills || user.skills;
-    user.firstname = firstname || user.firstname;
-    user.lastname = lastname || user.lastname;
     if (avatar) {
-      user.avatar = avatar;
+      user.avatar = avatar; // Update the avatar field
     }
 
     await user.save();
@@ -46,7 +49,8 @@ export const updateProfile = async (req, res) => {
       message: "Profile updated successfully",
       user: {
         ...user._doc,
-        password: undefined,
+        avatar: user.avatar, // Ensure avatar URL is included in the response
+        password: undefined, // Exclude password from response
       },
     });
   } catch (error) {

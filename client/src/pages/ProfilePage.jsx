@@ -2,9 +2,14 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useAuthStore } from "../store/authStore";
 import LoadingScreen from "../components/LoadingScreen";
+import { toast } from "react-toastify";
+import { Link } from "react-router-dom";
+import CustomDropdown from "../components/CustomDropdown"; // Import CustomDropdown
 
 import { IoPersonCircleOutline } from "react-icons/io5";
 import { HiPlusCircle } from "react-icons/hi2";
+import { HiMiniDocumentText } from "react-icons/hi2";
+import { MdSpaceDashboard } from "react-icons/md";
 
 const skillsList = [
   "JavaScript",
@@ -15,6 +20,26 @@ const skillsList = [
   "C++",
   "Ruby",
   "PHP",
+];
+
+const locationOptions = [
+  "Greater Accra Region",
+  "Ashanti Region",
+  "Central Region",
+  "Eastern Region",
+  "Brong Ahafo Region",
+  "Northern Region",
+  "Upper East Region",
+  "Upper West Region",
+  "Western North Region",
+  "North East Region",
+  "Oti Region",
+  "Bono East Region",
+  "Ahafo Region",
+  "Savannah Region",
+  "Volta Region",
+  "Western Region",
+  "Worldwide",
 ];
 
 const ProfilePage = () => {
@@ -74,6 +99,10 @@ const ProfilePage = () => {
     setProfileData({ ...profileData, skills: selectedSkills });
   };
 
+  const handleLocationChange = (selectedLocation) => {
+    setProfileData({ ...profileData, location: selectedLocation });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = new FormData();
@@ -88,28 +117,38 @@ const ProfilePage = () => {
     formData.append("skills", profileData.skills);
 
     try {
-      const response = await axios.put("/user", formData, {
+      const response = await axios.put("/user/profile", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       });
       setUser(response.data.user);
-      alert("Profile updated successfully!");
+      setAvatarPreview(`${axios.defaults.baseURL}${response.data.user.avatar}`); // Use the full URL for the avatar
+      toast.success("Profile updated successfully!");
     } catch (error) {
-      console.error("Error updating profile:", error);
-      alert("Failed to update profile.");
+      toast.error("Failed to update profile.");
     }
   };
 
   if (loading) {
-    return <LoadingScreen />; // Add a loading state
+    return <LoadingScreen />;
   }
 
-  console.log("ProfilePage rendered");
-
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Profile</h1>
+    <div className="mx-auto p-4 leading-normal font-SatoshiMedium text-sm">
+      <nav className="mb-4 leading-normal text-gray-600 text-breadcrumb inline-flex items-center text-black/70 gap-2">
+        <span className="text-black/70 font-bold inline-flex items-center">
+          <MdSpaceDashboard className="inline-block mr-1" />
+          <Link to="/em-dashboard" className="hover:underline">
+            Employer Dashboard
+          </Link>{" "}
+        </span>
+        /{" "}
+        <span className="text-black/40 font-bold inline-flex items-center">
+          <HiMiniDocumentText className="inline-block mr-1" />
+          Profile
+        </span>
+      </nav>
       <form onSubmit={handleSubmit}>
         <div className="flex items-center justify-center">
           <div className="rounded-full bg-slate-200 w-fit relative">
@@ -117,7 +156,7 @@ const ProfilePage = () => {
               <img
                 src={avatarPreview}
                 alt="Avatar Preview"
-                className="size-20 rounded-full object-cover border-4 border-gray-300 transition-opacity ease-in-out duration-300"
+                className="size-20 rounded-full object-cover border-2 border-black/50 transition-opacity ease-in-out duration-300"
                 onError={(e) => {
                   e.target.onerror = null; // Prevents infinite loop
                 }}
@@ -147,105 +186,126 @@ const ProfilePage = () => {
             />
           </div>
         </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-4 leading-normal w-1/2 mx-auto">
+          {user.role === "jobseeker" && (
+            <>
+              <div className="mb-4 leading-normal">
+                <label className="block text-gray-700">First Name</label>
+                <input
+                  type="text"
+                  name="firstname"
+                  value={profileData.firstname}
+                  onChange={handleChange}
+                  className="mt-1 p-2 border border-gray-300 rounded w-full"
+                />
+              </div>
+              <div className="mb-4 leading-normal">
+                <label className="block text-gray-700">Last Name</label>
+                <input
+                  type="text"
+                  name="lastname"
+                  value={profileData.lastname}
+                  onChange={handleChange}
+                  className="mt-1 p-2 border border-gray-300 rounded w-full"
+                />
+              </div>
+              <div className="mb-4 leading-normal">
+                <label className="block text-gray-700">Skills</label>
+                <select
+                  multiple
+                  name="skills"
+                  value={profileData.skills}
+                  onChange={handleSkillsChange}
+                  className="mt-1 p-2 border border-gray-300 rounded w-full"
+                >
+                  {skillsList.map((skill) => (
+                    <option key={skill} value={skill}>
+                      {skill}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </>
+          )}
 
-        {user.role === "jobseeker" && (
-          <>
-            <div className="mb-4">
-              <label className="block text-gray-700">First Name</label>
+          {user.role === "employer" && (
+            <div className="mb-4 leading-normal">
+              <label className="block text-gray-700">Company Name</label>
               <input
                 type="text"
-                name="firstname"
-                value={profileData.firstname}
+                name="companyName"
+                value={profileData.companyName}
                 onChange={handleChange}
-                className="mt-1 p-2 border border-gray-300 rounded w-full"
+                className="w-full inline-flex bg-white border-[1px] border-grayStroke rounded-lg p-2"
               />
             </div>
-            <div className="mb-4">
-              <label className="block text-gray-700">Last Name</label>
-              <input
-                type="text"
-                name="lastname"
-                value={profileData.lastname}
-                onChange={handleChange}
-                className="mt-1 p-2 border border-gray-300 rounded w-full"
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block text-gray-700">Skills</label>
-              <select
-                multiple
-                name="skills"
-                value={profileData.skills}
-                onChange={handleSkillsChange}
-                className="mt-1 p-2 border border-gray-300 rounded w-full"
-              >
-                {skillsList.map((skill) => (
-                  <option key={skill} value={skill}>
-                    {skill}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </>
-        )}
+          )}
 
-        {user.role === "employer" && (
-          <div className="mb-4">
-            <label className="block text-gray-700">Company Name</label>
+          <div className="mb-4 leading-normal">
+            <label className="block text-gray-700">First Name</label>
             <input
               type="text"
-              name="companyName"
-              value={profileData.companyName}
+              name="firstname"
+              value={profileData.firstname}
               onChange={handleChange}
-              className="mt-1 p-2 border border-gray-300 rounded w-full"
+              className="w-full inline-flex bg-white border-[1px] border-grayStroke rounded-lg p-2"
             />
           </div>
-        )}
 
-        <div className="mb-4">
-          <label className="block text-gray-700">Email</label>
-          <input
-            type="email"
-            name="email"
-            value={profileData.email}
-            onChange={handleChange}
-            className="mt-1 p-2 border border-gray-300 rounded w-full text-black/40"
-            disabled
-          />
-        </div>
+          <div className="mb-4 leading-normal">
+            <label className="block text-gray-700">Email</label>
+            <input
+              type="email"
+              name="email"
+              value={profileData.email}
+              onChange={handleChange}
+              className="w-full inline-flex bg-white border-[1px] border-grayStroke rounded-lg p-2"
+              disabled
+            />
+          </div>
 
-        <div className="mb-4">
-          <label className="block text-gray-700">Biography</label>
-          <textarea
-            name="biography"
-            value={profileData.biography}
-            onChange={handleChange}
-            className="mt-1 p-2 border border-gray-300 rounded w-full"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Location</label>
-          <input
-            type="text"
-            name="location"
-            value={profileData.location}
-            onChange={handleChange}
-            className="mt-1 p-2 border border-gray-300 rounded w-full"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700">Telephone Number</label>
-          <input
-            type="text"
-            name="telNumber"
-            value={profileData.telNumber}
-            onChange={handleChange}
-            className="mt-1 p-2 border border-gray-300 rounded w-full"
-          />
+          <div className="mb-4 leading-normal">
+            <label className="block text-gray-700">Last Name</label>
+            <input
+              type="text"
+              name="lastname"
+              value={profileData.lastname}
+              onChange={handleChange}
+              className="w-full inline-flex bg-white border-[1px] border-grayStroke rounded-lg p-2"
+            />
+          </div>
+          <div className="mb-4 leading-normal">
+            <label className="block text-gray-700">Biography</label>
+            <textarea
+              name="biography"
+              value={profileData.biography}
+              onChange={handleChange}
+              className="w-full inline-flex bg-white border-[1px] border-grayStroke rounded-lg p-2"
+            />
+          </div>
+          <div className="mb-4 leading-normal">
+            <label className="block text-gray-700">Location</label>
+            <CustomDropdown
+              options={locationOptions}
+              value={profileData.location}
+              onChange={handleLocationChange}
+              placeholder="Select Location"
+            />
+          </div>
+          <div className="mb-4 leading-normal">
+            <label className="block text-gray-700">Telephone Number</label>
+            <input
+              type="text"
+              name="telNumber"
+              value={profileData.telNumber}
+              onChange={handleChange}
+              className="w-full inline-flex bg-white border-[1px] border-grayStroke rounded-lg p-2"
+            />
+          </div>
         </div>
         <button
           type="submit"
-          className="bg-blue-500 text-white p-2 rounded hover:bg-blue-700"
+          className="bg-blue-500 text-white p-2 rounded hover:bg-blue-700 mt-4 leading-normal mx-auto flex w-fit h-fit"
         >
           Save Profile
         </button>
