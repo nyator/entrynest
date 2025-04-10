@@ -156,3 +156,24 @@ export const getPlatformStats = async (req, res) => {
     });
   }
 };
+
+export const getRecentEmployers = async (req, res) => {
+  try {
+    const recentEmployers = await User.find({ role: "employer" })
+      .sort({ createdAt: -1 }) // Sort by creation date (most recent first)
+      .limit(5) // Limit to the 5 most recent employers
+      .select("firstname lastname email createdAt"); // Select relevant fields
+
+    res.status(200).json({
+      success: true,
+      recentEmployers,
+    });
+  } catch (error) {
+    console.error("Error fetching recent employers:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch recent employers",
+      errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
+    });
+  }
+};
