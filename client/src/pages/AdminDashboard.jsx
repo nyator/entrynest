@@ -7,6 +7,14 @@ import DataTable from "react-data-table-component"; // Import react-data-table-c
 import { verified, notVerified } from "../constants/styles";
 import PostJob from "./PostJob";
 
+import { FcStatistics } from "react-icons/fc";
+import { FaUsers } from "react-icons/fa";
+import { MdSupervisedUserCircle } from "react-icons/md";
+import { BsFilePost } from "react-icons/bs";
+import { MdOutlinePostAdd } from "react-icons/md";
+import { FaGetPocket } from "react-icons/fa";
+
+
 const AdminDashboard = () => {
   const [employers, setEmployers] = useState([]);
   const [jobs, setJobs] = useState([]); // State for jobs
@@ -216,53 +224,69 @@ const AdminDashboard = () => {
       <div className="overflow-x-auto pt-5 w-full md:w-auto md:bg-gray-200 md:h-fit md:p-4 md:rounded-2xl md:bg-gray/10 md:my-4 md:font-SatoshiMedium md:border-gray/20 md:border flex-shrink-0">
         <ul className="w-full flex text-nowrap bg-gray/10 flex-row md:flex-col gap-4 ">
           <li
-            className={`cursor-pointer px-6 py-2 ${
+            className={`cursor-pointer px-6 py-2 inline-flex items-center gap-2 ${
+              activeTab === "Overall Stats"
+                ? "bg-white rounded-lg transition-all ease-linear duration-150 border-black/20 border"
+                : "hover:bg-black/70 bg-black/80 text-white rounded-lg transition-all ease-linear duration-150 border-black border "
+            }`}
+            onClick={() => setActiveTab("Overall Stats")}
+          >
+            <FcStatistics/>
+            Overall Stats 
+          </li>
+          <li
+            className={`cursor-pointer px-6 py-2 inline-flex items-center gap-2 ${
               activeTab === "Employees"
                 ? "bg-white rounded-lg transition-all ease-linear duration-150 border-gray/90 border"
                 : "hover:bg-white/50 rounded-lg transition-all ease-linear duration-150 border-gray/20 border"
             }`}
             onClick={() => setActiveTab("Employees")}
           >
+            <FaUsers/>
             Employees
           </li>
           <li
-            className={`cursor-pointer px-6 py-2 ${
+            className={`cursor-pointer px-6 py-2 inline-flex items-center gap-2 ${
               activeTab === "Mentors"
                 ? "bg-white rounded-lg transition-all ease-linear duration-150 border-gray/90 border"
                 : "hover:bg-white/50 rounded-lg transition-all ease-linear duration-150 border-gray/20 border"
             }`}
             onClick={() => setActiveTab("Mentors")}
           >
+            <MdSupervisedUserCircle/>
             Mentors
           </li>
           <li
-            className={`cursor-pointer px-6 py-2 ${
+            className={`cursor-pointer px-6 py-2 inline-flex items-center gap-2 ${
               activeTab === "Jobs"
                 ? "bg-white rounded-lg transition-all ease-linear duration-150 border-gray/90 border"
                 : "hover:bg-white/50 rounded-lg transition-all ease-linear duration-150 border-gray/20 border"
             }`}
             onClick={() => setActiveTab("Jobs")}
           >
+            <BsFilePost/>
             Jobs
           </li>
           <li
-            className={`cursor-pointer px-6 py-2 ${
+            className={`cursor-pointer px-6 py-2 inline-flex items-center gap-2 ${
               activeTab === "allApplications"
                 ? "bg-white rounded-lg transition-all ease-linear duration-150 border-gray/90 border"
                 : "hover:bg-white/50 rounded-lg transition-all ease-linear duration-150 border-gray/20 border"
             }`}
             onClick={() => setActiveTab("allApplications")}
           >
+            <FaGetPocket/>
             All Applications
           </li>
           <li
-            className={`cursor-pointer px-6 py-2 ${
+            className={`cursor-pointer px-6 py-2 inline-flex items-center gap-2 ${
               activeTab === "post_job"
                 ? "bg-white rounded-lg transition-all ease-linear duration-150 border-primary/20 border"
                 : "hover:bg-primary/90 bg-primary text-white rounded-lg transition-all ease-linear duration-150 border-primaryStroke/90 border "
             }`}
             onClick={() => setActiveTab("post_job")}
           >
+            <MdOutlinePostAdd/>
             Post Job
           </li>
         </ul>
@@ -318,6 +342,11 @@ const AdminDashboard = () => {
               highlightOnHover
               striped
             />
+          </div>
+        )}
+        {activeTab === "Overall Stats" && (
+          <div>
+            
           </div>
         )}
       </div>
