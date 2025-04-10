@@ -268,3 +268,30 @@ export const updateApplicationStatus = async (req, res) => {
     });
   }
 };
+
+export const getAllSubmittedCVs = async (req, res) => {
+  try {
+    const jobs = await Job.find().populate("applications.user", "firstname lastname email");
+
+    const applications = jobs.flatMap((job) =>
+      job.applications.map((app) => ({
+        jobId: job._id,
+        jobTitle: job.title,
+        employerId: job.postedBy,
+        user: app.user,
+        cvUrl: app.cvUrl, // Include the CV URL
+        message: app.message, // Include the applicant's message
+        status: app.status, // Include the application status
+      }))
+    );
+
+    res.status(200).json({ success: true, applications });
+  } catch (error) {
+    console.error("Error fetching submitted CVs:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch submitted CVs",
+      errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
+    });
+  }
+};

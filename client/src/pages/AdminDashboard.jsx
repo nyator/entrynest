@@ -38,7 +38,7 @@ const AdminDashboard = () => {
 
     const fetchApplications = async () => {
       try {
-        const response = await axios.get("/applications", {
+        const response = await axios.get("/jobs/applications/all", {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
@@ -46,15 +46,15 @@ const AdminDashboard = () => {
         });
         setApplications(response.data.applications);
       } catch (error) {
-        toast.error("Failed to fetch applications");
+        toast.error("Failed to fetch submitted CVs");
       }
     };
 
     fetchEmployers();
     fetchJobs();
 
-    if (activeTab === "Applications") {
-      fetchApplications();
+    if (activeTab === "allApplications") {
+      fetchApplications(); // Fetch applications for "allApplications" tab
     }
   }, [activeTab]);
 
@@ -189,13 +189,8 @@ const AdminDashboard = () => {
       sortable: true,
     },
     {
-      name: "Applicant Email",
-      selector: (row) => row.user.email,
-      sortable: true,
-    },
-    {
       name: "Status",
-      selector: (row) => row.status,
+      selector: (row) => row.status || "Pending",
       sortable: true,
     },
     {
@@ -314,7 +309,7 @@ const AdminDashboard = () => {
             <PostJob />
           </div>
         )}
-        {activeTab === "Applications" && (
+        {activeTab === "allApplications" && (
           <div className="w-full pb-32 md:pb-0 h-full bg-gray/10 p-4 rounded-t-2xl border border-gray/20 relative">
             <DataTable
               columns={applicationColumns}
