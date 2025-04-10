@@ -10,6 +10,7 @@ import PostJob from "./PostJob";
 const AdminDashboard = () => {
   const [employers, setEmployers] = useState([]);
   const [jobs, setJobs] = useState([]); // State for jobs
+  const [applications, setApplications] = useState([]); // State for applications
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("Employees"); // State for active tab
   const navigate = useNavigate();
@@ -35,9 +36,27 @@ const AdminDashboard = () => {
       }
     };
 
+    const fetchApplications = async () => {
+      try {
+        const response = await axios.get("/applications", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          withCredentials: true,
+        });
+        setApplications(response.data.applications);
+      } catch (error) {
+        toast.error("Failed to fetch applications");
+      }
+    };
+
     fetchEmployers();
     fetchJobs();
-  }, []);
+
+    if (activeTab === "Applications") {
+      fetchApplications();
+    }
+  }, [activeTab]);
 
   const handleDelete = async (id) => {
     try {
@@ -158,16 +177,54 @@ const AdminDashboard = () => {
     },
   ];
 
+  const applicationColumns = [
+    {
+      name: "Job Title",
+      selector: (row) => row.jobTitle,
+      sortable: true,
+    },
+    {
+      name: "Applicant Name",
+      selector: (row) => `${row.user.firstname} ${row.user.lastname}`,
+      sortable: true,
+    },
+    {
+      name: "Applicant Email",
+      selector: (row) => row.user.email,
+      sortable: true,
+    },
+    {
+      name: "Status",
+      selector: (row) => row.status,
+      sortable: true,
+    },
+    {
+      name: "Actions",
+      cell: (row) => (
+        <div>
+          <a
+            href={row.cvUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-blue-600/80 mr-4 text-sm"
+          >
+            View CV
+          </a>
+        </div>
+      ),
+    },
+  ];
+
   return (
-    <div className="flex">
+    <div className="flex flex-col md:flex-row">
       {/* Sidebar */}
-      <div className="w-fit bg-gray-200 h-fit p-4 rounded-2xl bg-gray/10 my-4 font-SatoshiMedium border-gray/20 border">
-        <ul className="space-y-3">
+      <div className="overflow-x-auto pt-5 w-full md:w-auto md:bg-gray-200 md:h-fit md:p-4 md:rounded-2xl md:bg-gray/10 md:my-4 md:font-SatoshiMedium md:border-gray/20 md:border flex-shrink-0">
+        <ul className="w-full flex text-nowrap bg-gray/10 flex-row md:flex-col gap-4 ">
           <li
             className={`cursor-pointer px-6 py-2 ${
               activeTab === "Employees"
                 ? "bg-white rounded-lg transition-all ease-linear duration-150 border-gray/90 border"
-                : "hover:bg-white/50 rounded-lg transition-all ease-linear duration-150 border-gray/20 border "
+                : "hover:bg-white/50 rounded-lg transition-all ease-linear duration-150 border-gray/20 border"
             }`}
             onClick={() => setActiveTab("Employees")}
           >
@@ -175,9 +232,19 @@ const AdminDashboard = () => {
           </li>
           <li
             className={`cursor-pointer px-6 py-2 ${
+              activeTab === "Mentors"
+                ? "bg-white rounded-lg transition-all ease-linear duration-150 border-gray/90 border"
+                : "hover:bg-white/50 rounded-lg transition-all ease-linear duration-150 border-gray/20 border"
+            }`}
+            onClick={() => setActiveTab("Mentors")}
+          >
+            Mentors
+          </li>
+          <li
+            className={`cursor-pointer px-6 py-2 ${
               activeTab === "Jobs"
                 ? "bg-white rounded-lg transition-all ease-linear duration-150 border-gray/90 border"
-                : "hover:bg-white/50 rounded-lg transition-all ease-linear duration-150 border-gray/20 border "
+                : "hover:bg-white/50 rounded-lg transition-all ease-linear duration-150 border-gray/20 border"
             }`}
             onClick={() => setActiveTab("Jobs")}
           >
@@ -193,13 +260,34 @@ const AdminDashboard = () => {
           >
             Post Job
           </li>
+          <li
+            className={`cursor-pointer px-6 py-2 ${
+              activeTab === "Applications"
+                ? "bg-white rounded-lg transition-all ease-linear duration-150 border-gray/90 border"
+                : "hover:bg-white/50 rounded-lg transition-all ease-linear duration-150 border-gray/20 border"
+            }`}
+            onClick={() => setActiveTab("Applications")}
+          >
+            Applications
+          </li>
         </ul>
       </div>
 
       {/* Main Content */}
-      <div className="w-3/4 container mx-auto p-4 min-h-[500px]">
+      <div className="w-full mx-auto p-4 min-h-[500px]">
         {activeTab === "Employees" && (
-          <div className="w-full bg-gray/40 p-4 rounded-2xl border border-gray/20">
+          <div className="w-full pb-32 md:pb-0 h-full bg-gray/10 p-4 rounded-t-2xl border border-gray/20 relative">
+            <DataTable
+              columns={employerColumns}
+              data={employers}
+              pagination
+              highlightOnHover
+              striped
+            />
+          </div>
+        )}
+        {activeTab === "Mentors" && (
+          <div className="w-full pb-32 md:pb-0 h-full bg-gray/10 p-4 rounded-t-2xl border border-gray/20 relative">
             <DataTable
               columns={employerColumns}
               data={employers}
@@ -210,7 +298,7 @@ const AdminDashboard = () => {
           </div>
         )}
         {activeTab === "Jobs" && (
-          <div className="w-full bg-gray/40 p-4 rounded-2xl border border-gray/20">
+          <div className="w-full pb-32 md:pb-0 h-full bg-gray/10 p-4 rounded-t-2xl border border-gray/20 relative">
             <DataTable
               columns={jobColumns}
               data={jobs}
@@ -221,9 +309,20 @@ const AdminDashboard = () => {
           </div>
         )}
         {activeTab === "post_job" && (
-          <div className="w-full bg-gray/40 p-4 rounded-2xl border border-gray/20">
+          <div className="w-full pb-32 md:pb-0 h-full bg-gray/10 p-4 rounded-t-2xl border border-gray/20 relative">
             <h1 className="text-2xl font-bold mb-4">Post Job</h1>
             <PostJob />
+          </div>
+        )}
+        {activeTab === "Applications" && (
+          <div className="w-full pb-32 md:pb-0 h-full bg-gray/10 p-4 rounded-t-2xl border border-gray/20 relative">
+            <DataTable
+              columns={applicationColumns}
+              data={applications}
+              pagination
+              highlightOnHover
+              striped
+            />
           </div>
         )}
       </div>
