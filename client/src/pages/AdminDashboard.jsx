@@ -24,7 +24,7 @@ const AdminDashboard = () => {
   const [mentors, setMentors] = useState([]);
   const [jobs, setJobs] = useState([]); // State for jobs
   const [applications, setApplications] = useState([]); // State for grouped applications
-  const [loading, setLoading] = useState(true);
+  const [tabLoading, setTabLoading] = useState(false); // State for tab-specific loading
   const [activeTab, setActiveTab] = useState("Overall Stats"); // State for active tab
   const [stats, setStats] = useState({
     totalUsers: 0,
@@ -38,26 +38,31 @@ const AdminDashboard = () => {
 
   useEffect(() => {
     const fetchEmployers = async () => {
+      setTabLoading(true);
       try {
         const response = await axios.get("/user/employers");
         setEmployers(response.data.employers);
-        setLoading(false);
       } catch (error) {
         toast.error("Failed to fetch employers");
-        setLoading(false);
+      } finally {
+        setTabLoading(false);
       }
     };
 
     const fetchJobs = async () => {
+      setTabLoading(true);
       try {
         const response = await axios.get("/jobs"); // Fetch jobs
         setJobs(response.data.jobs);
       } catch (error) {
         toast.error("Failed to fetch jobs");
+      } finally {
+        setTabLoading(false);
       }
     };
 
     const fetchApplications = async () => {
+      setTabLoading(true);
       try {
         const response = await axios.get("/jobs/applications/all", {
           headers: {
@@ -86,10 +91,13 @@ const AdminDashboard = () => {
         setApplications(Object.values(groupedApplications)); // Convert grouped object to array
       } catch (error) {
         toast.error("Failed to fetch applications");
+      } finally {
+        setTabLoading(false);
       }
     };
 
     const fetchStats = async () => {
+      setTabLoading(true);
       try {
         const response = await axios.get("/user/stats", {
           headers: {
@@ -100,10 +108,13 @@ const AdminDashboard = () => {
         setStats(response.data.stats);
       } catch (error) {
         toast.error("Failed to fetch platform stats");
+      } finally {
+        setTabLoading(false);
       }
     };
 
     const fetchRecentEmployers = async () => {
+      setTabLoading(true);
       try {
         const response = await axios.get("/user/recent-employers", {
           headers: {
@@ -114,19 +125,17 @@ const AdminDashboard = () => {
         setRecentEmployers(response.data.recentEmployers);
       } catch (error) {
         toast.error("Failed to fetch recent employers");
+      } finally {
+        setTabLoading(false);
       }
     };
 
-    fetchEmployers();
-    fetchJobs();
-
-    if (activeTab === "allApplications") {
-      fetchApplications(); // Fetch grouped applications when the "Applications" tab is active
-    }
-
+    if (activeTab === "Employees") fetchEmployers();
+    if (activeTab === "Jobs") fetchJobs();
+    if (activeTab === "allApplications") fetchApplications();
     if (activeTab === "Overall Stats") {
-      fetchStats(); // Fetch stats when "Overall Stats" tab is active
-      fetchRecentEmployers(); // Fetch recent employers when "Overall Stats" tab is active
+      fetchStats();
+      fetchRecentEmployers();
     }
   }, [activeTab]);
 
@@ -157,10 +166,6 @@ const AdminDashboard = () => {
   const handleViewJobDetails = (id) => {
     navigate(`/job-details/${id}`);
   };
-
-  if (loading) {
-    return <LoadingScreen />;
-  }
 
   const employerColumns = [
     {
@@ -406,129 +411,139 @@ const AdminDashboard = () => {
 
       {/* Main Content */}
       <div className="w-full mx-auto p-4 min-h-[500px]">
-        {activeTab === "Overall Stats" && (
-          <div className="w-full pb-32 md:pb-5 h-full bg-gray/10 p-4 rounded-2xl border font-SatoshiRegular text-sm border-gray/20 relative">
-            <h1 className="text-2xl font-bold mb-4">Platform Statistics</h1>
-            <div className="m-4 py-3 px-4 bg-gray/20 h-fit shadow rounded-lg">
-              <StatsGraph stats={stats} />
-            </div>
-            <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
-              <div className="py-2 px-4 bg-white  h-fit shadow rounded-lg">
-                <h2 className=" text-mblack underline underline-offset-4">
-                  Total Users
-                </h2>
-                <p className="text-lg font-SatoshiBlack ">{stats.totalUsers}</p>
-              </div>
-              <div className="py-2 px-4 bg-white  h-fit shadow rounded-lg">
-                <h2 className="text-mblack underline underline-offset-4">
-                  Employers
-                </h2>
-                <p className="text-lg font-SatoshiBlack ">
-                  {stats.totalEmployers}
-                </p>
-              </div>
-              <div className="py-2 px-4 bg-white  h-fit shadow rounded-lg">
-                <h2 className="text-mblack underline underline-offset-4">
-                  Jobseekers
-                </h2>
-                <p className="text-lg font-SatoshiBlack ">
-                  {stats.totalJobseekers}
-                </p>
-              </div>
-              <div className="py-2 px-4 bg-white  h-fit shadow rounded-lg">
-                <h2 className="text-mblack underline underline-offset-4">
-                  Mentors
-                </h2>
-                <p className="text-lg font-SatoshiBlack ">
-                  {stats.totalMentors}
-                </p>
-              </div>
-              <div className="py-2 px-4 bg-white  h-fit shadow rounded-lg">
-                <h2 className="text-mblack underline underline-offset-4">
-                  Total Applications
-                </h2>
-                <p className="text-lg font-SatoshiBlack ">
-                  {stats.totalApplications}
-                </p>
-              </div>
-            </div>
-            <div className="mt-8 py-3 px-4 bg-gray/20 h-fit shadow rounded-lg ">
-              <h2 className="text-lg font-bold">Recent Employers / Mentor</h2>
-              <ul className="space-y-4 grid grid-cols-1 sm:grid-cols-2 gap-4 justify-start">
-                {recentEmployers.slice(0, 5).map((employer) => (
-                  <li
-                    key={employer._id}
-                    className="py-2 px-4 bg-white h-fit shadow-sm rounded-lg cursor-pointer hover:translate-y-[1px] hover:ring-1 ring-gray transition-all ease-linear duration-150"
-                    onClick={() => handleViewProfile(employer._id)} // Move onClick here
-                  >
-                    <p className="font-bold inline-flex gap-2 items-center">
-                      <FaUsers />
-                      {employer.firstname} {employer.lastname}
+        {tabLoading ? (
+          <LoadingScreen /> // Show loading screen for the active tab
+        ) : (
+          <>
+            {activeTab === "Overall Stats" && (
+              <div className="w-full pb-32 md:pb-5 h-full bg-gray/10 p-4 rounded-2xl border font-SatoshiRegular text-sm border-gray/20 relative">
+                <h1 className="text-lg font-SatoshiMedium mb-4">Platform Statistics</h1>
+                <div className="m-4 py-3 px-4 bg-gray/20 h-fit shadow rounded-lg">
+                  <StatsGraph stats={stats} />
+                </div>
+                <div className="grid grid-cols-2 lg:grid-cols-3 gap-6">
+                  <div className="py-2 px-4 bg-white  h-fit shadow rounded-lg">
+                    <h2 className=" text-mblack underline underline-offset-4">
+                      Total Users
+                    </h2>
+                    <p className="text-lg font-SatoshiBlack ">
+                      {stats.totalUsers}
                     </p>
-                    <p className="text-sm text-black/70 flex gap-2 items-center">
-                      <TbBrandMailgun />
-                      {employer.email}
+                  </div>
+                  <div className="py-2 px-4 bg-white  h-fit shadow rounded-lg">
+                    <h2 className="text-mblack underline underline-offset-4">
+                      Employers
+                    </h2>
+                    <p className="text-lg font-SatoshiBlack ">
+                      {stats.totalEmployers}
                     </p>
-                    <p className="text-xs text-black/70 flex gap-2 items-center">
-                      <BsCalendar2DateFill />
-                      Joined:{" "}
-                      {new Date(employer.createdAt).toLocaleDateString()}
+                  </div>
+                  <div className="py-2 px-4 bg-white  h-fit shadow rounded-lg">
+                    <h2 className="text-mblack underline underline-offset-4">
+                      Jobseekers
+                    </h2>
+                    <p className="text-lg font-SatoshiBlack ">
+                      {stats.totalJobseekers}
                     </p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          </div>
-        )}
-        {activeTab === "Employees" && (
-          <div className="w-full pb-32 md:pb-0 h-full bg-gray/10 p-4 rounded-t-2xl border border-gray/20 relative">
-            <DataTable
-              columns={employerColumns}
-              data={employers}
-              pagination
-              highlightOnHover
-              striped
-            />
-          </div>
-        )}
-        {activeTab === "Mentors" && (
-          <div className="w-full pb-32 md:pb-0 h-full bg-gray/10 p-4 rounded-t-2xl border border-gray/20 relative">
-            <DataTable
-              columns={mentorColumns}
-              data={mentors}
-              pagination
-              highlightOnHover
-              striped
-            />
-          </div>
-        )}
-        {activeTab === "Jobs" && (
-          <div className="w-full pb-32 md:pb-0 h-full bg-gray/10 p-4 rounded-t-2xl border border-gray/20 relative">
-            <DataTable
-              columns={jobColumns}
-              data={jobs}
-              pagination
-              highlightOnHover
-              striped
-            />
-          </div>
-        )}
-        {activeTab === "allApplications" && (
-          <div className="w-full pb-32 md:pb-0 h-full bg-gray/10 p-4 rounded-t-2xl border border-gray/20 relative">
-            <DataTable
-              columns={applicationColumns}
-              data={applications} // Display grouped applications
-              pagination
-              highlightOnHover
-              striped
-            />
-          </div>
-        )}
-        {activeTab === "post_job" && (
-          <div className="w-full pb-32 md:pb-0 h-full bg-gray/10 p-4 rounded-2xl border border-gray/20 relative">
-            <h1 className="text-2xl font-bold mb-4">Post Job</h1>
-            <PostJob />
-          </div>
+                  </div>
+                  <div className="py-2 px-4 bg-white  h-fit shadow rounded-lg">
+                    <h2 className="text-mblack underline underline-offset-4">
+                      Mentors
+                    </h2>
+                    <p className="text-lg font-SatoshiBlack ">
+                      {stats.totalMentors}
+                    </p>
+                  </div>
+                  <div className="py-2 px-4 bg-white  h-fit shadow rounded-lg">
+                    <h2 className="text-mblack underline underline-offset-4">
+                      Total Applications
+                    </h2>
+                    <p className="text-lg font-SatoshiBlack ">
+                      {stats.totalApplications}
+                    </p>
+                  </div>
+                </div>
+                <div className="mt-8 py-3 px-4 bg-gray/20 h-fit shadow rounded-lg ">
+                  <h2 className="text-lg font-SatoshiMedium mb-2">
+                    Recent Employers / Mentor
+                  </h2>
+                  <ul className="space-y-4 grid grid-cols-1 sm:grid-cols-2 gap-4 justify-start">
+                    {recentEmployers.slice(0, 5).map((employer) => (
+                      <li
+                        key={employer._id}
+                        className="py-2 px-4 bg-white h-fit shadow-sm rounded-lg cursor-pointer hover:translate-y-[1px] hover:ring-1 ring-gray transition-all ease-linear duration-150"
+                        onClick={() => handleViewProfile(employer._id)} // Move onClick here
+                      >
+                        <p className="font-bold inline-flex gap-2 items-center">
+                          <FaUsers />
+                          {employer.firstname} {employer.lastname}
+                        </p>
+                        <p className="text-sm text-black/70 flex gap-2 items-center">
+                          <TbBrandMailgun />
+                          {employer.email}
+                        </p>
+                        <p className="text-xs text-black/70 flex gap-2 items-center">
+                          <BsCalendar2DateFill />
+                          Joined:{" "}
+                          {new Date(employer.createdAt).toLocaleDateString()}
+                        </p>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            )}
+            {activeTab === "Employees" && (
+              <div className="w-full pb-32 md:pb-0 h-full bg-gray/10 p-4 rounded-t-2xl border border-gray/20 relative">
+                <DataTable
+                  columns={employerColumns}
+                  data={employers}
+                  pagination
+                  highlightOnHover
+                  striped
+                />
+              </div>
+            )}
+            {activeTab === "Mentors" && (
+              <div className="w-full pb-32 md:pb-0 h-full bg-gray/10 p-4 rounded-t-2xl border border-gray/20 relative">
+                <DataTable
+                  columns={mentorColumns}
+                  data={mentors}
+                  pagination
+                  highlightOnHover
+                  striped
+                />
+              </div>
+            )}
+            {activeTab === "Jobs" && (
+              <div className="w-full pb-32 md:pb-0 h-full bg-gray/10 p-4 rounded-t-2xl border border-gray/20 relative">
+                <DataTable
+                  columns={jobColumns}
+                  data={jobs}
+                  pagination
+                  highlightOnHover
+                  striped
+                />
+              </div>
+            )}
+            {activeTab === "allApplications" && (
+              <div className="w-full pb-32 md:pb-0 h-full bg-gray/10 p-4 rounded-t-2xl border border-gray/20 relative">
+                <DataTable
+                  columns={applicationColumns}
+                  data={applications} // Display grouped applications
+                  pagination
+                  highlightOnHover
+                  striped
+                />
+              </div>
+            )}
+            {activeTab === "post_job" && (
+              <div className="w-full pb-32 md:pb-0 h-full bg-gray/10 p-4 rounded-2xl border border-gray/20 relative">
+                <h1 className="text-2xl font-bold mb-4">Post Job</h1>
+                <PostJob />
+              </div>
+            )}
+          </>
         )}
       </div>
     </div>

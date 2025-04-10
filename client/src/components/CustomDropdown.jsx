@@ -32,8 +32,8 @@ const CustomDropdown = ({ options, value, onChange, placeholder, icon }) => {
         onClick={() => setIsOpen(!isOpen)}
       ><span className="flex items-center">
         {icon && <span className="mr-2">{icon}</span>}
-        {value && <span className="text-black/70">{value}</span>}
-        {!value && <span className="text-black/70">{placeholder}</span>}
+        {value && <span className="text-black/80">{value}</span>}
+        {!value && <span className="text-black/80">{placeholder}</span>}
       </span>
         {isOpen ? (
           <MdOutlineArrowDropDown className="size-5 rotate-180 transition-all ease-in-out duration-200" />

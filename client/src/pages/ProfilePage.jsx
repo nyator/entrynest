@@ -10,6 +10,7 @@ import { IoPersonCircleOutline } from "react-icons/io5";
 import { HiPlusCircle } from "react-icons/hi2";
 import { HiMiniDocumentText } from "react-icons/hi2";
 import { MdSpaceDashboard } from "react-icons/md";
+import { TbLocationFilled } from "react-icons/tb";
 
 const skillsList = [
   "JavaScript",
@@ -79,6 +80,9 @@ const ProfilePage = () => {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
+    if (name === "telNumber" && (isNaN(value) || value.length > 9)) {
+      return; // Prevent non-numeric input or input longer than 9 digits
+    }
     setProfileData({ ...profileData, [name]: value });
   };
 
@@ -137,18 +141,53 @@ const ProfilePage = () => {
   return (
     <div className="mx-auto p-4 leading-normal font-SatoshiMedium text-sm">
       <nav className="mb-4 leading-normal text-gray-600 text-breadcrumb inline-flex items-center text-black/70 gap-2">
-        <span className="text-black/70 font-bold inline-flex items-center">
-          <MdSpaceDashboard className="inline-block mr-1" />
-          <Link to="/em-dashboard" className="hover:underline">
-            Employer Dashboard
-          </Link>{" "}
-        </span>
-        /{" "}
-        <span className="text-black/40 font-bold inline-flex items-center">
-          <HiMiniDocumentText className="inline-block mr-1" />
-          Profile
-        </span>
+        {user.role === "employer" && (
+          <>
+            <span className="text-black/70 font-bold inline-flex items-center">
+              <MdSpaceDashboard className="inline-block mr-1" />
+              <Link to="/em-dashboard" className="hover:underline">
+                Employer Dashboard
+              </Link>{" "}
+            </span>
+            /
+            <span className="text-black/40 font-bold inline-flex items-center">
+              <HiMiniDocumentText className="inline-block mr-1" />
+              Profile
+            </span>
+          </>
+        )}
+        {user.role === "admin" && (
+          <>
+            <span className="text-black/70 font-bold inline-flex items-center">
+              <MdSpaceDashboard className="inline-block mr-1" />
+              <Link to="/admin-dashboard" className="hover:underline">
+                Admin Dashboard
+              </Link>{" "}
+            </span>
+            /
+            <span className="text-black/40 font-bold inline-flex items-center">
+              <HiMiniDocumentText className="inline-block mr-1" />
+              Profile
+            </span>
+          </>
+        )}
+        {user.role === "jobseeker" && (
+          <>
+            <span className="text-black/70 font-bold inline-flex items-center">
+              <MdSpaceDashboard className="inline-block mr-1" />
+              <Link to="/jobs" className="hover:underline">
+                Home
+              </Link>{" "}
+            </span>
+            /
+            <span className="text-black/40 font-bold inline-flex items-center">
+              <HiMiniDocumentText className="inline-block mr-1" />
+              Profile
+            </span>
+          </>
+        )}
       </nav>
+
       <form onSubmit={handleSubmit}>
         <div className="flex items-center justify-center">
           <div className="rounded-full bg-slate-200 w-fit relative">
@@ -186,7 +225,7 @@ const ProfilePage = () => {
             />
           </div>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-4 leading-normal w-1/2 mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-4 leading-normal md:w-4/6 mx-auto">
           {user.role === "jobseeker" && (
             <>
               <div className="mb-4 leading-normal">
@@ -259,7 +298,7 @@ const ProfilePage = () => {
               name="email"
               value={profileData.email}
               onChange={handleChange}
-              className="w-full inline-flex bg-white border-[1px] border-grayStroke rounded-lg p-2"
+              className="w-full inline-flex bg-white border-[1px] border-grayStroke rounded-lg p-2 text-black/50"
               disabled
             />
           </div>
@@ -275,29 +314,37 @@ const ProfilePage = () => {
             />
           </div>
           <div className="mb-4 leading-normal">
-            <label className="block text-gray-700">Biography</label>
-            <textarea
-              name="biography"
-              value={profileData.biography}
-              onChange={handleChange}
-              className="w-full inline-flex bg-white border-[1px] border-grayStroke rounded-lg p-2"
-            />
-          </div>
-          <div className="mb-4 leading-normal">
             <label className="block text-gray-700">Location</label>
             <CustomDropdown
               options={locationOptions}
               value={profileData.location}
               onChange={handleLocationChange}
               placeholder="Select Location"
+              icon={
+                <TbLocationFilled className="text-breadcrumb text-black/50" />
+              }
             />
           </div>
           <div className="mb-4 leading-normal">
             <label className="block text-gray-700">Telephone Number</label>
-            <input
-              type="text"
-              name="telNumber"
-              value={profileData.telNumber}
+            <div className="relative">
+              <input
+                type="text"
+                name="telNumber"
+                value={profileData.telNumber}
+                onChange={handleChange}
+                className="w-full pl-12 bg-white border-[1px] border-grayStroke rounded-lg p-2 tracking-wider"
+              />
+              <span className="absolute top-1/2 left-3 transform -translate-y-1/2 text-black/70">
+                +233
+              </span>
+            </div>
+          </div>
+          <div className="mb-4 leading-normal">
+            <label className="block text-gray-700">Biography</label>
+            <textarea
+              name="biography"
+              value={profileData.biography}
               onChange={handleChange}
               className="w-full inline-flex bg-white border-[1px] border-grayStroke rounded-lg p-2"
             />
