@@ -252,6 +252,16 @@ const AdminDashboard = () => {
           </li>
           <li
             className={`cursor-pointer px-6 py-2 ${
+              activeTab === "allApplications"
+                ? "bg-white rounded-lg transition-all ease-linear duration-150 border-gray/90 border"
+                : "hover:bg-white/50 rounded-lg transition-all ease-linear duration-150 border-gray/20 border"
+            }`}
+            onClick={() => setActiveTab("allApplications")}
+          >
+            All Applications
+          </li>
+          <li
+            className={`cursor-pointer px-6 py-2 ${
               activeTab === "post_job"
                 ? "bg-white rounded-lg transition-all ease-linear duration-150 border-primary/20 border"
                 : "hover:bg-primary/90 bg-primary text-white rounded-lg transition-all ease-linear duration-150 border-primaryStroke/90 border "
@@ -259,16 +269,6 @@ const AdminDashboard = () => {
             onClick={() => setActiveTab("post_job")}
           >
             Post Job
-          </li>
-          <li
-            className={`cursor-pointer px-6 py-2 ${
-              activeTab === "Applications"
-                ? "bg-white rounded-lg transition-all ease-linear duration-150 border-gray/90 border"
-                : "hover:bg-white/50 rounded-lg transition-all ease-linear duration-150 border-gray/20 border"
-            }`}
-            onClick={() => setActiveTab("Applications")}
-          >
-            Applications
           </li>
         </ul>
       </div>
