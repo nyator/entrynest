@@ -32,6 +32,7 @@ const AdminDashboard = () => {
     totalJobseekers: 0,
     totalMentors: 0,
     totalApplications: 0,
+    totalJobsPosted: 0, // Ensure totalJobsPosted is included
   });
   const [recentEmployers, setRecentEmployers] = useState([]); // State for recent employers
   const navigate = useNavigate();
@@ -105,7 +106,7 @@ const AdminDashboard = () => {
           },
           withCredentials: true,
         });
-        setStats(response.data.stats);
+        setStats(response.data.stats); // Ensure totalJobsPosted is included in stats
       } catch (error) {
         toast.error("Failed to fetch platform stats");
       } finally {
@@ -452,6 +453,14 @@ const AdminDashboard = () => {
                     </h2>
                     <p className="text-lg font-SatoshiBlack ">
                       {stats.totalMentors}
+                    </p>
+                  </div>
+                  <div className="py-2 px-4 bg-white  h-fit shadow rounded-lg">
+                    <h2 className="text-mblack underline underline-offset-4">
+                      Jobs Posted
+                    </h2>
+                    <p className="text-lg font-SatoshiBlack ">
+                      {stats.totalJobsPosted}
                     </p>
                   </div>
                   <div className="py-2 px-4 bg-white  h-fit shadow rounded-lg">

@@ -134,8 +134,14 @@ export const getPlatformStats = async (req, res) => {
     const totalMentors = await User.countDocuments({ role: "mentor" });
     const totalApplications = await Job.aggregate([
       { $unwind: "$applications" },
-      { $count: "totalApplications" },
+      {
+        $group: {
+          _id: { jobId: "$_id", userId: "$applications.user" }, // Group by job and user
+        },
+      },
+      { $count: "totalApplications" }, // Count unique applications
     ]);
+    const totalJobsPosted = await Job.countDocuments();
 
     res.status(200).json({
       success: true,
@@ -144,7 +150,8 @@ export const getPlatformStats = async (req, res) => {
         totalEmployers,
         totalJobseekers,
         totalMentors,
-        totalApplications: totalApplications[0]?.totalApplications || 0,
+        totalApplications: totalApplications[0]?.totalApplications || 0, // Use grouped applications count
+        totalJobsPosted,
       },
     });
   } catch (error) {
