@@ -14,13 +14,19 @@ import { BsFilePost } from "react-icons/bs";
 import { MdOutlinePostAdd } from "react-icons/md";
 import { FaGetPocket } from "react-icons/fa";
 
-
 const AdminDashboard = () => {
   const [employers, setEmployers] = useState([]);
   const [jobs, setJobs] = useState([]); // State for jobs
   const [applications, setApplications] = useState([]); // State for applications
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("Employees"); // State for active tab
+  const [stats, setStats] = useState({
+    totalUsers: 0,
+    totalEmployers: 0,
+    totalJobseekers: 0,
+    totalMentors: 0,
+    totalApplications: 0,
+  });
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -58,11 +64,29 @@ const AdminDashboard = () => {
       }
     };
 
+    const fetchStats = async () => {
+      try {
+        const response = await axios.get("/user/stats", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          withCredentials: true,
+        });
+        setStats(response.data.stats);
+      } catch (error) {
+        toast.error("Failed to fetch platform stats");
+      }
+    };
+
     fetchEmployers();
     fetchJobs();
 
     if (activeTab === "allApplications") {
       fetchApplications(); // Fetch applications for "allApplications" tab
+    }
+
+    if (activeTab === "Overall Stats") {
+      fetchStats(); // Fetch stats when "Overall Stats" tab is active
     }
   }, [activeTab]);
 
@@ -231,8 +255,8 @@ const AdminDashboard = () => {
             }`}
             onClick={() => setActiveTab("Overall Stats")}
           >
-            <FcStatistics/>
-            Overall Stats 
+            <FcStatistics />
+            Overall Stats
           </li>
           <li
             className={`cursor-pointer px-6 py-2 inline-flex items-center gap-2 ${
@@ -242,7 +266,7 @@ const AdminDashboard = () => {
             }`}
             onClick={() => setActiveTab("Employees")}
           >
-            <FaUsers/>
+            <FaUsers />
             Employees
           </li>
           <li
@@ -253,7 +277,7 @@ const AdminDashboard = () => {
             }`}
             onClick={() => setActiveTab("Mentors")}
           >
-            <MdSupervisedUserCircle/>
+            <MdSupervisedUserCircle />
             Mentors
           </li>
           <li
@@ -264,7 +288,7 @@ const AdminDashboard = () => {
             }`}
             onClick={() => setActiveTab("Jobs")}
           >
-            <BsFilePost/>
+            <BsFilePost />
             Jobs
           </li>
           <li
@@ -275,7 +299,7 @@ const AdminDashboard = () => {
             }`}
             onClick={() => setActiveTab("allApplications")}
           >
-            <FaGetPocket/>
+            <FaGetPocket />
             All Applications
           </li>
           <li
@@ -286,7 +310,7 @@ const AdminDashboard = () => {
             }`}
             onClick={() => setActiveTab("post_job")}
           >
-            <MdOutlinePostAdd/>
+            <MdOutlinePostAdd />
             Post Job
           </li>
         </ul>
@@ -345,8 +369,32 @@ const AdminDashboard = () => {
           </div>
         )}
         {activeTab === "Overall Stats" && (
-          <div>
-            
+          <div className="w-full pb-32 md:pb-0 h-full bg-gray/10 p-4 rounded-t-2xl border border-gray/20 relative">
+            <h1 className="text-2xl font-bold mb-4">Platform Statistics</h1>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              <div className="p-4 bg-white shadow rounded-lg">
+                <h2 className="text-lg font-bold">Total Users</h2>
+                <p className="text-3xl font-semibold">{stats.totalUsers}</p>
+              </div>
+              <div className="p-4 bg-white shadow rounded-lg">
+                <h2 className="text-lg font-bold">Employers</h2>
+                <p className="text-3xl font-semibold">{stats.totalEmployers}</p>
+              </div>
+              <div className="p-4 bg-white shadow rounded-lg">
+                <h2 className="text-lg font-bold">Jobseekers</h2>
+                <p className="text-3xl font-semibold">{stats.totalJobseekers}</p>
+              </div>
+              <div className="p-4 bg-white shadow rounded-lg">
+                <h2 className="text-lg font-bold">Mentors</h2>
+                <p className="text-3xl font-semibold">{stats.totalMentors}</p>
+              </div>
+              <div className="p-4 bg-white shadow rounded-lg">
+                <h2 className="text-lg font-bold">Total Applications</h2>
+                <p className="text-3xl font-semibold">
+                  {stats.totalApplications}
+                </p>
+              </div>
+            </div>
           </div>
         )}
       </div>

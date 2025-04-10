@@ -125,3 +125,34 @@ export const getEmployerById = async (req, res) => {
     });
   }
 };
+
+export const getPlatformStats = async (req, res) => {
+  try {
+    const totalUsers = await User.countDocuments();
+    const totalEmployers = await User.countDocuments({ role: "employer" });
+    const totalJobseekers = await User.countDocuments({ role: "jobseeker" });
+    const totalMentors = await User.countDocuments({ role: "mentor" });
+    const totalApplications = await Job.aggregate([
+      { $unwind: "$applications" },
+      { $count: "totalApplications" },
+    ]);
+
+    res.status(200).json({
+      success: true,
+      stats: {
+        totalUsers,
+        totalEmployers,
+        totalJobseekers,
+        totalMentors,
+        totalApplications: totalApplications[0]?.totalApplications || 0,
+      },
+    });
+  } catch (error) {
+    console.error("Error fetching platform stats:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch platform stats",
+      errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
+    });
+  }
+};
