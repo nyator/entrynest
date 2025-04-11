@@ -1,10 +1,9 @@
 import { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { button } from "../constants/styles"; // Removed `input` import
+import { button } from "../constants/styles";
 import { useNavigate } from "react-router-dom";
 
-import { IoMdArrowRoundBack } from "react-icons/io";
 import { TbLocationFilled } from "react-icons/tb";
 import { HiOfficeBuilding } from "react-icons/hi";
 import { PiOfficeChairFill } from "react-icons/pi";
@@ -13,6 +12,8 @@ import { FaCediSign } from "react-icons/fa6";
 import { IoMdPricetags } from "react-icons/io";
 
 import CustomDropdown from "../components/CustomDropdown";
+
+import { jobTypes } from "../constants/index";
 
 const PostJob = () => {
   const [jobTitle, setJobTitle] = useState("");
@@ -106,7 +107,7 @@ const PostJob = () => {
   ];
 
   const workStyles = ["Remote", "On-site", "Hybrid"];
-  const jobTypes = ["Internship", "Mentorship", "Full-time", "Contract"];
+  // const jobTypes = ["Internship", "Mentorship", "Full-time", "Contract"];
   const tags = [
     "Sales & Marketing",
     "Aerospace",
@@ -169,7 +170,9 @@ const PostJob = () => {
             </div>
 
             <div className="mb-4">
-              <label className="block text-gray-700">Salary Range {"(GH₵)"}</label>
+              <label className="block text-gray-700">
+                Salary Range {"(GH₵)"}
+              </label>
               <CustomDropdown
                 options={salaryRanges}
                 value={salaryRange}

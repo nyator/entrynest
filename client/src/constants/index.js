@@ -27,7 +27,7 @@ export const locationOptions = [
   "Worldwide",
 ];
 
-export const jobType = ["Internship", "Contract", "Entry level", "NSS"];
+export const jobTypes = ["Internship", "Contract", "Entry level", "NSS"];
 
 export const jobStyle = ["On-site", "Remote", "Hybrid"];
 

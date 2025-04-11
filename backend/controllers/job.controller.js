@@ -1,20 +1,24 @@
 import { Job } from "../models/job.model.js";
 
 export const createJob = async (req, res) => {
-  const { salaryRange, title, description, location, tag, type, style } = req.body;
+  const { salaryRange, title, location, tags, type, style, aboutRole, qualification, responsibility } =
+    req.body; // Removed description
 
   console.log("createJob - Request body:", req.body);
   console.log("createJob - User ID:", req.userId);
 
   try {
     const job = new Job({
-      salaryRange,
       title,
-      description,
       location,
-      tag,
       type,
+      tags,
       style,
+      aboutRole,
+      qualification,
+      responsibility,
+      salaryRange,
+      // Removed description
       postedBy: req.userId,
     });
 
@@ -33,7 +37,8 @@ export const createJob = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to post job",
-      errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
+      errorDetails:
+        process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
   }
 };
@@ -51,14 +56,18 @@ export const getJobs = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to fetch jobs",
-      errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
+      errorDetails:
+        process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
   }
 };
 
 export const getJobById = async (req, res) => {
   try {
-    const job = await Job.findById(req.params.id).populate("postedBy", "firstname lastname");
+    const job = await Job.findById(req.params.id).populate(
+      "postedBy",
+      "firstname lastname"
+    );
     if (!job) {
       return res.status(404).json({ success: false, message: "Job not found" });
     }
@@ -69,7 +78,8 @@ export const getJobById = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to fetch job",
-      errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
+      errorDetails:
+        process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
   }
 };
@@ -83,13 +93,16 @@ export const deleteJob = async (req, res) => {
       return res.status(404).json({ success: false, message: "Job not found" });
     }
 
-    res.status(200).json({ success: true, message: "Job deleted successfully" });
+    res
+      .status(200)
+      .json({ success: true, message: "Job deleted successfully" });
   } catch (error) {
     console.error("Error deleting job:", error);
     res.status(500).json({
       success: false,
       message: "Failed to delete job",
-      errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
+      errorDetails:
+        process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
   }
 };
@@ -102,7 +115,9 @@ export const applyToJob = async (req, res) => {
 
     if (!cv) {
       console.error("CV file is missing in the request.");
-      return res.status(400).json({ success: false, message: "CV is required" });
+      return res
+        .status(400)
+        .json({ success: false, message: "CV is required" });
     }
 
     const job = await Job.findById(id);
@@ -119,34 +134,44 @@ export const applyToJob = async (req, res) => {
     };
 
     if (!req.userId) {
-      console.error("User ID is missing in the request. Ensure authentication middleware is working.");
+      console.error(
+        "User ID is missing in the request. Ensure authentication middleware is working."
+      );
       return res.status(401).json({ success: false, message: "Unauthorized" });
     }
 
     job.applications.push(application);
     await job.save();
 
-    res.status(201).json({ success: true, message: "Application submitted successfully" });
+    res
+      .status(201)
+      .json({ success: true, message: "Application submitted successfully" });
   } catch (error) {
     console.error("Error applying to job:", error.message);
     console.error("Stack trace:", error.stack);
     res.status(500).json({
       success: false,
       message: "Failed to apply to job",
-      errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
+      errorDetails:
+        process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
   }
 };
 
 export const getEmployerApplications = async (req, res) => {
   try {
-    const jobs = await Job.find({ postedBy: req.userId }).populate("applications.user", "firstname lastname email");
+    const jobs = await Job.find({ postedBy: req.userId }).populate(
+      "applications.user",
+      "firstname lastname email"
+    );
 
     if (!jobs) {
-      return res.status(404).json({ success: false, message: "No jobs found for this employer" });
+      return res
+        .status(404)
+        .json({ success: false, message: "No jobs found for this employer" });
     }
 
-    const applications = jobs.flatMap((job) => 
+    const applications = jobs.flatMap((job) =>
       job.applications.map((app) => ({
         jobId: job._id,
         jobTitle: job.title,
@@ -161,7 +186,8 @@ export const getEmployerApplications = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to fetch applications",
-      errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
+      errorDetails:
+        process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
   }
 };
@@ -170,7 +196,9 @@ export const getEmployerJobs = async (req, res) => {
   try {
     if (!req.userId) {
       console.error("User ID is missing in the request.");
-      return res.status(401).json({ success: false, message: "Unauthorized - User ID missing" });
+      return res
+        .status(401)
+        .json({ success: false, message: "Unauthorized - User ID missing" });
     }
 
     console.log("Fetching jobs for employer with ID:", req.userId);
@@ -179,7 +207,9 @@ export const getEmployerJobs = async (req, res) => {
 
     if (!jobs || jobs.length === 0) {
       console.log("No jobs found for employer with ID:", req.userId);
-      return res.status(404).json({ success: false, message: "No jobs found for this employer" });
+      return res
+        .status(404)
+        .json({ success: false, message: "No jobs found for this employer" });
     }
 
     // Add application count to each job
@@ -195,7 +225,8 @@ export const getEmployerJobs = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to fetch employer jobs",
-      errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
+      errorDetails:
+        process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
   }
 };
@@ -215,16 +246,21 @@ export const editJob = async (req, res) => {
     );
 
     if (!job) {
-      return res.status(404).json({ success: false, message: "Job not found or unauthorized" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Job not found or unauthorized" });
     }
 
-    res.status(200).json({ success: true, message: "Job updated successfully", job });
+    res
+      .status(200)
+      .json({ success: true, message: "Job updated successfully", job });
   } catch (error) {
     console.error("Error editing job:", error.message);
     res.status(500).json({
       success: false,
       message: "Failed to edit job",
-      errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
+      errorDetails:
+        process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
   }
 };
@@ -235,7 +271,9 @@ export const updateApplicationStatus = async (req, res) => {
     const { status } = req.body; // "approved" or "declined"
 
     if (!["approved", "declined"].includes(status)) {
-      return res.status(400).json({ success: false, message: "Invalid status" });
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid status" });
     }
 
     const job = await Job.findById(jobId);
@@ -247,7 +285,9 @@ export const updateApplicationStatus = async (req, res) => {
     const application = job.applications.id(applicationId);
 
     if (!application) {
-      return res.status(404).json({ success: false, message: "Application not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Application not found" });
     }
 
     application.status = status; // Update the application status
@@ -258,20 +298,26 @@ export const updateApplicationStatus = async (req, res) => {
 
     await job.save();
 
-    res.status(200).json({ success: true, message: `Application ${status} successfully` });
+    res
+      .status(200)
+      .json({ success: true, message: `Application ${status} successfully` });
   } catch (error) {
     console.error("Error updating application status:", error.message);
     res.status(500).json({
       success: false,
       message: "Failed to update application status",
-      errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
+      errorDetails:
+        process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
   }
 };
 
 export const getAllSubmittedCVs = async (req, res) => {
   try {
-    const jobs = await Job.find().populate("applications.user", "firstname lastname email");
+    const jobs = await Job.find().populate(
+      "applications.user",
+      "firstname lastname email"
+    );
 
     const applications = jobs.flatMap((job) =>
       job.applications.map((app) => ({
@@ -291,7 +337,8 @@ export const getAllSubmittedCVs = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to fetch submitted CVs",
-      errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
+      errorDetails:
+        process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
   }
 };
