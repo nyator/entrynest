@@ -11,6 +11,7 @@ import { HiPlusCircle } from "react-icons/hi2";
 import { HiMiniDocumentText } from "react-icons/hi2";
 import { MdSpaceDashboard } from "react-icons/md";
 import { TbLocationFilled } from "react-icons/tb";
+import { IoIosCloseCircle } from "react-icons/io";
 
 const skillsList = [
   "JavaScript",
@@ -58,6 +59,7 @@ const ProfilePage = () => {
   });
   const [avatarPreview, setAvatarPreview] = useState(user?.avatar || "");
   const [loading, setLoading] = useState(true);
+  const [skills, setSkills] = useState(profileData.skills || []); // State for selected skills
 
   useEffect(() => {
     if (user) {
@@ -74,6 +76,7 @@ const ProfilePage = () => {
         skills: user.skills || [],
       });
       setAvatarPreview(user.avatar || "");
+      setSkills(user.skills || []);
       setLoading(false);
     }
   }, [user]);
@@ -92,19 +95,18 @@ const ProfilePage = () => {
     setAvatarPreview(URL.createObjectURL(file));
   };
 
-  const handleSkillsChange = (e) => {
-    const { options } = e.target;
-    const selectedSkills = [];
-    for (const option of options) {
-      if (option.selected) {
-        selectedSkills.push(option.value);
-      }
-    }
-    setProfileData({ ...profileData, skills: selectedSkills });
-  };
-
   const handleLocationChange = (selectedLocation) => {
     setProfileData({ ...profileData, location: selectedLocation });
+  };
+
+  const handleAddSkill = (skill) => {
+    if (skill && !skills.includes(skill)) {
+      setSkills([...skills, skill]);
+    }
+  };
+
+  const handleRemoveSkill = (skill) => {
+    setSkills(skills.filter((s) => s !== skill));
   };
 
   const handleSubmit = async (e) => {
@@ -118,7 +120,7 @@ const ProfilePage = () => {
     formData.append("biography", profileData.biography);
     formData.append("location", profileData.location);
     formData.append("telNumber", profileData.telNumber);
-    formData.append("skills", profileData.skills);
+    formData.append("skills", skills.join(", ")); // Save skills as a comma-separated string
 
     try {
       const response = await axios.put("/user/profile", formData, {
@@ -226,47 +228,6 @@ const ProfilePage = () => {
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-4 leading-normal md:w-4/6 mx-auto">
-          {user.role === "jobseeker" && (
-            <>
-              <div className="mb-4 leading-normal">
-                <label className="block text-gray-700">First Name</label>
-                <input
-                  type="text"
-                  name="firstname"
-                  value={profileData.firstname}
-                  onChange={handleChange}
-                  className="mt-1 p-2 border border-gray-300 rounded w-full"
-                />
-              </div>
-              <div className="mb-4 leading-normal">
-                <label className="block text-gray-700">Last Name</label>
-                <input
-                  type="text"
-                  name="lastname"
-                  value={profileData.lastname}
-                  onChange={handleChange}
-                  className="mt-1 p-2 border border-gray-300 rounded w-full"
-                />
-              </div>
-              <div className="mb-4 leading-normal">
-                <label className="block text-gray-700">Skills</label>
-                <select
-                  multiple
-                  name="skills"
-                  value={profileData.skills}
-                  onChange={handleSkillsChange}
-                  className="mt-1 p-2 border border-gray-300 rounded w-full"
-                >
-                  {skillsList.map((skill) => (
-                    <option key={skill} value={skill}>
-                      {skill}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </>
-          )}
-
           {user.role === "employer" && (
             <div className="mb-4 leading-normal">
               <label className="block text-gray-700">Company Name</label>
@@ -319,7 +280,7 @@ const ProfilePage = () => {
               options={locationOptions}
               value={profileData.location}
               onChange={handleLocationChange}
-              placeholder="Select Location"
+              placeholder="Select Your Location"
               icon={
                 <TbLocationFilled className="text-breadcrumb text-black/50" />
               }
@@ -340,6 +301,41 @@ const ProfilePage = () => {
               </span>
             </div>
           </div>
+          {user.role === "jobseeker" && (
+            <div className="mb-4 leading-normal">
+              <div className="">
+                <label className="block text-gray-700 relative">
+                  Skills
+                </label>
+                <CustomDropdown
+                  options={skillsList.filter(
+                    (skill) => !skills.includes(skill)
+                  )}
+                  value=""
+                  onChange={handleAddSkill}
+                  placeholder="Choose Your skills"
+                />
+              </div>
+
+              <div className="flex flex-wrap gap-2 mt-2 md:absolute md:max-w-sm">
+                {skills.map((skill, index) => (
+                  <div
+                    key={index}
+                    className="flex items-center hover:translate-y-[-1px] border border-gray shadow-sm bg-white text-blue-500 px-3 py-1 rounded-full transition-all ease-in-out duration-200"
+                  >
+                    {skill}
+                    <button
+                      type="button"
+                      className="ml-2 text-black/50"
+                      onClick={() => handleRemoveSkill(skill)}
+                    >
+                      <IoIosCloseCircle className="text-black/60" />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
           <div className="mb-4 leading-normal">
             <label className="block text-gray-700">Biography</label>
             <textarea

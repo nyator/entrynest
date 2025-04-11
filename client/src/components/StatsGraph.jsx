@@ -74,11 +74,9 @@ const StatsGraph = ({ stats }) => {
   };
 
   return (
-    <div className="space-y-8">
-      <div>
+    <div className="space-y-1">
         <Bar data={barChartData} options={barChartOptions} />
       </div>
-    </div>
   );
 };
 

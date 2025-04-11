@@ -16,7 +16,7 @@ const JsNavbar = () => {
   return (
     <>
       <div className="md:flex hidden items-center justify-between">
-        <Link to="/">
+        <Link to="/jobs">
           <img src="/logo.svg" alt="logo" />
         </Link>
 
