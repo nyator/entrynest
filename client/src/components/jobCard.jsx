@@ -38,10 +38,10 @@ const JobCard = ({
 
   return (
     <div
-      className={`${cardBStyle} md:w-4/5 h-fit p-10 rounded-[35px] font-SatoshiRegular space-y-4`}
+      className={`${cardBStyle} md:w-4/5 h-fit p-10 rounded-[35px] font-SatoshiRegular space-y-4 border-[1px] border-black/20`}
     >
-      <div className="space-y-4 rounded-[25px] bg-primary/20 p-4 ">
-        <div className="flex justify-between items-center text-jobcard1">
+      <div className="space-y-4 rounded-[25px] bg-primary/20 p-4 border-[1px] border-primaryStroke/50">
+        <div className="flex justify-between items-center text-jobcard1 ">
           <div className={`${cardBStyle} rounded-full`}>{type || "NaN"}</div>
           <div className={`${cardBStyle} rounded-full`}>
             {`posted ${formatTimePosted(timePosted)}` || "NaN"}

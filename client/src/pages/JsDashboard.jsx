@@ -9,6 +9,7 @@ import { TbLocationFilled } from "react-icons/tb";
 import { IoMdPricetags } from "react-icons/io";
 import { HiMiniArrowsUpDown } from "react-icons/hi2";
 import { MdOutlineArrowDropDown } from "react-icons/md";
+import { IoSearch } from "react-icons/io5";
 
 import {
   jobTypes,
@@ -29,6 +30,8 @@ const JsDashboard = () => {
     location: false,
     tag: false,
   });
+  const [searchTerm, setSearchTerm] = useState(""); // Add search term state
+  const [searchQuery, setSearchQuery] = useState(""); // Add search query state
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -84,6 +87,16 @@ const JsDashboard = () => {
 
   const handleClearFilters = () => {
     setFilters({ type: "", location: "", tag: "" });
+    setSearchTerm(""); // Clear search term
+    setSearchQuery(""); // Clear search query
+  };
+
+  const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value); // Update search term
+  };
+
+  const handleSearch = () => {
+    setSearchQuery(searchTerm); // Set the search query when the search button is clicked
   };
 
   const query = new URLSearchParams(location.search);
@@ -94,7 +107,9 @@ const JsDashboard = () => {
       return (
         (filters.type === "" || job.type === filters.type) &&
         (filters.location === "" || job.location === filters.location) &&
-        (filters.tag === "" || job.tags.includes(filters.tag))
+        (filters.tag === "" || job.tags.includes(filters.tag)) &&
+        (searchQuery === "" ||
+          job.title.toLowerCase().includes(searchQuery.toLowerCase())) // Filter by search query
       );
     })
     .filter((job) =>
@@ -114,6 +129,25 @@ const JsDashboard = () => {
 
   return (
     <div className="mx-auto p-4">
+      {/* Search Bar */}
+      <div className="mb-4 flex justify-center bg-africanBackground2 py-10 md:py-20 gap-2 rounded-lg font-SatoshiRegular relative">
+        <div className="relative w-full max-w-80">
+          <input
+            type="text"
+            placeholder="Search jobs by job title..."
+            value={searchTerm}
+            onChange={handleSearchChange}
+            className="w-full border border-gray rounded-full p-4 h-14 pr-16"
+          />
+          <button
+            onClick={handleSearch}
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 px-4 py-2 bg-primary text-white rounded-full hover:bg-primary/80 transition-all"
+          >
+            <IoSearch className="text-xl" />
+          </button>
+        </div>
+      </div>
+
       {/* Horizontal Filter Bar */}
       <div className="flex flex-wrap gap-4 bg-gray-100 p-4 rounded-lg font-SatoshiRegular justify-center items-center">
         {/* Job Type Dropdown */}
@@ -157,7 +191,7 @@ const JsDashboard = () => {
             className="min-w-[200px] w-fit bg-white shadow-sm border border-gray gap-2 rounded-3xl px-4 py-2 text-start inline-flex items-center justify-between"
           >
             {filters.location || "Select Location"}
-            <MdOutlineArrowDropDown className="size-5" />
+            <MdOutlineArrowDropDown className="size-5"/>
           </button>
           {dropdownOpen.location && (
             <div className="absolute w-[200px] z-10 mt-2 text-start bg-white shadow-sm border border-gray gap-2 rounded-xl h-52 overflow-y-auto">
@@ -216,9 +250,16 @@ const JsDashboard = () => {
         </button>
       </div>
 
-      <h1 className="text-2xl font-SatoshiMedium font-bold bg-gray/40 rounded-xl p-4 mb-4">
-        {selectedEmployer ? selectedEmployer + "'s Jobs" : ""}
+      <h1 className="text-2xl font-SatoshiBold bg-gray/40 rounded-xl p-4 mb-4 ">
+        {selectedEmployer ? "Jobs by: " + selectedEmployer : ""}
       </h1>
+
+      {/* Job Count */}
+      {searchQuery && (
+        <p className="text-lg font-SatoshiRegular mb-4">
+          {filteredJobs.length} job{filteredJobs.length !== 1 ? "s" : ""} found
+        </p>
+      )}
 
       {/* Job Cards or No Results Visualization */}
       {filteredJobs.length > 0 ? (
@@ -258,7 +299,7 @@ const JsDashboard = () => {
           </p>
           <button
             onClick={handleClearFilters}
-            className="mt-4 px-4 py-2 bg-primary/80 text-white rounded-lg hover:bg-primary transition-all ease-in-out duration-300 "
+            className="mt-4 px-4 py-2 hover:bg-primary/80 text-white rounded-lg bg-primary transition-all ease-in-out duration-300 "
           >
             Clear Filters
           </button>

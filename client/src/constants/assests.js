@@ -10,6 +10,7 @@ import unh from "../assets/images/unh.jpg";
 import fg from "../assets/images/fg.jpg";
 import webpage from "../assets/images/web-page.png";
 import noresults from "../assets/images/no-results.png";
+import africanbackground from "../assets/images/african-background.jpg";
 
 export {
   logo,
@@ -24,4 +25,5 @@ export {
   fg,
   webpage,
   noresults,
+  africanbackground,
 };

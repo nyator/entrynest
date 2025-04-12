@@ -32,11 +32,22 @@ const ViewEmployersPage = () => {
   };
 
   if (loading) {
-    return <LoadingScreen />; // Display loading screen while fetching jobs
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <LoadingScreen />
+      </div>
+    ); // Display loading screen while fetching jobs
   }
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="mx-auto p-4">
+      <div className="mb-4 h-56 flex justify-center bg-africanBackground3 py-10 md:py-20 gap-2 rounded-lg  relative">
+        {/* <div className=" bg-black/50 border border-gray rounded-lg">
+          <h1 className="text-2xl text-white font-SatoshiBold p-4 w-full text-center">
+            Employers on entrynest
+          </h1>
+        </div> */}
+      </div>
       <div>
         <h1 className="text-2xl font-bold mb-4">
           Employers Who Have Posted Jobs
@@ -45,7 +56,7 @@ const ViewEmployersPage = () => {
           {employers.map((employer, index) => (
             <div
               key={index}
-              className={`shadow-lg p-4 mb-4 w-1/4 rounded-xl space-y-4 hover:ring-[1.5px] ring-primary/10`}
+              className={`shadow-lg p-4 mb-4 w-2/4 rounded-xl space-y-4 flex gap hover:ring-[1.5px] ring-primary/10 `}
             >
               <div className="flex space-x-5 justify-center items-center ">
                 <img

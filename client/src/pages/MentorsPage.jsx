@@ -26,11 +26,22 @@ const MentorsPage = () => {
   };
 
   if (loading) {
-    return <LoadingScreen />;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <LoadingScreen />
+      </div>
+    );
   }
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="mx-auto p-4">
+      <div className="mb-4 h-52 flex justify-center bg-africanBackground6 py-10 md:py-20 gap-2 rounded-lg  relative">
+        {/* <div className=" bg-black/50 border border-gray rounded-lg">
+          <h1 className="text-2xl text-white font-SatoshiBold p-4 w-full text-center">
+            Employers on entrynest
+          </h1>
+        </div> */}
+      </div>
       <h1 className="text-2xl font-bold mb-4">Mentors</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {mentors.map((mentor) => (
