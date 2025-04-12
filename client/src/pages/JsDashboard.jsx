@@ -17,6 +17,7 @@ import {
   jobCategory,
   salaryRanges,
 } from "../constants/index";
+
 import { noresults } from "../constants/assests.js";
 
 const JsDashboard = () => {
@@ -113,15 +114,13 @@ const JsDashboard = () => {
 
   return (
     <div className="mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">
-        {selectedEmployer
-          ? selectedEmployer + "'s Jobs"
-          : "Job Seeker Dashboard"}
-      </h1>
-
       {/* Horizontal Filter Bar */}
-      <div className="flex flex-wrap gap-4 mb-6 bg-gray-100 p-4 rounded-lg font-SatoshiRegular items-center">
+      <div className="flex flex-wrap gap-4 bg-gray-100 p-4 rounded-lg font-SatoshiRegular justify-center items-center">
         {/* Job Type Dropdown */}
+        <label className="inline-flex items-center text-gray-700 font-medium gap-2">
+          Filter by:
+          <HiMiniArrowsUpDown />
+        </label>
         <div className="relative" ref={dropdownRefs.type}>
           <button
             onClick={() =>
@@ -217,9 +216,13 @@ const JsDashboard = () => {
         </button>
       </div>
 
+      <h1 className="text-2xl font-SatoshiMedium font-bold bg-gray/40 rounded-xl p-4 mb-4">
+        {selectedEmployer ? selectedEmployer + "'s Jobs" : ""}
+      </h1>
+
       {/* Job Cards or No Results Visualization */}
       {filteredJobs.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-evenly items-center gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-evenly items-center mb-20 gap-4">
           {filteredJobs.map((job) => (
             <JobCard
               key={job._id}
@@ -255,7 +258,7 @@ const JsDashboard = () => {
           </p>
           <button
             onClick={handleClearFilters}
-            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition"
+            className="mt-4 px-4 py-2 bg-primary/80 text-white rounded-lg hover:bg-primary transition-all ease-in-out duration-300 "
           >
             Clear Filters
           </button>

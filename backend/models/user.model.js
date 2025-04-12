@@ -57,6 +57,10 @@ const userSchema = new mongoose.Schema(
     skills: {
       type: [String],
     },
+    isMentor: {
+      type: Boolean,
+      default: false, // Default to false; only set to true for mentors
+    },
   },
   { timestamps: true }
 ); //createAt and updateAt will be added automatically cus of the timestamp

@@ -7,9 +7,10 @@ import { IoMenu } from "react-icons/io5";
 import { IoClose } from "react-icons/io5";
 
 const navLinks = [
-  { title: "Browse All Jobs", href: "/jobs", id: 1 },
-  { title: "View Employers", href: "/view-employers", id: 2 },
-  { title: "Resources", href: "/resources", id: 3 },
+  { title: "Jobs", href: "/jobs", id: 1 },
+  { title: "Mentors", href: "/mentors", id: 2 },
+  { title: "View Employers", href: "/view-employers", id: 3 },
+  { title: "Resources", href: "/resources", id: 4 },
 ];
 
 const JsNavbar = () => {

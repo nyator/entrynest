@@ -55,7 +55,7 @@ const ViewEmployersPage = () => {
                 />
 
                 <div>
-                  <p className="uppercase font-bold ">{employer}</p>
+                  <p className="font-bold ">{employer}</p>
                   <p className="font-SatoshiRegular">Industry</p>
                   <p className="font-SatoshiRegular">Nö Jobs Posted</p>
                 </div>
