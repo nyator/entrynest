@@ -47,13 +47,13 @@ const JsDashboard = () => {
   }
 
   return (
-    <div className="container mx-auto p-4">
+    <div className="mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">
         {selectedEmployer
           ? selectedEmployer + "'s Jobs"
           : "Job Seeker Dashboard"}
       </h1>
-      <div className="grid grid-cols-3 justify-evenly items-center gap-10">
+      <div className="grid grid-cols-1 item` sm:grid-cols-2 lg:grid-cols-3 justify-evenly items-center gap-10">
         {filteredJobs.map((job) => (
           <JobCard
             key={job._id}
@@ -64,10 +64,12 @@ const JsDashboard = () => {
             } // Pass the name of the person who posted the job
             avatar={job.postedBy.avatar} // Pass the avatar of the person who posted the job
             location={job.location}
-            tag={job.tag}
+            tags={job.tags}
             type={job.type}
             style={job.style}
-            description={job.description}
+            responsibility={job.responsibility}
+            qualification={job.qualification}
+            aboutRole={job.aboutRole}
             timePosted={job.updatedAt || job.createdAt} // Pass the createdAt field
             postedBy={`${job.postedBy.firstname} ${job.postedBy.lastname}`} // Pass the first & last name of the person who posted the job
             salaryRange={job.salaryRange}

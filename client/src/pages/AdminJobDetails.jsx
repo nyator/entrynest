@@ -95,6 +95,7 @@ const AdminJobDetails = () => {
           GH<span className="">₵</span> {job.salaryRange}
         </p>
       </div>
+
       <div className="flex justify-center mt-4 gap-3">
         <button
           onClick={() => navigate(-1)} // Navigate back to the previous page

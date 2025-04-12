@@ -17,7 +17,7 @@ const JobCard = ({
   location,
   style,
   position,
-  tag,
+  tags,
   onViewDetails,
   salaryRange,
 }) => {
@@ -66,8 +66,17 @@ const JobCard = ({
           </h1>
         </div>
         <div className="w-full bg-black/40 h-[1.5px]"></div>
-        <div>
-          <p className={`${cardTag}`}>{tag || "NaN"}</p>
+        <div className="flex flex-wrap gap-2">
+          {tags && tags.length > 0 ? (
+            <>
+              <p className={`${cardTag}`}>{tags[0]}</p>
+              {tags.length > 1 && (
+                <p className="text-black/50 inline-flex items-center text-sm">+{tags.length - 1} more</p>
+              )}
+            </>
+          ) : (
+            "No Tags"
+          )}
         </div>
       </div>
       <div className="text-center weight-400 space-y-4">

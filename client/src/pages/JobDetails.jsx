@@ -69,7 +69,7 @@ const JobDetails = () => {
       >
         Back
       </button> */}
-      <h1 className="text-2xl font-SatoshiBold">{job.title}</h1>
+      <h1 className="text-2xl text-center md:text-start font-SatoshiBold mb-4">{job.title}</h1>
       <div className="flex items-center gap-5 text-black/70">
         <p className="flex justify-start items-center font-SatoshiRegular text-black/70 gap-1">
           <IoLocationOutline className="text-xl" /> {job.location}
@@ -79,10 +79,9 @@ const JobDetails = () => {
           {job.postedBy.lastname}
         </p>
         <p className="flex justify-start items-center font-SatoshiRegular gap-1">
-          <LiaIndustrySolid /> {job.tag}
+          <LiaIndustrySolid /> {job.tags?.join(", ") || "No tags available"}
         </p>
       </div>
-      <p>{job.description}</p>
       <div className="leading-none mt-6">
         <h1 className="text-clampText font-SatoshiBold ">About this Role</h1>
         <p className="text-black/70 leading-relaxed font-SatoshiRegular">
