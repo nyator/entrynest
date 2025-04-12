@@ -53,7 +53,7 @@ const JsDashboard = () => {
           ? selectedEmployer + "'s Jobs"
           : "Job Seeker Dashboard"}
       </h1>
-      <div className="grid grid-cols-1 item` sm:grid-cols-2 lg:grid-cols-3 justify-evenly items-center gap-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-evenly items-center gap-4">
         {filteredJobs.map((job) => (
           <JobCard
             key={job._id}

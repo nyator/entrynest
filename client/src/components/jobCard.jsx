@@ -1,5 +1,5 @@
 import React from "react";
-import { formatDistanceToNow } from "date-fns"; 
+import { formatDistanceToNow } from "date-fns";
 
 import { fr } from "../constants/assests";
 import { cardButton, cardBStyle, cardTag } from "../constants/styles";
@@ -25,15 +25,26 @@ const JobCard = ({
     return !isNaN(Date.parse(date));
   };
 
+  const formatTimePosted = (date) => {
+    if (!isValidDate(date)) return "NaN";
+    return formatDistanceToNow(new Date(date), {
+      addSuffix: true,
+      includeSeconds: true,
+    })
+      .replace("about ", "") // Remove "about" from the output
+      .replace("hours", "hrs") // Replace "hours" with "hrs"
+      .replace("minutes", "mins"); // Replace "minutes" with "mins"
+  };
+
   return (
     <div
-      className={`${cardBStyle}  w-4/5 h-fit p-10 rounded-[35px] font-SatoshiRegular space-y-4`}
+      className={`${cardBStyle} md:w-4/5 h-fit p-10 rounded-[35px] font-SatoshiRegular space-y-4`}
     >
       <div className="space-y-4 rounded-[25px] bg-primary/20 p-4 ">
-        <div className="flex justify-between items-center">
+        <div className="flex justify-between items-center text-jobcard1">
           <div className={`${cardBStyle} rounded-full`}>{type || "NaN"}</div>
           <div className={`${cardBStyle} rounded-full`}>
-            {isValidDate(timePosted) ? ["posted ", formatDistanceToNow(new Date(timePosted), { addSuffix: true })] : "NaN"}
+            {`posted ${formatTimePosted(timePosted)}` || "NaN"}
           </div>
         </div>
         <div className="flex justify-between items-center">
@@ -46,7 +57,7 @@ const JobCard = ({
             className="rounded-full w-[43px] h-[43px] ring-2 ring-black/20 "
           />
         </div>
-        <div className="flex justify-between gap-4 items-center text-clampSm">
+        <div className="flex sm:flex-col md:flex-row o:flex-row items-start md:items-center justify-between md:gap-4  text-clampSm">
           <p className="flex items-center gap-1 text-black/40 text-nowrap">
             <HiLocationMarker />
             {location || "NaN"}
@@ -56,22 +67,23 @@ const JobCard = ({
             {style || "NaN"}
           </p>
           <p className="flex items-center gap-1 text-black/40 text-nowrap">
-            <RiCoinsFill />
-            {salaryRange || "NaN"}
+            <RiCoinsFill />₵{salaryRange || "NaN"}
           </p>
         </div>
         <div>
-          <h1 className="font-SatoshiMedium text-lg">
-            {position || "NaN"}
-          </h1>
+          <h1 className="font-SatoshiMedium text-lg">{position || "NaN"}</h1>
         </div>
         <div className="w-full bg-black/40 h-[1.5px]"></div>
         <div className="flex flex-wrap gap-2">
           {tags && tags.length > 0 ? (
             <>
-              <p className={`${cardTag}`}>{tags[0]}</p>
+              <p className={`${cardTag} text-jobcard1 font-SatoshiRegular`}>
+                {tags[0]}
+              </p>
               {tags.length > 1 && (
-                <p className="text-black/50 inline-flex items-center text-sm">+{tags.length - 1} more</p>
+                <p className="text-black/50 text-jobcard1 inline-flex items-center text-sm">
+                  +{tags.length - 1} more
+                </p>
               )}
             </>
           ) : (
@@ -83,7 +95,10 @@ const JobCard = ({
         <h1>
           posted by <span>{postedBy || "NaN"}</span>
         </h1>
-        <button className={`${cardButton} rounded-full`} onClick={onViewDetails}>
+        <button
+          className={`${cardButton} rounded-full`}
+          onClick={onViewDetails}
+        >
           View Details
         </button>
       </div>
@@ -92,4 +107,3 @@ const JobCard = ({
 };
 
 export default JobCard;
-

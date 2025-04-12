@@ -5,6 +5,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import { IoLocationOutline } from "react-icons/io5";
 import { BsFilePersonFill } from "react-icons/bs";
 import { LiaIndustrySolid } from "react-icons/lia";
+import { IoChevronBackOutline } from "react-icons/io5";
+
 
 
 const JobDetails = () => {
@@ -62,24 +64,18 @@ const JobDetails = () => {
   }
 
   return (
-    <div className="container mx-auto p-4">
-      {/* <button
-        className="mb-4 px-4 py-2 bg-blue-500 text-white rounded"
-        onClick={() => navigate(-1)}
-      >
-        Back
-      </button> */}
-      <h1 className="text-2xl text-center md:text-start font-SatoshiBold mb-4">{job.title}</h1>
-      <div className="flex items-center gap-5 text-black/70">
+    <div className="mx-auto md:w-4/5 p-4">
+      <h1 className="text-2xl text-center md:text-start font-SatoshiBold mb-4 underline underline-offset-4">{job.title}</h1>
+      <div className="flex flex-col md:flex-row leading-tight items-center gap-1 md:gap-5 text-black/70 text-jobcard1">
         <p className="flex justify-start items-center font-SatoshiRegular text-black/70 gap-1">
-          <IoLocationOutline className="text-xl" /> {job.location}
+          <IoLocationOutline className="text-jobcard1" /> {job.location}
         </p>
         <p className="flex justify-start items-center font-SatoshiRegular gap-1">
-          <BsFilePersonFill className="text-xl" /> {job.postedBy.firstname}{" "}
+          <BsFilePersonFill className="text-jobcard1" /> {job.postedBy.firstname}{" "}
           {job.postedBy.lastname}
         </p>
-        <p className="flex justify-start items-center font-SatoshiRegular gap-1">
-          <LiaIndustrySolid /> {job.tags?.join(", ") || "No tags available"}
+        <p className="flex justify-start items-center text-jobcard1 font-SatoshiRegular gap-1">
+          <LiaIndustrySolid /> {job.tags?.join(" | ") || "No tags available"}
         </p>
       </div>
       <div className="leading-none mt-6">

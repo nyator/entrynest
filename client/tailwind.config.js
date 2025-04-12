@@ -5,6 +5,7 @@ export default {
     screens: {
       xs: "300px",
       sm: "600px",
+      o: "800px",
       md: "950px",
       lg: "1350px",
     },
@@ -46,10 +47,11 @@ export default {
         clampHeadSm: "clamp(17px, 5vw, 40px)",
         clampHeadXs: "clamp(30px, 3vw, 40px)",
         clampDesc: "clamp(0.7rem, 1vw, 25px)",
-        clampSm: "clamp(0.4rem, 2vw, 0.7rem)",
+        clampSm: "clamp(0.7rem, 1vw, 0.8rem)",
         clampText: "clamp(0.8rem, 2vw, 1rem)",
         clampInputText: "clamp(0.8rem, 1vw, 18px)", 
         breadcrumb: "clamp(0.6rem, 2vw, 0.8rem)",
+        jobcard1: "clamp(0.8rem, 1vw, 1rem)",
       },
 
       backgroundImage: {
