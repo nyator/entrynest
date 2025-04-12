@@ -51,7 +51,7 @@ const JsNavbar = () => {
       {/* MOBILE */}
       <div className="md:hidden flex items-center justify-between z-50">
         <Link to="/jobs">
-          <img src="/logo.svg" alt="logo" />
+          <img src="/logo.svg" alt="logo"/>
         </Link>
         <div className="flex gap-4 justify-end">
           {isAuthenticated ? (
