@@ -20,6 +20,7 @@ const JobApplications = () => {
   const [dropdownOpen, setDropdownOpen] = useState(false); // State to toggle dropdown visibility
   const [sortOrder, setSortOrder] = useState("newest"); // Add sort order state
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false); // State to toggle sort dropdown visibility
+  const [loading, setLoading] = useState(true); // Add loading state
   const applicationsPerPage = 5;
   const navigate = useNavigate();
 
@@ -97,6 +98,8 @@ const JobApplications = () => {
         setFilteredApplications(filteredApplications); // Initialize filtered applications
       } catch (error) {
         console.error("Error fetching applications:", error);
+      } finally {
+        setLoading(false); // Set loading to false after data is fetched
       }
     };
 
@@ -153,6 +156,14 @@ const JobApplications = () => {
       toast.error(`Failed to ${status} application`);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <LoadingScreen />
+      </div>
+    );
+  }
 
   return (
     <div className="mx-auto p-4 font-SatoshiMedium text-sm">

@@ -2,7 +2,15 @@ import { useState, useEffect, useRef } from "react";
 
 import { MdOutlineArrowDropDown } from "react-icons/md";
 
-const CustomDropdown = ({ options, value, onChange, placeholder, icon }) => {
+const CustomDropdown = ({
+  options,
+  value,
+  onChange,
+  placeholder,
+  icon,
+  classNameButton,
+  classNameDrop,
+}) => {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef(null);
 
@@ -28,13 +36,14 @@ const CustomDropdown = ({ options, value, onChange, placeholder, icon }) => {
     <div className="relative" ref={dropdownRef}>
       <button
         type="button"
-        className="w-full inline-flex justify-between bg-white border-[1px] border-grayStroke rounded-lg p-2 text-left"
+        className={`${classNameButton} w-full inline-flex justify-between bg-white border-[1px] border-grayStroke rounded-lg p-2 text-left`}
         onClick={() => setIsOpen(!isOpen)}
-      ><span className="flex items-center">
-        {icon && <span className="mr-2">{icon}</span>}
-        {value && <span className="text-black/80">{value}</span>}
-        {!value && <span className="text-black/80">{placeholder}</span>}
-      </span>
+      >
+        <span className="flex items-center">
+          {icon && <span className="mr-2">{icon}</span>}
+          {value && <span className="text-black/80">{value}</span>}
+          {!value && <span className="text-black/80">{placeholder}</span>}
+        </span>
         {isOpen ? (
           <MdOutlineArrowDropDown className="size-5 rotate-180 transition-all ease-in-out duration-200" />
         ) : (
@@ -46,7 +55,7 @@ const CustomDropdown = ({ options, value, onChange, placeholder, icon }) => {
           {options.map((option, index) => (
             <li
               key={index}
-              className="py-2 px-8 hover:bg-gray-100 cursor-pointer border-b border-gray/50 hover:bg-blue-100 "
+              className={`${classNameDrop} py-2 px-8 hover:bg-gray-100 cursor-pointer border-b border-gray/50 hover:bg-blue-100`}
               onClick={() => handleSelect(option)}
             >
               {option}

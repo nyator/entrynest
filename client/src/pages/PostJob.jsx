@@ -13,7 +13,13 @@ import { IoMdPricetags } from "react-icons/io";
 
 import CustomDropdown from "../components/CustomDropdown";
 
-import { jobTypes } from "../constants/index";
+import {
+  jobTypes,
+  locationOptions,
+  jobStyles,
+  jobCategory,
+  salaryRanges,
+} from "../constants/index";
 
 const PostJob = () => {
   const [jobTitle, setJobTitle] = useState("");
@@ -86,38 +92,6 @@ const PostJob = () => {
     setSalaryRange("");
   };
 
-  const locations = [
-    "Greater Accra Region",
-    "Ashanti Region",
-    "Central Region",
-    "Eastern Region",
-    "Brong Ahafo Region",
-    "Northern Region",
-    "Upper East Region",
-    "Upper West Region",
-    "Western North Region",
-    "North East Region",
-    "Oti Region",
-    "Bono East Region",
-    "Ahafo Region",
-    "Savannah Region",
-    "Volta Region",
-    "Western Region",
-    "Worldwide",
-  ];
-
-  const workStyles = ["Remote", "On-site", "Hybrid"];
-  // const jobTypes = ["Internship", "Mentorship", "Full-time", "Contract"];
-  const tags = [
-    "Sales & Marketing",
-    "Aerospace",
-    "Agriculture",
-    "Development & IT",
-    "Hospitality",
-    "Finance & Accounting",
-  ];
-  const salaryRanges = ["0 - 1k", "1k - 3k", "3k - 5k", "Confidential"];
-
   return (
     <div className="container mx-auto p-4 font-SatoshiMedium text-sm">
       <form onSubmit={handleSubmit}>
@@ -139,7 +113,7 @@ const PostJob = () => {
             <div className="mb-4">
               <label className="block text-gray-700">Location</label>
               <CustomDropdown
-                options={locations}
+                options={locationOptions}
                 value={jobLocation}
                 onChange={setJobLocation}
                 placeholder="Select Job Location"
@@ -150,7 +124,7 @@ const PostJob = () => {
             <div className="mb-4">
               <label className="block text-gray-700">Work Style</label>
               <CustomDropdown
-                options={workStyles}
+                options={jobStyles}
                 value={jobStyle}
                 onChange={setJobStyle}
                 placeholder="Select Work Style"
@@ -187,7 +161,7 @@ const PostJob = () => {
             <div className="mb-4">
               <label className="block text-gray-700">Tags</label>
               <CustomDropdown
-                options={tags}
+                options={jobCategory}
                 value=""
                 onChange={handleAddTag}
                 placeholder="Select a Tag"
