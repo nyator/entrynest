@@ -67,7 +67,7 @@ const PostJob = () => {
       setQualification("");
       setResponsibility("");
       setSalaryRange("");
-      navigate(-1);
+      // navigate(-1);
     } catch (error) {
       console.error("Error posting job:", error);
       toast.error("Failed to post job.");

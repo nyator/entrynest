@@ -62,38 +62,36 @@ const AdminJobDetails = () => {
           {job.postedBy?.firstname} {job.postedBy?.lastname}
         </p>
         <p className="flex justify-start items-center font-SatoshiRegular gap-1">
-          <LiaIndustrySolid /> {job.tag}
+          <LiaIndustrySolid /> {job.tags?.join(", ")}
         </p>
       </div>
-      <p>{job.description}</p>
       <div className="leading-none mt-6">
-        <h1 className="text-clampText font-SatoshiBold ">About this Role</h1>
-        <p className="text-black/70 leading-relaxed font-SatoshiRegular">NaN</p>
+        <h1 className="text-clampText font-SatoshiBold">About this Role</h1>
+        <p className="text-black/70 leading-relaxed font-SatoshiRegular">
+          {job.aboutRole}
+        </p>
       </div>
 
       <div className="leading-none mt-6">
         <h1 className="text-clampText font-SatoshiBold">Qualification</h1>
         <p className="text-black/70 leading-relaxed font-SatoshiRegular">
-          <li>NaN</li>
-          <li>NaN</li>
-          <li>NaN</li>
-          <li>NaN</li>
+          {job.qualification.split("\n").map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
         </p>
       </div>
 
       <div className="leading-none mt-6">
-        <h1 className="text-clampText font-SatoshiBold">Responsible</h1>
+        <h1 className="text-clampText font-SatoshiBold">Responsibilities</h1>
         <p className="text-black/70 leading-relaxed font-SatoshiRegular">
-          <li>efkmfakfndfk</li>
-          <li>efkmfakfndfk</li>
-          <li>efkmfakfndfk</li>
-          <li>efkmfakfndfk</li>
+          {job.responsibility.split("\n").map((item, index) => (
+            <li key={index}>{item}</li>
+          ))}
         </p>
       </div>
       <div className="leading-none mt-6">
         <h1 className="text-clampText font-SatoshiBold">Salary</h1>
         <p className="text-black/70 leading-relaxed font-SatoshiRegular">
-          {" "}
           GH<span className="">₵</span> {job.salaryRange}
         </p>
       </div>
