@@ -364,30 +364,36 @@ const EmDashboard = () => {
                       .map((job) => (
                         <div
                           key={job._id}
-                          className="border border-black/10 rounded-2xl px-4 py-2 shadow-sm bg-white leading-none"
+                          className="flex flex-col sm:flex-row border border-black/10 rounded-2xl px-4 py-2 shadow-sm bg-white leading-none"
                         >
-                          <h2 className="text-lg font-bold">{job.title}</h2>
-                          <p className="mb-2">
-                            <strong>Posted On:</strong>{" "}
-                            {new Date(job.createdAt).toLocaleDateString()}
-                          </p>
-                          <p className="mb-2">
-                            <strong>Updated On:</strong>{" "}
-                            {new Date(job.updatedAt).toLocaleDateString()}
-                          </p>
-                          <p className="mb-2">
-                            <strong>Applicants:</strong>{" "}
-                            {job.applicationCount || 0}
-                          </p>
-                          <div className="flex gap-4 items-center">
-                            {job.applicationCount > 0 && (
-                              <button
-                                onClick={() => handleViewApplications(job._id)}
-                                className="px-4 py-2 bg-blue-500 text-white rounded"
-                              >
-                                View Applications
-                              </button>
-                            )}
+                          <div className="flex flex-col w-full">
+                            <h2 className="text-lg font-bold">{job.title}</h2>
+                            <p className="mb-2">
+                              <strong>Posted On:</strong>{" "}
+                              {new Date(job.createdAt).toLocaleDateString()}
+                            </p>
+                            <p className="mb-2">
+                              <strong>Updated On:</strong>{" "}
+                              {new Date(job.updatedAt).toLocaleDateString()}
+                            </p>
+                            <p className="mb-2">
+                              <strong>Applicants:</strong>{" "}
+                              {job.applicationCount || 0}
+                            </p>
+                            <div className="flex gap-4 items-center">
+                              {job.applicationCount > 0 && (
+                                <button
+                                  onClick={() =>
+                                    handleViewApplications(job._id)
+                                  }
+                                  className="px-4 py-2 bg-blue-500 text-white rounded"
+                                >
+                                  View Applications
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex gap-4 items-start">
                             <button
                               onClick={() => handleEditJob(job._id)}
                               className="px-4 py-2 bg-yellow-500 text-white rounded"

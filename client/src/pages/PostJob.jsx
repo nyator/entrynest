@@ -105,7 +105,7 @@ const PostJob = () => {
           <div className="w-full mr-4">
             {user.role === "admin" && ( // Render company name input only for admin
               <div className="mb-4">
-                <label className="block text-gray-700">Company Name</label>
+                <label className="block text-black/60">Company Name</label>
                 <input
                   type="text"
                   value={companyName}
@@ -118,7 +118,7 @@ const PostJob = () => {
             )}
 
             <div className="mb-4">
-              <label className="block text-gray-700">Job Title</label>
+              <label className="block text-black/60">Job Title</label>
               <input
                 type="text"
                 value={jobTitle}
@@ -131,7 +131,7 @@ const PostJob = () => {
             </div>
 
             <div className="mb-4">
-              <label className="block text-gray-700">Location</label>
+              <label className="block text-black/60">Location</label>
               <CustomDropdown
                 options={locationOptions}
                 value={jobLocation}
@@ -142,7 +142,7 @@ const PostJob = () => {
             </div>
 
             <div className="mb-4">
-              <label className="block text-gray-700">Work Style</label>
+              <label className="block text-black/60">Work Style</label>
               <CustomDropdown
                 options={jobStyles}
                 value={jobStyle}
@@ -153,7 +153,7 @@ const PostJob = () => {
             </div>
 
             <div className="mb-4">
-              <label className="block text-gray-700">Job Type</label>
+              <label className="block text-black/60">Job Type</label>
               <CustomDropdown
                 options={jobTypes}
                 value={jobType}
@@ -164,7 +164,7 @@ const PostJob = () => {
             </div>
 
             <div className="mb-4">
-              <label className="block text-gray-700">
+              <label className="block text-black/60">
                 Salary Range {"(GH₵)"}
               </label>
               <CustomDropdown
@@ -179,7 +179,7 @@ const PostJob = () => {
 
           <div className="w-full">
             <div className="mb-4">
-              <label className="block text-gray-700">Tags</label>
+              <label className="block text-black/60">Tags</label>
               <CustomDropdown
                 options={jobCategory}
                 value=""
@@ -207,7 +207,7 @@ const PostJob = () => {
             </div>
 
             <div className="mb-4">
-              <label className="block text-gray-700">About Role</label>
+              <label className="block text-black/60">About Role</label>
               <textarea
                 value={aboutRole}
                 onChange={(e) => setAboutRole(e.target.value)}
@@ -218,7 +218,7 @@ const PostJob = () => {
             </div>
 
             <div className="mb-4">
-              <label className="block text-gray-700">Qualification</label>
+              <label className="block text-black/60">Qualification</label>
               <textarea
                 value={qualification}
                 onChange={(e) => setQualification(e.target.value)}
@@ -229,7 +229,7 @@ const PostJob = () => {
             </div>
 
             <div className="mb-4">
-              <label className="block text-gray-700">Responsibility</label>
+              <label className="block text-black/60">Responsibility</label>
               <textarea
                 value={responsibility}
                 onChange={(e) => setResponsibility(e.target.value)}
