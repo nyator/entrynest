@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import LoadingScreen from "../components/LoadingScreen";
 import { useNavigate } from "react-router-dom";
 
+import { IoSearch } from "react-icons/io5";
+
 const MentorsPage = () => {
   const [mentors, setMentors] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -35,12 +37,22 @@ const MentorsPage = () => {
 
   return (
     <div className="mx-auto p-4">
-      <div className="mb-4 h-52 flex justify-center bg-africanBackground6 py-10 md:py-20 gap-2 rounded-lg  relative">
-        {/* <div className=" bg-black/50 border border-gray rounded-lg">
-          <h1 className="text-2xl text-white font-SatoshiBold p-4 w-full text-center">
-            Employers on entrynest
-          </h1>
-        </div> */}
+      <div className="mb-4 flex justify-center bg-africanBackground6 py-10 md:py-20 gap-2 rounded-lg font-SatoshiRegular relative">
+        <div className="relative w-full max-w-80">
+          <input
+            type="text"
+            placeholder="Search mentors by industry..."
+            //  value={searchTerm}
+            //  onChange={handleSearchChange}
+            className="w-full border border-gray rounded-full p-4 h-14 pr-16"
+          />
+          <button
+            //  onClick={handleSearch}
+            className="absolute right-2 top-1/2 transform -translate-y-1/2 px-4 py-2 bg-primary text-white rounded-full hover:bg-primary/80 transition-all"
+          >
+            <IoSearch className="text-xl" />
+          </button>
+        </div>
       </div>
       <h1 className="text-2xl font-bold mb-4">Mentors</h1>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

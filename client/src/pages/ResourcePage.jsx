@@ -17,3 +17,7 @@ const ResourcePage = () => {
 };
 
 export default ResourcePage;
+
+//  className="w-[200px] bg-white shadow-sm border border-gray gap-2 rounded-3xl px-4 py-2 text-start inline-flex items-center justify-between"
+
+// className="absolute w-[200px] z-10 mt-2 text-start bg-white shadow-sm border border-gray gap-2 rounded-xl"

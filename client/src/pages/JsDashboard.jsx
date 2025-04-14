@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate, useLocation } from "react-router-dom";
 import JobCard from "../components/jobCard.jsx";
 import LoadingScreen from "../components/LoadingScreen.jsx";
+import CustomDropdownV2 from "../components/CustomDropdownV2.jsx";
 
 import { HiOfficeBuilding } from "react-icons/hi";
 import { TbLocationFilled } from "react-icons/tb";
@@ -155,91 +156,43 @@ const JsDashboard = () => {
           Filter by:
           <HiMiniArrowsUpDown />
         </label>
-        <div className="relative" ref={dropdownRefs.type}>
-          <button
-            onClick={() =>
-              setDropdownOpen((prev) => ({ ...prev, type: !prev.type }))
-            }
-            className="w-[200px] bg-white shadow-sm border border-gray gap-2 rounded-3xl px-4 py-2 text-start inline-flex items-center justify-between"
-          >
-            {filters.type || "Select Job Type"}
-            <MdOutlineArrowDropDown className="size-5" />
-          </button>
-          {dropdownOpen.type && (
-            <div className="absolute w-[200px] z-10 mt-2 text-start bg-white shadow-sm border border-gray gap-2 rounded-xl">
-              {["All Job", ...jobTypes].map((type, index) => (
-                <div
-                  key={index}
-                  onClick={() =>
-                    handleFilterChange("type", type === "All Job" ? "" : type)
-                  }
-                  className="px-4 py-2 hover:bg-blue-100 cursor-pointer"
-                >
-                  {type}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        <CustomDropdownV2
+          options={["All Job", ...jobTypes]}
+          value={filters.type || "Select Job Type"}
+          onChange={(value) =>
+            handleFilterChange("type", value === "All Job" ? "" : value)
+          }
+          placeholder="Select Job Type"
+          classNameButton="w-[200px] bg-white shadow-sm border border-gray gap-2"
+          classNameDrop="hover:bg-blue-100"
+        />
 
         {/* Location Dropdown */}
-        <div className="relative" ref={dropdownRefs.location}>
-          <button
-            onClick={() =>
-              setDropdownOpen((prev) => ({ ...prev, location: !prev.location }))
-            }
-            className="min-w-[200px] w-fit bg-white shadow-sm border border-gray gap-2 rounded-3xl px-4 py-2 text-start inline-flex items-center justify-between"
-          >
-            {filters.location || "Select Location"}
-            <MdOutlineArrowDropDown className="size-5"/>
-          </button>
-          {dropdownOpen.location && (
-            <div className="absolute w-[200px] z-10 mt-2 text-start bg-white shadow-sm border border-gray gap-2 rounded-xl h-52 overflow-y-auto">
-              {["All Locations", ...locationOptions].map((location, index) => (
-                <div
-                  key={index}
-                  onClick={() =>
-                    handleFilterChange(
-                      "location",
-                      location === "All Locations" ? "" : location
-                    )
-                  }
-                  className="px-4 py-2 hover:bg-blue-100 cursor-pointer"
-                >
-                  {location}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        <CustomDropdownV2
+          options={["All Locations", ...locationOptions]}
+          value={filters.location || "Select Location"}
+          onChange={(value) =>
+            handleFilterChange(
+              "location",
+              value === "All Locations" ? "" : value
+            )
+          }
+          placeholder="Select Location"
+          classNameButton="min-w-[200px] w-fit bg-white shadow-sm border border-gray gap-2"
+          classNameDrop="hover:bg-blue-100"
+        />
 
         {/* Tag Dropdown */}
-        <div className="relative" ref={dropdownRefs.tag}>
-          <button
-            onClick={() =>
-              setDropdownOpen((prev) => ({ ...prev, tag: !prev.tag }))
-            }
-            className="min-w-[200px] w-fit bg-white shadow-sm border border-gray gap-2 rounded-3xl px-4 py-2 text-start inline-flex items-center justify-between"
-          >
-            {filters.tag || "Select Category"}
-            <MdOutlineArrowDropDown className="size-5" />
-          </button>
-          {dropdownOpen.tag && (
-            <div className="absolute w-[200px] z-10 mt-2 text-start bg-white shadow-sm border border-gray gap-2 rounded-xl h-52 overflow-y-auto">
-              {["All Category", ...jobCategory].map((tag, index) => (
-                <div
-                  key={index}
-                  onClick={() =>
-                    handleFilterChange("tag", tag === "All Category" ? "" : tag)
-                  }
-                  className="px-4 py-2 hover:bg-blue-100 cursor-pointer"
-                >
-                  {tag}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+        <CustomDropdownV2
+          options={["All Category", ...jobCategory]}
+          value={filters.tag || "Select Category"}
+          onChange={(value) =>
+            handleFilterChange("tag", value === "All Category" ? "" : value)
+          }
+          placeholder="Select Category"
+          classNameButton="min-w-[200px] w-fit bg-white shadow-sm border border-gray gap-2"
+          classNameDrop="hover:bg-blue-100"
+        />
 
         {/* Clear Filters Button */}
         <button
@@ -263,7 +216,7 @@ const JsDashboard = () => {
 
       {/* Job Cards or No Results Visualization */}
       {filteredJobs.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-evenly items-center mb-20 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-between items-center mb-20 gap-4">
           {filteredJobs.map((job) => (
             <JobCard
               key={job._id}

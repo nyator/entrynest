@@ -2,12 +2,11 @@ import { useState, useEffect, useRef } from "react";
 
 import { MdOutlineArrowDropDown } from "react-icons/md";
 
-const CustomDropdown = ({
+const CustomDropdownV2 = ({
   options,
   value,
   onChange,
   placeholder,
-  icon,
   classNameButton,
   classNameDrop,
 }) => {
@@ -36,26 +35,22 @@ const CustomDropdown = ({
     <div className="relative" ref={dropdownRef}>
       <button
         type="button"
-        className={`${classNameButton} w-full inline-flex justify-between bg-white border-[1px] border-grayStroke rounded-lg p-2 text-left`}
+        className={`${classNameButton} w-full inline-flex justify-between bg-white border border-gray rounded-3xl px-4 py-2 text-start`}
         onClick={() => setIsOpen(!isOpen)}
       >
-        <span className="flex items-center">
-          {icon && <span className="mr-2">{icon}</span>}
-          {value && <span className="text-black/80">{value}</span>}
-          {!value && <span className="text-black/80">{placeholder}</span>}
-        </span>
-        {isOpen ? (
-          <MdOutlineArrowDropDown className="size-5 rotate-180 transition-all ease-in-out duration-200" />
-        ) : (
-          <MdOutlineArrowDropDown className="size-5 transition-all ease-in-out duration-200" />
-        )}
+        <span>{value || placeholder}</span>
+        <MdOutlineArrowDropDown
+          className={`size-5 transition-transform ${
+            isOpen ? "rotate-180" : ""
+          }`}
+        />
       </button>
       {isOpen && (
-        <ul className="absolute z-10 w-full bg-white border-[1px] border-gray rounded-lg mt-1 max-h-40 overflow-y-auto">
+        <ul className="absolute z-10 w-full bg-white border border-gray rounded-xl mt-2 max-h-52 overflow-y-auto">
           {options.map((option, index) => (
             <li
               key={index}
-              className={` ${classNameDrop} py-2 px-8 hover:bg-gray-100 cursor-pointer border-b border-gray/50 hover:bg-blue-100`}
+              className={`${classNameDrop} px-4 py-2 hover:bg-blue-100 cursor-pointer`}
               onClick={() => handleSelect(option)}
             >
               {option}
@@ -67,4 +62,4 @@ const CustomDropdown = ({
   );
 };
 
-export default CustomDropdown;
+export default CustomDropdownV2;
