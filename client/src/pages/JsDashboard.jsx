@@ -135,7 +135,7 @@ const JsDashboard = () => {
         <div className="relative w-full max-w-80">
           <input
             type="text"
-            placeholder="Search jobs by job title..."
+            placeholder="Search jobs by title..."
             value={searchTerm}
             onChange={handleSearchChange}
             className="w-full border border-gray rounded-full p-4 h-14 pr-16"
@@ -163,7 +163,7 @@ const JsDashboard = () => {
             handleFilterChange("type", value === "All Job" ? "" : value)
           }
           placeholder="Select Job Type"
-          classNameButton="w-[200px] bg-white shadow-sm border border-gray gap-2"
+          classNameButton="min-w-[200px] w-fit bg-white shadow-sm border border-gray gap-2"
           classNameDrop="hover:bg-blue-100"
         />
 
@@ -223,7 +223,9 @@ const JsDashboard = () => {
               id={job._id}
               position={job.title}
               company={
-                `${job.postedBy.firstname} ${job.postedBy.lastname}` || "NaN"
+                job.companyName ||
+                `${job.postedBy.firstname} ${job.postedBy.lastname}` ||
+                "NaN"
               }
               avatar={job.postedBy.avatar}
               location={job.location}

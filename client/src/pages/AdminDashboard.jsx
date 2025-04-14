@@ -418,7 +418,9 @@ const AdminDashboard = () => {
           <>
             {activeTab === "Overall Stats" && (
               <div className="w-full pb-32 md:pb-5 md:h-full bg-gray/10 p-4 rounded-2xl border font-SatoshiRegular text-sm border-gray/20 relative">
-                <h1 className="text-lg font-SatoshiMedium mb-4">Platform Statistics</h1>
+                <h1 className="text-lg font-SatoshiMedium mb-4">
+                  Platform Statistics
+                </h1>
                 <div className="m-4 py-3 px-4 bg-gray/20 hidden md:block lg:w-3/6 h-fit shadow rounded-lg">
                   <StatsGraph stats={stats} />
                 </div>

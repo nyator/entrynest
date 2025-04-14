@@ -1,13 +1,16 @@
 import { Job } from "../models/job.model.js";
+import { User } from "../models/user.model.js"; // Import User model
 
 export const createJob = async (req, res) => {
-  const { salaryRange, title, location, tags, type, style, aboutRole, qualification, responsibility } =
-    req.body; // Removed description
-
-  console.log("createJob - Request body:", req.body);
-  console.log("createJob - User ID:", req.userId);
+  const { salaryRange, title, location, tags, type, style, aboutRole, qualification, responsibility, companyName } =
+    req.body;
 
   try {
+    const user = await User.findById(req.userId); // Fetch the user to check their role
+    if (!user) {
+      return res.status(404).json({ success: false, message: "User not found" });
+    }
+
     const job = new Job({
       title,
       location,
@@ -18,13 +21,11 @@ export const createJob = async (req, res) => {
       qualification,
       responsibility,
       salaryRange,
-      // Removed description
+      companyName: user.role === "admin" ? companyName : user.companyName, // Use provided companyName only if admin
       postedBy: req.userId,
     });
 
     await job.save();
-
-    console.log("Job posted successfully:", job);
 
     res.status(201).json({
       success: true,

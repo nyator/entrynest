@@ -82,9 +82,9 @@ const UserAvatar = () => {
                 navigate("/profile");
                 setIsOpen(false);
               }}
-              className="block text-start w-full px-4 py-4 text-sm text-gray-700 hover:bg-black/10 transform-all ease-in-out duration-300 border-b border-gray/40"
+              className="block text-start w-full px-4 py-4 text-sm text-gray-700 hover:bg-gray/30 transform-all ease-in-out duration-300 border-b border-gray/40"
             >
-              <IoPersonCircleSharp className="inline-block mr-2 size-6 text-black/50" />
+              <IoPersonCircleSharp className="inline-block mr-2 size-6 text-blue-400" />
               Edit Profile
             </button>
             <button
@@ -92,9 +92,9 @@ const UserAvatar = () => {
                 handleLogout();
                 setIsOpen(false);
               }}
-              className="block text-start rounded-b-md w-full px-4 py-4 text-sm text-gray-700 hover:bg-black/10 transform-all ease-in-out duration-300"
+              className="block text-start rounded-b-md w-full px-4 py-4 text-sm text-gray-700 hover:bg-gray/30 transform-all ease-in-out duration-300"
             >
-              <TbLogout2 className="inline-block mr-2 size-5 text-black/50" />
+              <TbLogout2 className="inline-block mr-2 size-5 text-red-600" />
               Logout
             </button>
           </div>

@@ -6,6 +6,11 @@ import { useNavigate } from "react-router-dom";
 
 import LoadingScreen from "../components/LoadingScreen";
 import { FaDownload } from "react-icons/fa6";
+import { MdPendingActions } from "react-icons/md";
+import { MdOutlineBookmark } from "react-icons/md";
+import { FaCircleXmark } from "react-icons/fa6";
+import { IoCheckmarkCircle } from "react-icons/io5";
+import { MdOutlinePostAdd } from "react-icons/md";
 
 const EmDashboard = () => {
   const [applications, setApplications] = useState([]);
@@ -271,59 +276,64 @@ const EmDashboard = () => {
       <div className="overflow-x-auto pt-5 w-full md:w-auto md:bg-gray-200 md:h-fit md:p-4 md:rounded-2xl md:bg-gray/10 md:my-4 md:font-SatoshiMedium md:border-gray/20 md:border flex-shrink-0">
         <ul className="w-full flex text-nowrap bg-gray/10 flex-row md:flex-col gap-4 ">
           <li
-            className={`cursor-pointer px-6 py-2 w-full relative ${
+            className={`cursor-pointer px-6 py-2 inline-flex items-center gap-2 relative ${
               activeTab === "manageJobs"
                 ? "bg-white rounded-lg transition-all ease-linear duration-150 border-gray/90 border"
                 : "hover:bg-white/50 rounded-lg transition-all ease-linear duration-150 border-gray/20 border"
             }`}
             onClick={() => setActiveTab("manageJobs")}
           >
+            <MdOutlineBookmark />
             Manage Jobs
             <span className="rounded-full p-2 bg-purple-300 border border-primaryStroke h-6 w-6 text-breadcrumb absolute -top-2 -right-2 flex justify-center items-center">
               {manageJobsCount}
             </span>
           </li>
           <li
-            className={`cursor-pointer px-6 py-2 w-full relative ${
+            className={`cursor-pointer px-6 py-2 inline-flex items-center gap-2 relative ${
               activeTab === "reviewApplication"
                 ? "bg-white rounded-lg transition-all ease-linear duration-150 border-gray/90 border"
                 : "hover:bg-white/50 rounded-lg transition-all ease-linear duration-150 border-gray/20 border"
             }`}
             onClick={() => setActiveTab("reviewApplication")}
           >
+            <MdPendingActions className="text-yellow-500" />
             Review Applications
             <span className="rounded-full p-2 bg-purple-300 border border-primaryStroke h-6 w-6 text-breadcrumb absolute -top-2 -right-2 flex justify-center items-center">
               {pendingApplicationsCount}
             </span>
           </li>
           <li
-            className={`cursor-pointer px-6 py-2 w-full ${
+            className={`cursor-pointer px-6 py-2 inline-flex items-center gap-2 ${
               activeTab === "approved"
                 ? "bg-white rounded-lg transition-all ease-linear duration-150 border-gray/90 border"
                 : "hover:bg-white/50 rounded-lg transition-all ease-linear duration-150 border-gray/20 border"
             }`}
             onClick={() => setActiveTab("approved")}
           >
+            <IoCheckmarkCircle className="text-green-600 text-lg" />
             Approved
           </li>
           <li
-            className={`cursor-pointer px-6 py-2 w-full ${
+            className={`cursor-pointer px-6 py-2 inline-flex items-center gap-2 ${
               activeTab === "declined"
                 ? "bg-white rounded-lg transition-all ease-linear duration-150 border-gray/90 border"
                 : "hover:bg-white/50 rounded-lg transition-all ease-linear duration-150 border-gray/20 border"
             }`}
             onClick={() => setActiveTab("declined")}
           >
+            <FaCircleXmark className="text-red-500" />
             Declined
           </li>
           <li
-            className={`cursor-pointer px-6 py-2 w-full ${
+            className={`cursor-pointer px-6 py-2 inline-flex items-center gap-2 ${
               activeTab === "post_job"
                 ? "bg-white rounded-lg transition-all ease-linear duration-150 border-primary/20 border"
                 : "hover:bg-primary/90 bg-primary text-white rounded-lg transition-all ease-linear duration-150 border-primaryStroke/90 border"
             }`}
             onClick={() => setActiveTab("post_job")}
           >
+            <MdOutlinePostAdd />
             Post Job
           </li>
         </ul>
@@ -338,7 +348,12 @@ const EmDashboard = () => {
             {activeTab === "manageJobs" && (
               <div className="w-full pb-32 md:pb-0 h-full bg-gray/10 p-4 rounded-2xl border border-gray/20 relative">
                 {jobs.length === 0 ? (
-                  <p>No job postings yet.</p>
+                  <div className="flex flex-col justify-center items-center h-full">
+                    <FaCircleXmark className="text-red-500 text-4xl" />
+                    <h2 className="text-lg font-bold ml-2">
+                      No job postings yet.
+                    </h2>
+                  </div>
                 ) : (
                   <div className="space-y-4">
                     {jobs
@@ -365,12 +380,14 @@ const EmDashboard = () => {
                             {job.applicationCount || 0}
                           </p>
                           <div className="flex gap-4 items-center">
-                            <button
-                              onClick={() => handleViewApplications(job._id)}
-                              className="px-4 py-2 bg-blue-500 text-white rounded"
-                            >
-                              View Applications
-                            </button>
+                            {job.applicationCount > 0 && (
+                              <button
+                                onClick={() => handleViewApplications(job._id)}
+                                className="px-4 py-2 bg-blue-500 text-white rounded"
+                              >
+                                View Applications
+                              </button>
+                            )}
                             <button
                               onClick={() => handleEditJob(job._id)}
                               className="px-4 py-2 bg-yellow-500 text-white rounded"
@@ -416,7 +433,12 @@ const EmDashboard = () => {
               <>
                 <div className="w-full h-full bg-gray/10 p-4 rounded-2xl border border-gray/20 relative">
                   {applications.length === 0 ? (
-                    <p>No pending applications yet.</p>
+                    <div className="flex flex-col justify-center items-center h-full">
+                      <FaCircleXmark className="text-red-500 text-4xl" />
+                      <h2 className="text-lg font-bold ml-2">
+                        No pending applications yet.
+                      </h2>
+                    </div>
                   ) : (
                     <div className="space-y-4">
                       {currentTabApplications.map((app) => (
@@ -511,7 +533,12 @@ const EmDashboard = () => {
             {activeTab === "approved" && (
               <div className="w-full h-full bg-gray/10 p-4 rounded-2xl border border-gray/20 relative">
                 {applications.length === 0 ? (
-                  <p>No approved applications yet.</p>
+                  <div className="flex flex-col justify-center items-center h-full">
+                    <FaCircleXmark className="text-red-500 text-4xl" />
+                    <h2 className="text-lg font-bold ml-2">
+                      No approved applications yet.
+                    </h2>
+                  </div>
                 ) : (
                   <div className="space-y-4">
                     {currentTabApplications.map((app) => (
@@ -584,7 +611,12 @@ const EmDashboard = () => {
             {activeTab === "declined" && (
               <div className="w-full h-full bg-gray/10 p-4 rounded-2xl border border-gray/20 relative">
                 {applications.length === 0 ? (
-                  <p>No declined applications yet.</p>
+                  <div className="flex flex-col justify-center items-center h-full">
+                    <FaCircleXmark className="text-red-500 text-4xl" />
+                    <h2 className="text-lg font-bold ml-2">
+                      No declined applications yet.
+                    </h2>
+                  </div>
                 ) : (
                   <div className="space-y-4">
                     {currentTabApplications.map((app) => (

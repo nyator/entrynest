@@ -52,6 +52,10 @@ const jobSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    companyName: {
+      type: String,
+      required: true,
+    },
     postedBy: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",

@@ -3,6 +3,7 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { button } from "../constants/styles";
 import { useNavigate } from "react-router-dom";
+import { useAuthStore } from "../store/authStore"; // Import auth store to get user role
 
 import { TbLocationFilled } from "react-icons/tb";
 import { HiOfficeBuilding } from "react-icons/hi";
@@ -22,11 +23,13 @@ import {
 } from "../constants/index";
 
 const PostJob = () => {
+  const { user } = useAuthStore(); // Get the logged-in user's details
   const [jobTitle, setJobTitle] = useState("");
   const [jobLocation, setJobLocation] = useState("");
   const [jobTags, setJobTags] = useState([]);
   const [jobType, setJobType] = useState("");
   const [jobStyle, setJobStyle] = useState("");
+  const [companyName, setCompanyName] = useState(""); // New state for company name
   const [aboutRole, setAboutRole] = useState("");
   const [qualification, setQualification] = useState("");
   const [responsibility, setResponsibility] = useState("");
@@ -54,6 +57,7 @@ const PostJob = () => {
           type: jobType,
           tags: jobTags,
           style: jobStyle,
+          companyName: user.role === "admin" ? companyName : undefined, // Include companyName only if admin
           aboutRole,
           qualification,
           responsibility,
@@ -69,6 +73,7 @@ const PostJob = () => {
       setJobType("");
       setJobStyle("");
       setJobTags([]);
+      setCompanyName("");
       setAboutRole("");
       setQualification("");
       setResponsibility("");
@@ -86,6 +91,7 @@ const PostJob = () => {
     setJobLocation("");
     setJobType("");
     setJobTags([]);
+    setCompanyName("");
     setAboutRole("");
     setQualification("");
     setResponsibility("");
@@ -97,6 +103,20 @@ const PostJob = () => {
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col md:flex-row justify-between items-start mb-4">
           <div className="w-full mr-4">
+            {user.role === "admin" && ( // Render company name input only for admin
+              <div className="mb-4">
+                <label className="block text-gray-700">Company Name</label>
+                <input
+                  type="text"
+                  value={companyName}
+                  onChange={(e) => setCompanyName(e.target.value)}
+                  className="w-full border-[1px] border-grayStroke rounded-lg p-2 text-black/70"
+                  placeholder="Enter Company Name"
+                  required
+                />
+              </div>
+            )}
+
             <div className="mb-4">
               <label className="block text-gray-700">Job Title</label>
               <input
