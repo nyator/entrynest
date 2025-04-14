@@ -110,7 +110,7 @@ const EditJob = () => {
   };
 
   return (
-    <div className="container mx-auto p-4 font-SatoshiMedium text-sm">
+    <div className="mx-auto p-4 font-SatoshiMedium text-sm">
       {/* Breadcrumb */}
       <nav className="mb-4 text-gray-600 text-breadcrumb inline-flex items-center text-black/70 gap-2">
         <span className="text-black/70 font-bold inline-flex items-center">
@@ -256,7 +256,7 @@ const EditJob = () => {
             </div>
           </div>
         </div>
-        <div className="flex space-x-3">
+        <div className="flex justify-center md:justify-normal space-x-3">
           <button
             type="submit"
             className="px-4 py-2 bg-blue-500 text-white rounded"

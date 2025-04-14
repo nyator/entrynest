@@ -6,18 +6,19 @@ import { toast } from "react-toastify";
 import { fr } from "../constants/assests";
 import InputField from "../elements/inputField";
 import { FcGoogle } from "react-icons/fc";
+import { BiLoaderCircle } from "react-icons/bi";
+
 import { useAuthStore } from "../store/authStore";
 
 function LoginPage() {
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const navigate = useNavigate();
-  const { isAuthenticated, setAuthenticated } = useAuthStore(); // Add setAuthenticated
+  const { isAuthenticated, setAuthenticated, setUser } = useAuthStore(); // Add setAuthenticated and setUser
   const [loading, setLoading] = useState(false); // Add loading state
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/"); // Redirect to home page if already authenticated
     }
   }, [isAuthenticated, navigate]);
 
@@ -38,23 +39,28 @@ function LoginPage() {
     const loadingToastId = toast.loading("Processing...");
 
     try {
-      const response = await axios.post(
-        "http://localhost:3000/api/auth/login",
-        {
-          email,
-          password,
-        }
-      );
+      const response = await axios.post("/auth/login", {
+        email,
+        password,
+      });
+      const user = response.data.user;
+      setUser(user); // Update the user state
       toast.dismiss(); // Dismiss any existing toasts
       toast.success("Login successful");
 
-      const user = response.data.user;
-      if (user.role === "admin") {
-        navigate("/admin-dashboard");
-      } else if (user.role === "employer") {
-        navigate("/em-dashboard");
-      } else {
-        navigate("/jobs");
+      // Redirect based on user role
+      switch (user.role) {
+        case "admin":
+          navigate("/admin-dashboard");
+          break;
+        case "employer":
+          navigate("/em-dashboard");
+          break;
+        case "jobseeker":
+          navigate("/jobs");
+          break;
+        default:
+          navigate("/"); // Fallback for unknown roles
       }
     } catch (error) {
       toast.dismiss(); // Dismiss any existing toasts
@@ -107,9 +113,13 @@ function LoginPage() {
                 <div>
                   <button
                     type="submit"
-                    className="w-full bg-primary text-white font-medium py-2 rounded-xl"
+                    className="w-full bg-primary text-white justify-center flex font-medium py-2 rounded-xl"
                   >
-                    Login
+                    {loading ? (
+                      <BiLoaderCircle className="font-bold text-2xl items-center animate-spin transition-all ease-in-out duration-200 " />
+                    ) : (
+                      "Login"
+                    )}
                   </button>
                 </div>
               </form>

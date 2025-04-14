@@ -10,7 +10,7 @@ import AuthRedirect from "./components/AuthRedirect";
 import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 
-import LandingPage from "../src/pages/LandingPage"; //ALSO JOB_SEARCH PAGE
+import LandingPage from "../src/pages/LandingPage"; 
 import Layout from "./Layout";
 import NotFoundPage from "./pages/notFoundPage";
 import FindTalentPage from "./pages/FindTalentPage";
@@ -22,18 +22,18 @@ import SignupPage from "../src/pages/SignupPage";
 import SupportPage from "./pages/SupportPage";
 import SignupJobSeeker from "./pages/SignupJobSeeker";
 import EmailVerificationPage from "./pages/EmailVerificationPage";
-import JsDashboard from "./pages/JsDashboard.jsx"; // Import JsDashboard
-import JobDetails from "./pages/JobDetails.jsx"; // Import JobDetails
-import ProfilePage from "./pages/ProfilePage"; // Import ProfilePage
-import EmDashboard from "./pages/EmDashboard.jsx"; // Import EmDashboard
+import JsDashboard from "./pages/JsDashboard.jsx"; 
+import JobDetails from "./pages/JobDetails.jsx"; 
+import ProfilePage from "./pages/ProfilePage"; 
+import EmDashboard from "./pages/EmDashboard.jsx"; 
 import PostJob from "./pages/PostJob";
 import ViewEmployersPage from "./pages/ViewEmployersPage.jsx";
 import ResourcePage from "./pages/ResourcePage.jsx";
-import AdminDashboard from "./pages/AdminDashboard.jsx"; // Import AdminDashboard
-import EmployerProfilePage from "./pages/EmployerProfilePage.jsx"; // Import EmployerProfilePage
+import AdminDashboard from "./pages/AdminDashboard.jsx";
+import EmployerProfilePage from "./pages/EmployerProfilePage.jsx"; 
 import AdminJobDetails from "./pages/AdminJobDetails.jsx";
-import EditJob from "./pages/EditJob"; // Import EditJob
-import JobApplications from "./pages/JobApplications"; // Import JobApplications
+import EditJob from "./pages/EditJob";
+import JobApplications from "./pages/JobApplications"; 
 import MentorsPage from "./pages/MentorsPage.jsx";
 
 // Set the base URL for Axios
@@ -119,7 +119,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/edit-job/:jobId",
-        element: <EditJob />, // Add route for editing a job
+        element: <EditJob />,
       },
 
 
@@ -141,7 +141,7 @@ const router = createBrowserRouter([
       },
       {
         path: "/em-dashboard/applications/:jobId",
-        element: <JobApplications />, // Add route for job applications
+        element: <JobApplications />, 
       },
     ],
   },

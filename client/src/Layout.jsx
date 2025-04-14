@@ -2,27 +2,33 @@ import Footer from "./components/footer";
 import Navbar from "./components/navbar";
 import EmNavbar from "./components/EmNavbar";
 import JsNavbar from "./components/JsNavbar";
+import AdminNavbar from "./components/AdminNavbar";
 import { useAuthStore } from "./store/authStore";
 import { Outlet, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 const Layout = () => {
   const location = useLocation();
-  const { user } = useAuthStore();
+  const { user } = useAuthStore(); // Get the user state
+  const [currentNavbar, setCurrentNavbar] = useState(null);
 
-  const renderNavbar = () => {
+  useEffect(() => {
+    // Dynamically update the navbar based on the user's role
     if (user?.role === "jobseeker") {
-      return <JsNavbar />;
+      setCurrentNavbar(<JsNavbar />);
     } else if (user?.role === "employer") {
-      return <EmNavbar />;
+      setCurrentNavbar(<EmNavbar />);
+    } else if (user?.role === "admin") {
+      setCurrentNavbar(<AdminNavbar />);
     } else {
-      return <Navbar />;
+      setCurrentNavbar(<Navbar />);
     }
-  };
+  }, [user]); // Re-run whenever the user state changes
 
   return (
     <>
       <main className="w-11/12 mx-auto my-[25px]">
-        {location.pathname !== "/verify-email" && renderNavbar()}
+        {location.pathname !== "/verify-email" && currentNavbar}
         <Outlet />
         {location.pathname !== "/login" &&
           location.pathname !== "/signup" &&

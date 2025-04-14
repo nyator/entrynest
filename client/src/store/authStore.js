@@ -41,7 +41,6 @@ export const useAuthStore = create((set) => ({
         user: response.data.user,
         isAuthenticated: true,
         isLoading: false,
-        // isCheckingAuth: false,
       });
     } catch (error) {
       set({
@@ -64,7 +63,6 @@ export const useAuthStore = create((set) => ({
         user: response.data.user,
         error: null,
         isLoading: false,
-        // isCheckingAuth: false,
       });
     } catch (error) {
       set({
@@ -84,7 +82,6 @@ export const useAuthStore = create((set) => ({
         isAuthenticated: false,
         error: null,
         isLoading: false,
-		// isCheckingAuth: false,
       });
     } catch (error) {
       set({ error: "Error logging out", isLoading: false });
