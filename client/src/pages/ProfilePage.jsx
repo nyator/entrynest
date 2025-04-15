@@ -4,7 +4,10 @@ import { useAuthStore } from "../store/authStore";
 import LoadingScreen from "../components/LoadingScreen";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
-import CustomDropdown from "../components/CustomDropdown"; // Import CustomDropdown
+import CustomDropdown from "../components/CustomDropdown"; 
+
+import { skillsList, locationOptions } from "../constants/index";
+
 
 import { IoPersonCircleOutline } from "react-icons/io5";
 import { HiPlusCircle } from "react-icons/hi2";
@@ -13,36 +16,6 @@ import { MdSpaceDashboard } from "react-icons/md";
 import { TbLocationFilled } from "react-icons/tb";
 import { IoIosCloseCircle } from "react-icons/io";
 
-const skillsList = [
-  "JavaScript",
-  "React",
-  "Node.js",
-  "Python",
-  "Java",
-  "C++",
-  "Ruby",
-  "PHP",
-];
-
-const locationOptions = [
-  "Greater Accra Region",
-  "Ashanti Region",
-  "Central Region",
-  "Eastern Region",
-  "Brong Ahafo Region",
-  "Northern Region",
-  "Upper East Region",
-  "Upper West Region",
-  "Western North Region",
-  "North East Region",
-  "Oti Region",
-  "Bono East Region",
-  "Ahafo Region",
-  "Savannah Region",
-  "Volta Region",
-  "Western Region",
-  "Worldwide",
-];
 
 const ProfilePage = () => {
   const { user, setUser } = useAuthStore();
@@ -59,7 +32,8 @@ const ProfilePage = () => {
   });
   const [avatarPreview, setAvatarPreview] = useState(user?.avatar || "");
   const [loading, setLoading] = useState(true);
-  const [skills, setSkills] = useState(profileData.skills || []); // State for selected skills
+  const [skills, setSkills] = useState(profileData.skills || []); 
+  
 
   useEffect(() => {
     if (user) {
