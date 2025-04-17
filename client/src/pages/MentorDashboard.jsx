@@ -8,7 +8,16 @@ const MentorDashboard = () => {
   const [mentorships, setMentorships] = useState([]);
   const [applicants, setApplicants] = useState([]); // State for mentorship applicants
   const [mentees, setMentees] = useState([]); // State for approved applications
-  const [activeTab, setActiveTab] = useState("openMentorships");
+  const [sessions, setSessions] = useState([]); // State for sessions
+  const [sessionForm, setSessionForm] = useState({
+    selectedMentees: [], // Array to hold selected mentees
+    topic: "",
+    date: "",
+    startTime: "",
+    endTime: "",
+    message: "",
+  });
+  const [activeTab, setActiveTab] = useState("myMentees");
   const [formData, setFormData] = useState({
     title: "",
     description: "",
@@ -56,6 +65,19 @@ const MentorDashboard = () => {
     }
   };
 
+  const fetchSessions = async () => {
+    try {
+      const response = await axios.get("/mentorships/sessions", {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      setSessions(response.data.sessions);
+    } catch (error) {
+      toast.error("Failed to fetch sessions");
+    }
+  };
+
   useEffect(() => {
     if (activeTab === "postMentorships") {
       fetchMentorships();
@@ -69,6 +91,10 @@ const MentorDashboard = () => {
     if (activeTab === "openMentorships") {
       fetchMentorships(); // Fetch mentorships when the tab is active
     }
+    if (activeTab === "sessions") {
+      fetchMentees();
+      fetchSessions();
+    }
   }, [activeTab]);
 
   useEffect(() => {
@@ -78,6 +104,23 @@ const MentorDashboard = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
+  };
+
+  const handleSessionChange = (e) => {
+    const { name, value } = e.target;
+    setSessionForm({ ...sessionForm, [name]: value });
+  };
+
+  const handleMenteeSelection = (menteeId) => {
+    setSessionForm((prevForm) => {
+      const isSelected = prevForm.selectedMentees.includes(menteeId);
+      return {
+        ...prevForm,
+        selectedMentees: isSelected
+          ? prevForm.selectedMentees.filter((id) => id !== menteeId)
+          : [...prevForm.selectedMentees, menteeId],
+      };
+    });
   };
 
   const handleSubmit = async (e) => {
@@ -99,6 +142,29 @@ const MentorDashboard = () => {
       });
     } catch (error) {
       toast.error("Failed to create mentorship opportunity");
+    }
+  };
+
+  const handleSessionSubmit = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.post("/api/mentorships/sessions", sessionForm, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+      });
+      toast.success("Session created successfully");
+      setSessions([...sessions, response.data.session]);
+      setSessionForm({
+        selectedMentees: [],
+        topic: "",
+        date: "",
+        startTime: "",
+        endTime: "",
+        message: "",
+      });
+    } catch (error) {
+      toast.error("Failed to create session");
     }
   };
 
@@ -242,7 +308,107 @@ const MentorDashboard = () => {
         )}
         {activeTab === "sessions" && (
           <div className="w-full h-full bg-gray/10 p-4 rounded-2xl border border-gray/20">
-            <h1 className="text-2xl font-bold mb-4">Sessions</h1>
+            <h2 className="text-xl font-bold mb-4">Create Session</h2>
+            <form onSubmit={handleSessionSubmit} className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium">Select Mentees</label>
+                <ul className="space-y-2 mt-2">
+                  {mentees.map((mentee) => (
+                    <li key={mentee._id} className="flex items-center gap-2">
+                      <input
+                        type="checkbox"
+                        checked={sessionForm.selectedMentees.includes(mentee._id)}
+                        onChange={() => handleMenteeSelection(mentee._id)}
+                      />
+                      <label>
+                        {mentee.firstname} {mentee.lastname} - {mentee.email}
+                      </label>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <label className="block text-sm font-medium">Topic</label>
+                <input
+                  type="text"
+                  name="topic"
+                  value={sessionForm.topic}
+                  onChange={handleSessionChange}
+                  className="w-full border rounded p-2"
+                  required
+                />
+              </div>
+              <div>
+                <label className="block text-sm font-medium">Date</label>
+                <input
+                  type="date"
+                  name="date"
+                  value={sessionForm.date}
+                  onChange={handleSessionChange}
+                  className="w-full border rounded p-2"
+                  required
+                />
+              </div>
+              <div className="flex gap-4">
+                <div>
+                  <label className="block text-sm font-medium">Start Time</label>
+                  <input
+                    type="time"
+                    name="startTime"
+                    value={sessionForm.startTime}
+                    onChange={handleSessionChange}
+                    className="w-full border rounded p-2"
+                    required
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium">End Time</label>
+                  <input
+                    type="time"
+                    name="endTime"
+                    value={sessionForm.endTime}
+                    onChange={handleSessionChange}
+                    className="w-full border rounded p-2"
+                    required
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-sm font-medium">Message</label>
+                <textarea
+                  name="message"
+                  value={sessionForm.message}
+                  onChange={handleSessionChange}
+                  className="w-full border rounded p-2"
+                  placeholder="Add a message for the session"
+                />
+              </div>
+              <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">
+                Create Session
+              </button>
+            </form>
+
+            <h3 className="text-lg font-bold mt-8">Scheduled Sessions</h3>
+            <ul className="space-y-4 mt-4">
+              {sessions.map((session) => (
+                <li key={session._id} className="border p-4 rounded-xl">
+                  <h4 className="text-lg font-bold">{session.topic}</h4>
+                  <p>
+                    <strong>Date:</strong> {new Date(session.date).toLocaleDateString()}
+                  </p>
+                  <p>
+                    <strong>Time:</strong> {session.startTime} - {session.endTime}
+                  </p>
+                  <p>
+                    <strong>Message:</strong> {session.message || "No message provided"}
+                  </p>
+                  <p>
+                    <strong>Mentees:</strong>{" "}
+                    {session.mentees.map((mentee) => mentee.firstname).join(", ")}
+                  </p>
+                </li>
+              ))}
+            </ul>
           </div>
         )}
         {activeTab === "openMentorships" && (

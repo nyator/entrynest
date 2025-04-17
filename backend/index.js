@@ -8,6 +8,7 @@ import authRoutes from "./routes/auth.routes.js";
 import userRoutes from "./routes/user.routes.js";
 import jobRoutes from "./routes/job.routes.js"; // Import job routes
 import mentorshipRoutes from "./routes/mentorship.routes.js"; // Import mentorship routes
+import sessionRoutes from "./routes/session.routes.js"; // Import session routes
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ app.use("/api/auth", authRoutes); // Ensure this line is present
 app.use("/api/user", userRoutes); // Ensure this line exists
 app.use("/api/jobs", jobRoutes); // Use job routes
 app.use("/api/mentorships", mentorshipRoutes); // Mount mentorship routes
+app.use("/api/mentorships/sessions", sessionRoutes); // Mount session routes under /api/mentorships/sessions
 
 app.listen(PORT, () => {
   connectDB();
