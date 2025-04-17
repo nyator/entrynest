@@ -184,3 +184,20 @@ export const getRecentEmployers = async (req, res) => {
     });
   }
 };
+
+export const getJobseekers = async (req, res) => {
+  try {
+    const jobseekers = await User.find({ role: "jobseeker" }).select("-password");
+    res.status(200).json({
+      success: true,
+      jobseekers,
+    });
+  } catch (error) {
+    console.error("Error fetching jobseekers:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch jobseekers",
+      errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
+    });
+  }
+};

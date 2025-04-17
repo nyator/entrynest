@@ -9,6 +9,7 @@ import { HiMiniArrowsUpDown } from "react-icons/hi2";
 import { MdOutlineArrowDropDown } from "react-icons/md";
 
 import { toast } from "react-toastify";
+import LoadingScreen from "../components/LoadingScreen";
 
 const JobApplications = () => {
   const { jobId } = useParams();

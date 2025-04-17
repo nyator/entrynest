@@ -1,6 +1,6 @@
 import express from "express";
 import multer from "multer";
-import { getAllEmployers, deleteEmployer, getEmployerById, updateProfile, getPlatformStats, getRecentEmployers } from "../controllers/user.controller.js";
+import { getAllEmployers, deleteEmployer, getEmployerById, updateProfile, getPlatformStats, getRecentEmployers, getJobseekers } from "../controllers/user.controller.js";
 import { verifyToken } from "../middleware/verifyToken.js"; // Ensure this is imported
 
 const router = express.Router();
@@ -19,5 +19,6 @@ router.get("/employers/:id", getEmployerById); // Add this route
 
 router.get("/stats", verifyToken, getPlatformStats); // Add this route
 router.get("/recent-employers", verifyToken, getRecentEmployers); // Add this route
+router.get("/jobseekers", getJobseekers); // Add this route
 
 export default router;

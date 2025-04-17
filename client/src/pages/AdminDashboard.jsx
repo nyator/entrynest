@@ -16,6 +16,7 @@ import { FaGetPocket } from "react-icons/fa";
 import { TbBrandMailgun } from "react-icons/tb";
 import { BsCalendar2DateFill } from "react-icons/bs";
 import { BiSupport } from "react-icons/bi";
+import { FaCircleXmark } from "react-icons/fa6";
 
 import StatsGraph from "../components/StatsGraph"; // Import the StatsGraph component
 
@@ -24,6 +25,7 @@ const AdminDashboard = () => {
   const [mentors, setMentors] = useState([]);
   const [jobs, setJobs] = useState([]); // State for jobs
   const [applications, setApplications] = useState([]); // State for grouped applications
+  const [jobseekers, setJobseekers] = useState([]); // State for jobseekers
   const [tabLoading, setTabLoading] = useState(false); // State for tab-specific loading
   const [activeTab, setActiveTab] = useState("Overall Stats"); // State for active tab
   const [stats, setStats] = useState({
@@ -45,6 +47,18 @@ const AdminDashboard = () => {
         setEmployers(response.data.employers);
       } catch (error) {
         toast.error("Failed to fetch employers");
+      } finally {
+        setTabLoading(false);
+      }
+    };
+
+    const fetchJobseekers = async () => {
+      setTabLoading(true);
+      try {
+        const response = await axios.get("/user/jobseekers");
+        setJobseekers(response.data.jobseekers);
+      } catch (error) {
+        toast.error("Failed to fetch jobseekers");
       } finally {
         setTabLoading(false);
       }
@@ -138,6 +152,7 @@ const AdminDashboard = () => {
       fetchStats();
       fetchRecentEmployers();
     }
+    if (activeTab === "Jobseekers") fetchJobseekers();
   }, [activeTab]);
 
   const handleDelete = async (id) => {
@@ -325,6 +340,58 @@ const AdminDashboard = () => {
     },
   ];
 
+  const jobseekerColumns = [
+    {
+      name: "Name",
+      selector: (row) => `${row.firstname} ${row.lastname}`,
+      sortable: true,
+    },
+    {
+      name: "Email",
+      selector: (row) => row.email,
+      sortable: true,
+    },
+    {
+      name: "Joined",
+      selector: (row) => new Date(row.createdAt).toLocaleDateString(),
+      sortable: true,
+    },
+    {
+      name: "Actions",
+      cell: (row) => (
+        <div className="flex gap-4 items-center">
+          {row.cvUrl ? (
+            <>
+              <a
+                href={row.cvUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-500 underline"
+              >
+                <button className="px-4 py-2 bg-blue-500 text-white rounded">
+                  Open CV
+                </button>
+              </a>
+              <button
+                onClick={() => {
+                  const link = document.createElement("a");
+                  link.href = row.cvUrl;
+                  link.download = row.cvUrl.split("/").pop();
+                  link.click();
+                }}
+                className="px-4 py-2 bg-green-500 text-white rounded"
+              >
+                Download CV
+              </button>
+            </>
+          ) : (
+            <p className="text-red-500">No CV uploaded</p>
+          )}
+        </div>
+      ),
+    },
+  ];
+
   return (
     <div className="flex flex-col md:flex-row font-SatoshiMedium text-sm">
       {/* Sidebar */}
@@ -384,6 +451,17 @@ const AdminDashboard = () => {
           >
             <FaGetPocket />
             All Applications
+          </li>
+          <li
+            className={`cursor-pointer px-6 py-2 inline-flex items-center gap-2 ${
+              activeTab === "Jobseekers"
+                ? "bg-white rounded-lg transition-all ease-linear duration-150 border-gray/90 border"
+                : "hover:bg-white/50 rounded-lg transition-all ease-linear duration-150 border-gray/20 border"
+            }`}
+            onClick={() => setActiveTab("Jobseekers")}
+          >
+            <FaUsers />
+            Jobseekers
           </li>
           <li
             className={`cursor-pointer px-6 py-2 inline-flex items-center gap-2 ${
@@ -546,6 +624,26 @@ const AdminDashboard = () => {
                   highlightOnHover
                   striped
                 />
+              </div>
+            )}
+            {activeTab === "Jobseekers" && (
+              <div className="w-full pb-32 md:pb-0 h-full bg-gray/10 p-4 rounded-t-2xl border border-gray/20 relative">
+                {jobseekers.length === 0 ? (
+                  <div className="flex flex-col justify-center items-center h-full">
+                    <FaCircleXmark className="text-red-500 text-4xl" />
+                    <h2 className="text-lg font-bold ml-2">
+                      No jobseekers found.
+                    </h2>
+                  </div>
+                ) : (
+                  <DataTable
+                    columns={jobseekerColumns}
+                    data={jobseekers}
+                    pagination
+                    highlightOnHover
+                    striped
+                  />
+                )}
               </div>
             )}
             {activeTab === "post_job" && (

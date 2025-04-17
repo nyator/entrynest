@@ -160,6 +160,7 @@ export const applyToJob = async (req, res) => {
 };
 
 export const getEmployerApplications = async (req, res) => {
+  // Ensure this endpoint is returning applications correctly
   try {
     const jobs = await Job.find({ postedBy: req.userId }).populate(
       "applications.user",
