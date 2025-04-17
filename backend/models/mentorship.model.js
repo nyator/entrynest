@@ -18,15 +18,21 @@ const mentorshipSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    maxApplicants: {
+      type: Number,
+      required: true,
+    },
     mentor: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
       required: true,
     },
-    maxApplicants: {
-      type: Number,
-      required: true,
-    },
+    applicants: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User", // Reference to the User model
+      },
+    ],
     currentApplicants: {
       type: Number,
       default: 0,
@@ -34,6 +40,9 @@ const mentorshipSchema = new mongoose.Schema(
     isClosed: {
       type: Boolean,
       default: false,
+    },
+    message: {
+      type: String,
     },
   },
   { timestamps: true }

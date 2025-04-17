@@ -30,7 +30,7 @@ export const createMentorship = async (req, res) => {
   }
 };
 
-export const getMentorshipsByMentor = async (req, res) => {
+export const getMentorships = async (req, res) => {
   try {
     const mentorships = await Mentorship.find({ mentor: req.userId });
     res.status(200).json({
@@ -113,6 +113,66 @@ export const getMentorshipApplications = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to fetch mentorship applications",
+      errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
+    });
+  }
+};
+
+export const getMentorshipApplicants = async (req, res) => {
+  try {
+    // Fetch mentorships created by the logged-in mentor
+    const mentorships = await Mentorship.find({ mentor: req.userId })
+      .populate("applicants", "firstname lastname email") // Ensure applicants are populated
+      .select("applicants message"); // Select only relevant fields
+
+    if (!mentorships || mentorships.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "No mentorship applicants found",
+      });
+    }
+
+    // Flatten the applicants from all mentorships
+    const applicants = mentorships.flatMap((mentorship) =>
+      mentorship.applicants.map((applicant) => ({
+        ...applicant._doc,
+        message: mentorship.message, // Include the message from the mentorship
+      }))
+    );
+
+    res.status(200).json({
+      success: true,
+      applicants,
+    });
+  } catch (error) {
+    console.error("Error fetching mentorship applicants:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch mentorship applicants",
+      errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
+    });
+  }
+};
+
+export const getApprovedMentees = async (req, res) => {
+  try {
+    const mentorships = await Mentorship.find({ mentor: req.userId })
+      .populate("applicants", "firstname lastname email")
+      .select("applicants");
+
+    const mentees = mentorships.flatMap((mentorship) =>
+      mentorship.applicants.filter((applicant) => applicant.status === "approved")
+    );
+
+    res.status(200).json({
+      success: true,
+      mentees,
+    });
+  } catch (error) {
+    console.error("Error fetching approved mentees:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch approved mentees",
       errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
   }
