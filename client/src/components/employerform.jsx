@@ -9,7 +9,8 @@ import LoadingBar from "./LoadingToast"; // Import the LoadingBar component
 
 async function signup(firstname, lastname, email, password, role) {
   try {
-    const response = await axios.post("/auth/signup", { // Ensure the URL is correct
+    const response = await axios.post("/auth/signup", {
+      // Ensure the URL is correct
       firstname,
       lastname,
       email,
@@ -36,11 +37,12 @@ function EmployerForm({
 }) {
   const [signupError, setSignupError] = useState(""); // Initialize signupError state
   const [loading, setLoading] = useState(false); // Add loading state
+  const [isMentor, setIsMentor] = useState(false); // Add state for mentor checkbox
   const navigate = useNavigate(); // Add useNavigate hook
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true); // Set loading to true
+    setLoading(true);
 
     if (!emfirstname || !emlastname || !workemail || !empassword || !emconfirmpassword) {
       toast.error("Please fill in all fields");
@@ -51,25 +53,28 @@ function EmployerForm({
     if (empassword !== emconfirmpassword) {
       setSignupError("Passwords do not match.");
       toast.error("Passwords do not match");
-      setLoading(false); // Set loading to false
+      setLoading(false);
       return;
     }
+
+    const role = isMentor ? "mentor" : "employer";
+    const payload = { firstname: emfirstname, lastname: emlastname, email: workemail, password: empassword, role };
+
+    console.log("Signup payload:", payload); // Debug the payload
 
     const loadingToastId = toast.loading("Processing...");
 
     try {
-      await signup(emfirstname, emlastname, workemail, empassword, "employer");
-      toast.success(
-        "Signup successful! Check your email for verification Code."
-      );
-      navigate("/jobs"); // Navigate to jobs page
+      await signup(emfirstname, emlastname, workemail, empassword, role);
+      toast.success("Signup successful! Check your email for verification Code.");
+      navigate(role === "mentor" ? "/mentor-dashboard" : "/jobs");
     } catch (error) {
-      setSignupError(error.response?.data?.message || "Signup failed"); // Set error message
-      console.log("Signup error:", error);
+      setSignupError(error.response?.data?.message || "Signup failed");
+      console.error("Signup error:", error);
       toast.error(error.response?.data?.message || "Signup failed");
     } finally {
-      setLoading(false); // Set loading to false
-      toast.dismiss(loadingToastId); // Dismiss only the loading toast
+      setLoading(false);
+      toast.dismiss(loadingToastId);
     }
   };
 
@@ -101,6 +106,17 @@ function EmployerForm({
               />
             </label>
           </div>
+        </div>
+        <div className="flex items-center gap-2">
+          <input
+            type="checkbox"
+            id="mentorCheckbox"
+            checked={isMentor}
+            onChange={(e) => setIsMentor(e.target.checked)}
+          />
+          <label htmlFor="mentorCheckbox" className="text-clampText">
+            I want to be a mentor
+          </label>
         </div>
 
         <div className="flex flex-col">
@@ -137,10 +153,13 @@ function EmployerForm({
             />
           </label>
         </div>
+
         <div>
-        {signupError && (
-          <div className="text-red-600 text-[0.60rem] mt-2 text-center">{signupError}</div>
-        )}
+          {signupError && (
+            <div className="text-red-600 text-[0.60rem] mt-2 text-center">
+              {signupError}
+            </div>
+          )}
           <button
             type="submit"
             className="w-full bg-primary text-white font-medium py-2 rounded-xl"

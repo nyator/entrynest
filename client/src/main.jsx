@@ -35,10 +35,11 @@ import AdminJobDetails from "./pages/AdminJobDetails.jsx";
 import EditJob from "./pages/EditJob";
 import JobApplications from "./pages/JobApplications"; 
 import MentorsPage from "./pages/MentorsPage.jsx";
+import MentorDashboard from "./pages/MentorDashboard.jsx";
 
 // Set the base URL for Axios
 const API_URL =
-  import.meta.env.MODE === "development" ? "http://localhost:3000/api" : "/api";
+  import.meta.env.MODE === "development" ? "http://localhost:3000/api" : "/api"; // Ensure `/api` is included only once
 axios.defaults.baseURL = API_URL;
 
 const router = createBrowserRouter([
@@ -138,6 +139,10 @@ const router = createBrowserRouter([
       {
         path: "/admin-dashboard",
         element: <AdminDashboard />,
+      },
+      {
+        path: "/mentor-dashboard",
+        element: <MentorDashboard />,
       },
       {
         path: "/em-dashboard/applications/:jobId",

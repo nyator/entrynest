@@ -3,6 +3,7 @@ import Navbar from "./components/navbar";
 import EmNavbar from "./components/EmNavbar";
 import JsNavbar from "./components/JsNavbar";
 import AdminNavbar from "./components/AdminNavbar";
+import MtNavbar from "./components/MtNavbar";
 import { useAuthStore } from "./store/authStore";
 import { Outlet, useLocation } from "react-router-dom";
 import { useEffect, useState } from "react";
@@ -20,6 +21,8 @@ const Layout = () => {
       setCurrentNavbar(<EmNavbar />);
     } else if (user?.role === "admin") {
       setCurrentNavbar(<AdminNavbar />);
+    } else if (user?.role === "mentor") {
+      setCurrentNavbar(<MtNavbar />);
     } else {
       setCurrentNavbar(<Navbar />);
     }

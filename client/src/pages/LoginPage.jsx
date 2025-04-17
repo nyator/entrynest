@@ -59,6 +59,9 @@ function LoginPage() {
         case "jobseeker":
           navigate("/jobs");
           break;
+        case "mentor":
+          navigate("/mentor-dashboard"); // Redirect mentors to MentorDashboard
+          break;
         default:
           navigate("/"); // Fallback for unknown roles
       }
