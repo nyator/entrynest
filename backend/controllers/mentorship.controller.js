@@ -32,7 +32,7 @@ export const createMentorship = async (req, res) => {
 
 export const getMentorships = async (req, res) => {
   try {
-    const mentorships = await Mentorship.find({ mentor: req.userId });
+    const mentorships = await Mentorship.find(); // Fetch all mentorships
     res.status(200).json({
       success: true,
       mentorships,
@@ -41,7 +41,7 @@ export const getMentorships = async (req, res) => {
     console.error("Error fetching mentorships:", error);
     res.status(500).json({
       success: false,
-      message: "Failed to fetch mentorship opportunities",
+      message: "Failed to fetch mentorship opportunities.",
       errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
   }

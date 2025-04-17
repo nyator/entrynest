@@ -34,8 +34,8 @@ import EmployerProfilePage from "./pages/EmployerProfilePage.jsx";
 import AdminJobDetails from "./pages/AdminJobDetails.jsx";
 import EditJob from "./pages/EditJob";
 import JobApplications from "./pages/JobApplications"; 
-import MentorsPage from "./pages/MentorsPage.jsx";
 import MentorDashboard from "./pages/MentorDashboard.jsx";
+import MentorshipsPage from "./pages/MentorshipsPage.jsx"; // Import the new page
 
 // Set the base URL for Axios
 const API_URL =
@@ -124,9 +124,10 @@ const router = createBrowserRouter([
       },
 
 
+
       {
-        path: "/mentors",
-        element: <MentorsPage />,
+        path: "/mentorships",
+        element: <MentorshipsPage />, // Add the new route
       },
       {
         path: "/jobs",

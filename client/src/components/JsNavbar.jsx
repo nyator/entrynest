@@ -8,7 +8,7 @@ import { IoClose } from "react-icons/io5";
 
 const navLinks = [
   { title: "Jobs", href: "/jobs", id: 1 },
-  { title: "Mentors", href: "/mentors", id: 2 },
+  { title: "Mentorships", href: "/mentorships", id: 2 },
   { title: "View Employers", href: "/view-employers", id: 3 },
   { title: "Resources", href: "/resources", id: 4 },
 ];
