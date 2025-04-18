@@ -77,7 +77,7 @@ const ViewEmployersPage = () => {
                   className={`${cardButton} bg-primary/90 hover:bg-primary rounded-full`}
                   onClick={() => handleEmployerClick(employer)}
                 >
-                  View Details
+                  View Jobs
                 </button>
               </div>
             </div>

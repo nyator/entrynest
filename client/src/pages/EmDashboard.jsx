@@ -14,37 +14,29 @@ import { MdOutlinePostAdd } from "react-icons/md";
 
 const EmDashboard = () => {
   const [applications, setApplications] = useState([]);
-  const [loading, setLoading] = useState(false); // Corrected loading state initialization
+  const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("manageJobs");
   const [currentPage, setCurrentPage] = useState(1);
-  const applicationsPerPage = 3;
+  const itemsPerPage = 3; // Unified items per page for jobs and applications
   const [jobs, setJobs] = useState([]);
   const navigate = useNavigate();
-  const [pendingApplicationsCount, setPendingApplicationsCount] = useState(0); // Add state for pending applications count
-  const [manageJobsCount, setManageJobsCount] = useState(0); // Add state for pending applications count
-
-  const currentApplications = applications.slice(
-    (currentPage - 1) * applicationsPerPage,
-    currentPage * applicationsPerPage
-  );
+  const [pendingApplicationsCount, setPendingApplicationsCount] = useState(0);
+  const [manageJobsCount, setManageJobsCount] = useState(0);
 
   const currentTabApplications = applications.slice(
-    (currentPage - 1) * applicationsPerPage,
-    currentPage * applicationsPerPage
+    (currentPage - 1) * itemsPerPage,
+    currentPage * itemsPerPage
   );
 
   const handlePageChange = (page) => {
-    if (
-      page >= 1 &&
-      page <= Math.ceil(applications.length / applicationsPerPage)
-    ) {
+    if (page >= 1 && page <= Math.ceil(jobs.length / itemsPerPage)) {
       setCurrentPage(page);
     }
   };
 
   useEffect(() => {
     const fetchPendingApplications = async () => {
-      setLoading(true); // Set loading to true
+      setLoading(true);
       try {
         const response = await axios.get("/jobs/employer/applications", {
           headers: {
@@ -60,7 +52,7 @@ const EmDashboard = () => {
         console.error("Error fetching pending applications:", error);
         toast.error("Failed to fetch pending applications");
       } finally {
-        setLoading(false); // Set loading to false
+        setLoading(false);
       }
     };
 
@@ -71,7 +63,7 @@ const EmDashboard = () => {
 
   useEffect(() => {
     const fetchManageJobsCount = async () => {
-      setLoading(true); // Set loading to true
+      setLoading(true);
       try {
         const response = await axios.get("/jobs/employer/applications", {
           headers: {
@@ -87,7 +79,7 @@ const EmDashboard = () => {
         console.error("Error fetching pending applications:", error);
         toast.error("Failed to fetch pending applications");
       } finally {
-        setLoading(false); // Set loading to false
+        setLoading(false);
       }
     };
 
@@ -98,7 +90,7 @@ const EmDashboard = () => {
 
   useEffect(() => {
     const fetchJobs = async () => {
-      setLoading(true); // Set loading to true
+      setLoading(true);
       try {
         const response = await axios.get("/jobs/employer", {
           headers: {
@@ -111,7 +103,7 @@ const EmDashboard = () => {
         console.error("Error fetching jobs:", error);
         toast.error("Failed to fetch jobs");
       } finally {
-        setLoading(false); // Set loading to false
+        setLoading(false);
       }
     };
 
@@ -122,7 +114,7 @@ const EmDashboard = () => {
 
   useEffect(() => {
     const fetchApprovedApplications = async () => {
-      setLoading(true); // Set loading to true
+      setLoading(true);
       try {
         const response = await axios.get("/jobs/employer/applications", {
           headers: {
@@ -149,7 +141,7 @@ const EmDashboard = () => {
 
   useEffect(() => {
     const fetchDeclinedApplications = async () => {
-      setLoading(true); // Set loading to true
+      setLoading(true);
       try {
         const response = await axios.get("/jobs/employer/applications", {
           headers: {
@@ -165,7 +157,7 @@ const EmDashboard = () => {
         console.error("Error fetching declined applications:", error);
         toast.error("Failed to fetch declined applications");
       } finally {
-        setLoading(false); // Set loading to false
+        setLoading(false);
       }
     };
 
@@ -186,15 +178,15 @@ const EmDashboard = () => {
         const pendingApplications = response.data.applications.filter(
           (app) => app.status === "pending"
         );
-        setPendingApplicationsCount(pendingApplications.length); // Set the count of pending applications
+        setPendingApplicationsCount(pendingApplications.length);
       } catch (error) {
         console.error("Error fetching pending applications count:", error);
         toast.error("Failed to fetch pending applications count");
       }
     };
 
-    fetchPendingApplicationsCount(); // Fetch the count on component mount
-  }, []); // Run only once when the component mounts
+    fetchPendingApplicationsCount();
+  }, []);
 
   useEffect(() => {
     const fetchManageJobsCount = async () => {
@@ -205,15 +197,15 @@ const EmDashboard = () => {
           },
           withCredentials: true,
         });
-        setManageJobsCount(response.data.jobs.length); // Set the count of jobs
+        setManageJobsCount(response.data.jobs.length);
       } catch (error) {
         console.error("Error fetching manage jobs count:", error);
         toast.error("Failed to fetch manage jobs count");
       }
     };
 
-    fetchManageJobsCount(); // Fetch the count on component mount
-  }, []); // Run only once when the component mounts
+    fetchManageJobsCount();
+  }, []);
 
   const handleDownload = (cvUrl) => {
     const link = document.createElement("a");
@@ -223,7 +215,7 @@ const EmDashboard = () => {
   };
 
   const handleEditJob = (jobId) => {
-    navigate(`/edit-job/${jobId}`); // Navigate to the EditJob page
+    navigate(`/edit-job/${jobId}`);
   };
 
   const handleDeleteJob = async (jobId) => {
@@ -234,7 +226,7 @@ const EmDashboard = () => {
         },
         withCredentials: true,
       });
-      setJobs(jobs.filter((job) => job._id !== jobId));
+      setJobs((prev) => prev.filter((job) => job._id !== jobId));
       toast.success("Job deleted successfully");
     } catch (error) {
       console.error("Error deleting job:", error);
@@ -243,7 +235,7 @@ const EmDashboard = () => {
   };
 
   const handleViewApplications = (jobId) => {
-    navigate(`/em-dashboard/applications/${jobId}`); // Navigate to the applications page for the job
+    navigate(`/em-dashboard/applications/${jobId}`);
   };
 
   const handleUpdateStatus = async (applicationId, status) => {
@@ -342,7 +334,7 @@ const EmDashboard = () => {
       {/* Main Content */}
       <div className="w-full mx-auto p-4 min-h-[700px] font-SatoshiMedium text-sm">
         {loading ? (
-          <LoadingScreen /> // Display loading screen while fetching data
+          <LoadingScreen />
         ) : (
           <>
             {activeTab === "manageJobs" && (
@@ -358,8 +350,8 @@ const EmDashboard = () => {
                   <div className="space-y-4">
                     {jobs
                       .slice(
-                        (currentPage - 1) * applicationsPerPage,
-                        currentPage * applicationsPerPage
+                        (currentPage - 1) * itemsPerPage,
+                        currentPage * itemsPerPage
                       )
                       .map((job) => (
                         <div
@@ -414,7 +406,7 @@ const EmDashboard = () => {
                       <div className="border-t border-gray w-full h-1 absolute -top-5"></div>
                       {Array.from(
                         {
-                          length: Math.ceil(jobs.length / applicationsPerPage),
+                          length: Math.ceil(jobs.length / itemsPerPage),
                         },
                         (_, index) => (
                           <button
@@ -513,7 +505,7 @@ const EmDashboard = () => {
                         {Array.from(
                           {
                             length: Math.ceil(
-                              applications.length / applicationsPerPage
+                              applications.length / itemsPerPage
                             ),
                           },
                           (_, index) => (
@@ -592,7 +584,7 @@ const EmDashboard = () => {
                       {Array.from(
                         {
                           length: Math.ceil(
-                            applications.length / applicationsPerPage
+                            applications.length / itemsPerPage
                           ),
                         },
                         (_, index) => (
@@ -670,7 +662,7 @@ const EmDashboard = () => {
                       {Array.from(
                         {
                           length: Math.ceil(
-                            applications.length / applicationsPerPage
+                            applications.length / itemsPerPage
                           ),
                         },
                         (_, index) => (

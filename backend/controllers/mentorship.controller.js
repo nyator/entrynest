@@ -32,7 +32,7 @@ export const createMentorship = async (req, res) => {
 
 export const getMentorships = async (req, res) => {
   try {
-    const mentorships = await Mentorship.find(); // Fetch all mentorships
+    const mentorships = await Mentorship.find();
     res.status(200).json({
       success: true,
       mentorships,
@@ -42,57 +42,43 @@ export const getMentorships = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to fetch mentorship opportunities.",
-      errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
   }
 };
 
 export const applyToMentorship = async (req, res) => {
   const { mentorshipId } = req.params;
+  const userId = req.userId; // Ensure `req.userId` is populated by authentication middleware
 
   try {
     const mentorship = await Mentorship.findById(mentorshipId);
 
     if (!mentorship) {
-      return res.status(404).json({
-        success: false,
-        message: "Mentorship opportunity not found",
-      });
+      return res.status(404).json({ success: false, message: "Mentorship not found." });
     }
 
-    if (mentorship.isClosed) {
-      return res.status(400).json({
-        success: false,
-        message: "Applications for this mentorship are closed",
-      });
+    // Check if the user has already applied
+    const alreadyApplied = mentorship.applicants.some((applicant) => applicant.toString() === userId);
+    if (alreadyApplied) {
+      return res.status(400).json({ success: false, message: "You have already applied to this mentorship." });
     }
 
+    // Check if the mentorship has reached the maximum number of applicants
     if (mentorship.currentApplicants >= mentorship.maxApplicants) {
-      mentorship.isClosed = true;
-      await mentorship.save();
-      return res.status(400).json({
-        success: false,
-        message: "Applications for this mentorship are closed",
-      });
+      return res.status(400).json({ success: false, message: "This mentorship has reached its maximum number of applicants." });
     }
 
-    mentorship.currentApplicants += 1;
-
-    if (mentorship.currentApplicants >= mentorship.maxApplicants) {
-      mentorship.isClosed = true;
-    }
-
+    // Add the user to the list of applicants
+    mentorship.applicants.push(userId);
+    mentorship.currentApplicants += 1; // Increment the currentApplicants count
     await mentorship.save();
 
-    res.status(200).json({
-      success: true,
-      message: "Application submitted successfully",
-    });
+    res.status(200).json({ success: true, message: "Application submitted successfully." });
   } catch (error) {
     console.error("Error applying to mentorship:", error);
     res.status(500).json({
       success: false,
-      message: "Failed to apply to mentorship",
+      message: "Failed to apply to mentorship.",
       errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
   }
@@ -120,35 +106,26 @@ export const getMentorshipApplications = async (req, res) => {
 
 export const getMentorshipApplicants = async (req, res) => {
   try {
-    // Fetch mentorships created by the logged-in mentor
-    const mentorships = await Mentorship.find({ mentor: req.userId })
-      .populate("applicants", "firstname lastname email") // Ensure applicants are populated
-      .select("applicants message"); // Select only relevant fields
+    const mentorships = await Mentorship.find({ mentor: req.userId }) // Fetch mentorships created by the logged-in mentor
+      .populate("applicants", "firstname lastname email") // Populate applicant details
+      .select("title applicants"); // Select relevant fields
 
     if (!mentorships || mentorships.length === 0) {
       return res.status(404).json({
         success: false,
-        message: "No mentorship applicants found",
+        message: "No mentorship applicants found.",
       });
     }
 
-    // Flatten the applicants from all mentorships
-    const applicants = mentorships.flatMap((mentorship) =>
-      mentorship.applicants.map((applicant) => ({
-        ...applicant._doc,
-        message: mentorship.message, // Include the message from the mentorship
-      }))
-    );
-
     res.status(200).json({
       success: true,
-      applicants,
+      mentorships,
     });
   } catch (error) {
     console.error("Error fetching mentorship applicants:", error);
     res.status(500).json({
       success: false,
-      message: "Failed to fetch mentorship applicants",
+      message: "Failed to fetch mentorship applicants.",
       errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
   }
@@ -173,6 +150,35 @@ export const getApprovedMentees = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to fetch approved mentees",
+      errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
+    });
+  }
+};
+
+export const deleteMentorship = async (req, res) => {
+  const { mentorshipId } = req.params;
+  const userId = req.userId; // Ensure `req.userId` is populated by authentication middleware
+
+  try {
+    const mentorship = await Mentorship.findById(mentorshipId);
+
+    if (!mentorship) {
+      return res.status(404).json({ success: false, message: "Mentorship not found." });
+    }
+
+    // Check if the logged-in user is the mentor who created the mentorship
+    if (mentorship.mentor.toString() !== userId) {
+      return res.status(403).json({ success: false, message: "You are not authorized to delete this mentorship." });
+    }
+
+    await mentorship.deleteOne();
+
+    res.status(200).json({ success: true, message: "Mentorship deleted successfully." });
+  } catch (error) {
+    console.error("Error deleting mentorship:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to delete mentorship.",
       errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
   }

@@ -4,10 +4,10 @@ import crypto from "crypto";
 import { User } from "../models/user.model.js";
 import { generateTokenAndSetCookie } from "../utils/generateTokenAndSetCookie.js";
 import {
-  sendVerificationEmail,
   sendWelcomeEmail,
   sendPasswordResetEmail,
   sendResetSuccessEmail,
+  sendVerificationEmail, // Reintroduce sendVerificationEmail
 } from "../mailtrap/emails.js";
 
 import { verifyEmailFormat } from "../utils/verifyEmailFormat.js";
@@ -17,6 +17,7 @@ export const signup = async (req, res) => {
 
   // Validate role
   if (!role || !["jobseeker", "employer", "mentor", "admin"].includes(role)) {
+    console.warn("Invalid role specified:", role);
     return res.status(400).json({
       success: false,
       message: "Invalid role specified",
@@ -44,6 +45,7 @@ export const signup = async (req, res) => {
 
     // Validate email format
     if (!verifyEmailFormat(email)) {
+      console.warn("Invalid email format:", email);
       return res.status(400).json({
         success: false,
         message: "Invalid email format",
@@ -83,7 +85,7 @@ export const signup = async (req, res) => {
       email,
       password: hashedpassword,
       verificationToken,
-      role, // Save the role in the user model
+      role,
       verificationTokenExpireAt: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
     });
     await user.save();
@@ -92,6 +94,7 @@ export const signup = async (req, res) => {
     console.log("Saved user ID:", user._id);
     generateTokenAndSetCookie(res, user._id);
 
+    // Send verification email
     await sendVerificationEmail(user.email, user.firstname, verificationToken);
 
     console.log(`User created successfully: ${user.email}`);

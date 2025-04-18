@@ -22,28 +22,16 @@ const mentorshipSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
-    mentor: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
-    },
-    applicants: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "User", // Reference to the User model
-      },
-    ],
     currentApplicants: {
       type: Number,
       default: 0,
     },
-    isClosed: {
-      type: Boolean,
-      default: false,
-    },
-    message: {
-      type: String,
-    },
+    applicants: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
   },
   { timestamps: true }
 );

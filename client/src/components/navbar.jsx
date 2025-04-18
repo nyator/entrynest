@@ -15,8 +15,8 @@ import AdminNavbar from "./AdminNavbar";
 const navLinks = [
   { title: "Find Job", href: "/", id: 1 },
   { title: "Find Talent", href: "/find_talent", id: 2 },
-  { title: "Community", href: "/community", id: 3 },
-  { title: "Support", href: "/support", id: 4 },
+  // { title: "Community", href: "/community", id: 3 },
+  { title: "Support", href: "/support", id: 3 },
 ];
 
 const Navbar = () => {

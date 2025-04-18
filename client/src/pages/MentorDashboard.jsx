@@ -78,6 +78,31 @@ const MentorDashboard = () => {
     }
   };
 
+  const handleDelete = async (mentorshipId) => {
+    try {
+      const response = await fetch(
+        `http://localhost:3000/api/mentorships/${mentorshipId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.message || "Failed to delete mentorship.");
+      }
+
+      setMentorships((prev) => prev.filter((mentorship) => mentorship._id !== mentorshipId));
+      toast.success("Mentorship deleted successfully!");
+    } catch (error) {
+      console.error("Error deleting mentorship:", error);
+      toast.error(error.message || "Failed to delete mentorship.");
+    }
+  };
+
   useEffect(() => {
     if (activeTab === "postMentorships") {
       fetchMentorships();
@@ -436,6 +461,12 @@ const MentorDashboard = () => {
                     <strong>Status:</strong>{" "}
                     {mentorship.isClosed ? "Closed" : "Open"}
                   </p>
+                  {/* <button
+                    onClick={() => handleDelete(mentorship._id)}
+                    className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-all"
+                  >
+                    Delete
+                  </button> */}
                 </li>
               ))}
             </ul>

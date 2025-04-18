@@ -1,13 +1,19 @@
 import { MailtrapClient } from "mailtrap";
+import dotenv from "dotenv";
+dotenv.config();
 
-const TOKEN = "618b4a9337d7406292e66c87d919c70a";
+const TOKEN = process.env.MAILTRAP_API_TOKEN; // Ensure this environment variable is set correctly
+
+if (!TOKEN) {
+  throw new Error("MAILTRAP_API_TOKEN is not defined in the environment variables.");
+}
 
 export const mailTrapClient = new MailtrapClient({
   token: TOKEN,
 });
 
 export const sender = {
-  email: "hello@demomailtrap.com",
-  name: "entrynest Test",
-};  
- 
+  email: "no-reply@entrynest.com", // Ensure this matches the verified domain in Mailtrap
+  name: "entrynest Team", // Update the sender name if needed
+};
+

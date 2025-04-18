@@ -9,15 +9,16 @@ import LoadingBar from "./LoadingToast"; // Import the LoadingBar component
 
 async function signup(firstname, lastname, email, password, role) {
   try {
-    const response = await axios.post("/auth/signup", { // Ensure the URL is correct
+    const response = await axios.post("/auth/signup", {
       firstname,
       lastname,
       email,
       password,
-      role,
+      role, // Ensure the role is included in the request
     });
     return response.data;
   } catch (error) {
+    console.error("Signup error:", error.response?.data || error.message);
     throw error;
   }
 }
@@ -154,12 +155,12 @@ function JobseekerForm({
         <div className="w-2/5 h-[1.5px] bg-gray"></div>
       </div>
 
-      <Link to={""} className="flex items-center justify-center">
+      {/* <Link to={""} className="flex items-center justify-center">
         <div className="flex w-fit items-center  gap-2 rounded-full text-clampInputText bg-gray border border-grayStroke px-[20px] py-[10px]">
           <FcGoogle className="size-6" />
           Signup with Google
         </div>
-      </Link>
+      </Link> */}
 
       <div className="flex justify-center items-center">
         <p className="font-SatoshiMedium ">

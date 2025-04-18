@@ -27,8 +27,6 @@ export const sendVerificationEmail = async (
   }
 };
 
-
-
 export const sendWelcomeEmail = async (email, firstname) => {
   const recipient = [{ email }];
 
@@ -48,8 +46,6 @@ export const sendWelcomeEmail = async (email, firstname) => {
     throw new Error(`Error sending verification email: ${error}`);
   }
 };
-
-
 
 export const sendPasswordResetEmail = async (email, firstname, resetURL) => {
 	const recipient = [{ email }];
