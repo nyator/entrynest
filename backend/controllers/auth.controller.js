@@ -3,12 +3,7 @@ import crypto from "crypto";
 
 import { User } from "../models/user.model.js";
 import { generateTokenAndSetCookie } from "../utils/generateTokenAndSetCookie.js";
-import {
-  sendWelcomeEmail,
-  sendPasswordResetEmail,
-  sendResetSuccessEmail,
-  sendVerificationEmail, // Reintroduce sendVerificationEmail
-} from "../mailtrap/emails.js";
+import { sendVerificationEmail, sendPasswordResetEmail } from '../utils/emailService.js';
 
 import { verifyEmailFormat } from "../utils/verifyEmailFormat.js";
 
@@ -77,7 +72,7 @@ export const signup = async (req, res) => {
     }
 
     const hashedpassword = await bcryptjs.hash(password, 12);
-    const verificationToken = Math.floor(Math.random() * 1000000).toString();
+    const verificationToken = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
 
     const user = new User({
       firstname,
@@ -86,7 +81,7 @@ export const signup = async (req, res) => {
       password: hashedpassword,
       verificationToken,
       role,
-      verificationTokenExpireAt: Date.now() + 24 * 60 * 60 * 1000, // 24 hours
+      verificationTokenExpireAt: Date.now() + 10 * 60 * 1000, // 10 minutes
     });
     await user.save();
 
@@ -141,10 +136,7 @@ export const verifyEmail = async (req, res) => {
     user.verificationTokenExpireAt = undefined;
     await user.save();
 
-    await sendWelcomeEmail(user.email, user.firstname);
-
     res.status(200).json({
-      redirectUrl: "/jobs", // Redirect to jobs page after login
       success: true,
       message: "Email verified successfully",
       user: {
@@ -279,7 +271,7 @@ export const resetPassword = async (req, res) => {
     user.resetPasswordExpiresAt = undefined;
     await user.save();
 
-    await sendResetSuccessEmail(user.email);
+    await sendPasswordResetSuccessEmail(user.email, user.firstname);
 
     res
       .status(200)
@@ -315,6 +307,55 @@ export const checkAuth = async (req, res) => {
       message: error.message,
       errorDetails:
         process.env.NODE_ENV === "development" ? error.stack : undefined,
+    });
+  }
+};
+
+export const resendVerificationCode = async (req, res) => {
+  try {
+    const { email } = req.body;
+    
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is required",
+      });
+    }
+
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "User not found",
+      });
+    }
+
+    if (user.isVerified) {
+      return res.status(400).json({
+        success: false,
+        message: "Email is already verified",
+      });
+    }
+
+    // Generate new verification token
+    const verificationToken = Math.floor(Math.random() * 1000000).toString().padStart(6, '0');
+    user.verificationToken = verificationToken;
+    user.verificationTokenExpireAt = Date.now() + 10 * 60 * 1000; // 10 minutes
+    await user.save();
+
+    // Send new verification email
+    await sendVerificationEmail(user.email, user.firstname, verificationToken);
+
+    res.status(200).json({
+      success: true,
+      message: "New verification code sent to your email",
+    });
+  } catch (error) {
+    console.error("Error in resendVerificationCode:", error);
+    res.status(500).json({
+      success: false,
+      message: "Error sending verification code",
+      errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
   }
 };

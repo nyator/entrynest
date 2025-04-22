@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import InputField from "../elements/inputField";
-import Button from "../elements/button";
-import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
+
 import { toast } from "react-toastify";
-import LoadingBar from "./LoadingToast"; // Import the LoadingBar component
+import { BiLoaderCircle } from "react-icons/bi";
 
 async function signup(firstname, lastname, email, password, role) {
   try {
@@ -44,7 +43,13 @@ function EmployerForm({
     e.preventDefault();
     setLoading(true);
 
-    if (!emfirstname || !emlastname || !workemail || !empassword || !emconfirmpassword) {
+    if (
+      !emfirstname ||
+      !emlastname ||
+      !workemail ||
+      !empassword ||
+      !emconfirmpassword
+    ) {
       toast.error("Please fill in all fields");
       setLoading(false);
       return;
@@ -58,7 +63,13 @@ function EmployerForm({
     }
 
     const role = isMentor ? "mentor" : "employer";
-    const payload = { firstname: emfirstname, lastname: emlastname, email: workemail, password: empassword, role };
+    const payload = {
+      firstname: emfirstname,
+      lastname: emlastname,
+      email: workemail,
+      password: empassword,
+      role,
+    };
 
     console.log("Signup payload:", payload); // Debug the payload
 
@@ -66,8 +77,10 @@ function EmployerForm({
 
     try {
       await signup(emfirstname, emlastname, workemail, empassword, role);
-      toast.success("Signup successful! Check your email for verification Code.");
-      navigate(role === "mentor" ? "/mentor-dashboard" : "/jobs");
+      toast.success(
+        "Signup successful! Check your email for verification Code."
+      );
+      navigate("/verify-email"); // Navigate to verification page
     } catch (error) {
       setSignupError(error.response?.data?.message || "Signup failed");
       console.error("Signup error:", error);
@@ -162,9 +175,13 @@ function EmployerForm({
           )}
           <button
             type="submit"
-            className="w-full bg-primary text-white font-medium py-2 rounded-xl"
+            className="w-full bg-primary text-white font-medium py-2  flex justify-center items-center rounded-xl"
           >
-            Signup
+            {loading ? (
+              <BiLoaderCircle className="font-bold text-2xl text-center items-center animate-spin" />
+            ) : (
+              "Signup"
+            )}
           </button>
         </div>
       </form>

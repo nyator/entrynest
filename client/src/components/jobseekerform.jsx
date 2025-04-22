@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import InputField from "../elements/inputField";
-import Button from "../elements/button";
-import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import LoadingBar from "./LoadingToast"; // Import the LoadingBar component
+import { BiLoaderCircle } from "react-icons/bi";
 
 async function signup(firstname, lastname, email, password, role) {
   try {
@@ -38,6 +36,8 @@ function JobseekerForm({
   const [signupError, setSignupError] = useState(""); // Initialize signupError state
   const [loading, setLoading] = useState(false); // Add loading state
   const navigate = useNavigate(); // Add useNavigate hook
+  const [resendCooldown, setResendCooldown] = useState(0);
+  const [isResending, setIsResending] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -63,7 +63,7 @@ function JobseekerForm({
       toast.success(
         "Signup successful! Check your email for verification Code."
       );
-      navigate("/jobs"); // Navigate to jobs page
+      navigate("/verify-email"); // Navigate to verification page
     } catch (error) {
       setSignupError(error.response?.data?.message || "Signup failed"); // Set error message
       console.log("Signup error:", error);
@@ -71,6 +71,30 @@ function JobseekerForm({
     } finally {
       setLoading(false); // Set loading to false
       toast.dismiss(loadingToastId); // Dismiss only the loading toast
+    }
+  };
+
+  const handleResendCode = async () => {
+    if (resendCooldown > 0) {
+      toast.warning(`Please wait ${resendCooldown} seconds before requesting a new code`);
+      return;
+    }
+
+    if (!jsemail) {
+      toast.error("Email not found. Please try signing up again.");
+      return;
+    }
+
+    setIsResending(true);
+    try {
+      await axios.post("/resend-verification", { email: jsemail });
+      toast.success("New verification code sent to your email");
+      setResendCooldown(60);
+    } catch (error) {
+      console.error("Resend verification error:", error);
+      toast.error(error.response?.data?.message || "Failed to send new verification code");
+    } finally {
+      setIsResending(false);
     }
   };
 
@@ -144,9 +168,13 @@ function JobseekerForm({
         )}
           <button
             type="submit"
-            className="w-full bg-primary text-white font-medium py-2 rounded-xl"
+            className="w-full bg-primary text-white font-medium py-2  flex justify-center items-center rounded-xl"
           >
-            Signup
+            {loading ? (
+              <BiLoaderCircle className="font-bold text-2xl text-center items-center animate-spin" />
+            ) : (
+              "Signup"
+            )}
           </button>
         </div>
       </form>

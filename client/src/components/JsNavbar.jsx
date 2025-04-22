@@ -10,7 +10,7 @@ const navLinks = [
   { title: "Jobs", href: "/jobs", id: 1 },
   { title: "Mentorships", href: "/mentorships", id: 2 },
   { title: "View Employers", href: "/view-employers", id: 3 },
-  { title: "Resources", href: "/resources", id: 4 },
+  { title: "Resources Center", href: "/resources", id: 4 },
 ];
 
 const JsNavbar = () => {
