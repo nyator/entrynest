@@ -69,11 +69,11 @@ const UserAvatar = () => {
             alt={
               user?.firstname ? `${user.firstname}'s avatar` : "Default avatar"
             }
-            className="w-10 h-10 rounded-full object-cover border-2 border-gray"
+            className={`w-12 h-12 rounded-full object-cover border-2 border-gray ${hover}`}
           />
         ) : (
           <div
-            className={`w-10 h-10 rounded-full shadow-sm bg-primary flex items-center justify-center text-white ${hover}`}
+            className={`w-12 h-12 rounded-full shadow-sm bg-primary flex items-center justify-center text-white ${hover}`}
           >
             {user?.firstname && user?.lastname
               ? `${user.firstname[0]}${user.lastname[0]}`

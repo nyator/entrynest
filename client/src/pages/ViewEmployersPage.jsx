@@ -81,9 +81,9 @@ const ViewEmployersPage = () => {
 
   return (
     <div className="mx-auto p-4">
-      <div className="mb-4 h-56 flex justify-center bg-africanBackground3 py-10 md:py-20 gap-2 rounded-lg relative">
+      <div className="mb-4 flex justify-center bg-africanBackground3 py-10 md:py-20 gap-2 rounded-lg relative">
         <div className="bg-black/50 border border-gray rounded-lg">
-          <h1 className="text-2xl text-white font-SatoshiBold p-4 w-full text-center">
+          <h1 className="text-2xl text-white font-SatoshiBold p-2 w-full text-center">
             Employers on entrynest
           </h1>
         </div>
