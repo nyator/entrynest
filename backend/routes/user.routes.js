@@ -20,10 +20,12 @@ const storage = multer.diskStorage({
 const upload = multer({ 
   storage: storage,
   fileFilter: (req, file, cb) => {
-    if (file.mimetype.startsWith('image/')) {
-      cb(null, true);
+    if (file.fieldname === 'avatar' && !file.mimetype.startsWith('image/')) {
+      cb(new Error('Only image files are allowed for avatar!'), false);
+    } else if (file.fieldname === 'cv' && !file.mimetype.startsWith('application/pdf')) {
+      cb(new Error('Only PDF files are allowed for CV!'), false);
     } else {
-      cb(new Error('Only image files are allowed!'), false);
+      cb(null, true);
     }
   },
   limits: {
@@ -36,7 +38,10 @@ router.get("/", (req, res) => {
   res.send("User route is working");
 });
 
-router.put("/profile", verifyToken, upload.single("avatar"), updateProfile); // Ensure the route exists and is protected
+router.put("/profile", verifyToken, upload.fields([
+  { name: 'avatar', maxCount: 1 },
+  { name: 'cv', maxCount: 1 }
+]), updateProfile);
 
 router.get("/employers", getAllEmployers); // Add this route
 router.delete("/employers/:id", deleteEmployer); // Add this route

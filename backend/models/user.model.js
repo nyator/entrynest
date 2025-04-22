@@ -42,6 +42,9 @@ const userSchema = new mongoose.Schema(
     avatar: {
       type: String,
     },
+    cv: {
+      type: String,
+    },
     companyName: {
       type: String,
     },

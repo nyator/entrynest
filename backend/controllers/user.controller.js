@@ -28,9 +28,15 @@ export const updateProfile = async (req, res) => {
     skills,
   } = req.body;
   let avatar = null;
+  let cv = null;
 
-  if (req.file) {
-    avatar = `/uploads/${req.file.filename}`; // The path will be relative to the server's public directory
+  if (req.files) {
+    if (req.files.avatar) {
+      avatar = `/uploads/${req.files.avatar[0].filename}`;
+    }
+    if (req.files.cv) {
+      cv = `/uploads/${req.files.cv[0].filename}`;
+    }
   }
 
   try {
@@ -50,6 +56,14 @@ export const updateProfile = async (req, res) => {
       }
     }
 
+    // If there's a new CV and the user had a previous one, delete the old file
+    if (cv && user.cv) {
+      const oldCvPath = path.join(process.cwd(), user.cv);
+      if (fs.existsSync(oldCvPath)) {
+        fs.unlinkSync(oldCvPath);
+      }
+    }
+
     user.firstname = firstname || user.firstname;
     user.lastname = lastname || user.lastname;
     user.email = email || user.email;
@@ -61,6 +75,9 @@ export const updateProfile = async (req, res) => {
     if (avatar) {
       user.avatar = avatar;
     }
+    if (cv) {
+      user.cv = cv;
+    }
 
     await user.save();
 
@@ -68,6 +85,7 @@ export const updateProfile = async (req, res) => {
     const userResponse = {
       ...user._doc,
       avatar: user.avatar ? `${process.env.API_URL}${user.avatar}` : null,
+      cv: user.cv ? `${process.env.API_URL}${user.cv}` : null,
       password: undefined,
     };
 

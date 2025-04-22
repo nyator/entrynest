@@ -62,7 +62,7 @@ const ProfilePage = () => {
         skills: user.skills || [],
         cv: user.cv || "",
       });
-      
+
       // Update avatar preview when user data changes
       if (user.avatar) {
         const avatarUrl = user.avatar.startsWith("http")
@@ -72,7 +72,7 @@ const ProfilePage = () => {
       } else {
         setAvatarPreview("");
       }
-      
+
       setCvPreview(
         user.cv
           ? user.cv.startsWith("http")
@@ -171,8 +171,8 @@ const ProfilePage = () => {
       // Update previews with the server URLs
       if (response.data.user.avatar) {
         setAvatarPreview(
-          response.data.user.avatar.startsWith('http') 
-            ? response.data.user.avatar 
+          response.data.user.avatar.startsWith("http")
+            ? response.data.user.avatar
             : `${import.meta.env.VITE_API_URL}${response.data.user.avatar}`
         );
         setProfileData((prev) => ({
@@ -182,7 +182,7 @@ const ProfilePage = () => {
       }
       if (response.data.user.cv) {
         setCvPreview(
-          response.data.user.cv.startsWith('http')
+          response.data.user.cv.startsWith("http")
             ? response.data.user.cv
             : `${import.meta.env.VITE_API_URL}${response.data.user.cv}`
         );
@@ -251,7 +251,7 @@ const ProfilePage = () => {
       </nav>
 
       <form onSubmit={handleSubmit}>
-        <div className="flex items-center justify-center">
+        <div className="flex flex-col items-center justify-center">
           <div className="rounded-full bg-slate-200 w-fit relative">
             {avatarPreview ? (
               <img
@@ -293,7 +293,46 @@ const ProfilePage = () => {
               className="hidden"
             />
           </div>
+          {/* CV Upload Section */}
+          {user.role === "jobseeker" && (
+            <div className="mt-4">
+              <div className="flex items-center gap-4">
+                <button
+                  type="button"
+                  onClick={() => document.getElementById("cvInput").click()}
+                  className="flex items-center gap-2 bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors"
+                >
+                  <HiMiniDocumentText className="text-xl" />
+                  {cvPreview ? "Change CV" : "Upload CV"}
+                </button>
+                {cvPreview && (
+                  <a
+                    href={cvPreview}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-500 hover:underline flex items-center gap-1"
+                  >
+                    <HiMiniDocumentText />
+                    View Current CV
+                  </a>
+                )}
+                <input
+                  type="file"
+                  id="cvInput"
+                  accept="application/pdf"
+                  onChange={handleCvChange}
+                  className="hidden"
+                />
+              </div>
+              {cvPreview && (
+                <p className="text-sm text-center text-green-700 text-gray-500 mt-2">
+                  CV uploaded successfully
+                </p>
+              )}
+            </div>
+          )}
         </div>
+
         <div className="grid grid-cols-1 md:grid-cols-2 gap-2 mt-4 leading-normal md:w-4/6 mx-auto">
           {user.role === "employer" && (
             <div className="mb-4 leading-normal">
