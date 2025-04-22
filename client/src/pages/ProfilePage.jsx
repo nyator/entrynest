@@ -30,7 +30,7 @@ const ProfilePage = () => {
     telNumber: user?.telNumber || "",
     skills: user?.skills || [],
   });
-  const [avatarPreview, setAvatarPreview] = useState(user?.avatar || "");
+  const [avatarPreview, setAvatarPreview] = useState(user?.avatar ? `http://localhost:3000${user.avatar}` : "");
   const [loading, setLoading] = useState(true);
   const [skills, setSkills] = useState(profileData.skills || []); 
   
@@ -49,7 +49,7 @@ const ProfilePage = () => {
         telNumber: user.telNumber || "",
         skills: user.skills || [],
       });
-      setAvatarPreview(user.avatar || "");
+      setAvatarPreview(user.avatar ? `http://localhost:3000${user.avatar}` : "");
       setSkills(user.skills || []);
       setLoading(false);
     }
@@ -65,8 +65,16 @@ const ProfilePage = () => {
 
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
-    setProfileData({ ...profileData, avatar: file });
-    setAvatarPreview(URL.createObjectURL(file));
+    if (file) {
+      if (file.type.startsWith('image/')) {
+        setProfileData(prev => ({ ...prev, avatar: file }));
+        // Create a temporary URL for the preview
+        const tempUrl = URL.createObjectURL(file);
+        setAvatarPreview(tempUrl);
+      } else {
+        toast.error("Please select an image file");
+      }
+    }
   };
 
   const handleLocationChange = (selectedLocation) => {
@@ -89,12 +97,14 @@ const ProfilePage = () => {
     formData.append("firstname", profileData.firstname);
     formData.append("lastname", profileData.lastname);
     formData.append("email", profileData.email);
-    formData.append("avatar", profileData.avatar);
+    if (profileData.avatar instanceof File) {
+      formData.append("avatar", profileData.avatar);
+    }
     formData.append("companyName", profileData.companyName);
     formData.append("biography", profileData.biography);
     formData.append("location", profileData.location);
     formData.append("telNumber", profileData.telNumber);
-    formData.append("skills", skills.join(", ")); // Save skills as a comma-separated string
+    formData.append("skills", skills.join(", "));
 
     try {
       const response = await axios.put("/user/profile", formData, {
@@ -102,13 +112,34 @@ const ProfilePage = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      setUser(response.data.user);
-      setAvatarPreview(`${axios.defaults.baseURL}${response.data.user.avatar}`); // Use the full URL for the avatar
+      
+      // Update user data with the new avatar URL
+      const updatedUser = {
+        ...response.data.user,
+        avatar: response.data.user.avatar
+      };
+      setUser(updatedUser);
+      
+      // Update avatar preview with the server URL
+      if (response.data.user.avatar) {
+        setAvatarPreview(response.data.user.avatar);
+        setProfileData(prev => ({ ...prev, avatar: response.data.user.avatar }));
+      }
+      
       toast.success("Profile updated successfully!");
     } catch (error) {
+      console.error("Profile update error:", error);
       toast.error("Failed to update profile.");
     }
   };
+
+  // Update initial avatar preview when component mounts
+  useEffect(() => {
+    if (user?.avatar) {
+      setAvatarPreview(user.avatar);
+      setProfileData(prev => ({ ...prev, avatar: user.avatar }));
+    }
+  }, [user]);
 
   if (loading) {
     return <LoadingScreen />;
@@ -170,20 +201,27 @@ const ProfilePage = () => {
             {avatarPreview ? (
               <img
                 src={avatarPreview}
-                alt="Avatar Preview"
-                className="size-20 rounded-full object-cover border-2 border-black/50 transition-opacity ease-in-out duration-300"
+                alt="Profile Avatar"
+                className="size-20 rounded-full object-cover border-2 border-gray transition-opacity ease-in-out duration-300"
                 onError={(e) => {
-                  e.target.onerror = null; // Prevents infinite loop
+                  e.target.onerror = null;
+                  e.target.src = ""; // Clear the src to prevent infinite loop
+                  e.target.parentElement.classList.add("bg-gray-200"); // Add background color
                 }}
                 onLoad={(e) => {
-                  e.target.style.opacity = 1; // Fade-in effect
+                  e.target.style.opacity = 1;
                 }}
                 onClick={() => document.getElementById("avatarInput").click()}
                 onMouseEnter={(e) => (e.currentTarget.style.cursor = "pointer")}
                 onMouseLeave={(e) => (e.currentTarget.style.cursor = "default")}
               />
             ) : (
-              <IoPersonCircleOutline className="text-gray-500 size-20" />
+              <div 
+                className="size-20 rounded-full bg-gray-200 flex items-center justify-center cursor-pointer"
+                onClick={() => document.getElementById("avatarInput").click()}
+              >
+                <IoPersonCircleOutline className="text-gray-500 size-12" />
+              </div>
             )}
             <button
               type="button"

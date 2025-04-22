@@ -18,6 +18,39 @@ const EmailVerificationPage = () => {
   const { error, isLoading, verifyEmail, user } = useAuthStore();
   const email = user?.email || location.state?.email;
 
+  // Handle cooldown timer
+  useEffect(() => {
+    let timer;
+    if (resendCooldown > 0) {
+      timer = setInterval(() => {
+        setResendCooldown((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [resendCooldown]);
+
+  // Countdown timer effect
+  useEffect(() => {
+    let timer;
+    if (countdown > 0) {
+      timer = setInterval(() => {
+        setCountdown((prev) => prev - 1);
+      }, 1000);
+    }
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [countdown]);
+
+  // Reset countdown when resending code
+  useEffect(() => {
+    if (resendCooldown === 0) {
+      setCountdown(600); // Reset to 10 minutes
+    }
+  }, [resendCooldown]);
+
   const handleResendCode = async () => {
     if (resendCooldown > 0) {
       toast.warning(
@@ -33,7 +66,6 @@ const EmailVerificationPage = () => {
 
     setIsResending(true);
     try {
-      // Use the correct API endpoint path
       const response = await axios.post("/auth/resend-verification", {
         email,
       });
@@ -41,6 +73,7 @@ const EmailVerificationPage = () => {
       if (response.data.success) {
         toast.success("New verification code sent to your email");
         setResendCooldown(60);
+        setCountdown(600); // Reset countdown immediately
       } else {
         throw new Error(response.data.message);
       }
@@ -53,33 +86,6 @@ const EmailVerificationPage = () => {
       setIsResending(false);
     }
   };
-
-  // Handle cooldown timer
-  useEffect(() => {
-    if (resendCooldown > 0) {
-      const timer = setInterval(() => {
-        setResendCooldown((prev) => prev - 1);
-      }, 1000);
-      return () => clearInterval(timer);
-    }
-  }, [resendCooldown]);
-
-  // Countdown timer effect
-  useEffect(() => {
-    if (countdown > 0) {
-      const timer = setInterval(() => {
-        setCountdown((prev) => prev - 1);
-      }, 1000);
-      return () => clearInterval(timer);
-    }
-  }, [countdown]);
-
-  // Reset countdown when resending code
-  useEffect(() => {
-    if (resendCooldown === 0) {
-      setCountdown(600); // Reset to 10 minutes
-    }
-  }, [resendCooldown]);
 
   const handleChange = (index, value) => {
     const newCode = [...code];

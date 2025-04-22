@@ -2,6 +2,7 @@ import { User } from "../models/user.model.js";
 import multer from "multer";
 import path from "path";
 import { Job } from "../models/job.model.js"; // Import Job model
+import fs from "fs";
 
 // Configure multer for file uploads
 const storage = multer.diskStorage({
@@ -20,7 +21,7 @@ export const updateProfile = async (req, res) => {
   let avatar = null;
 
   if (req.file) {
-    avatar = `/uploads/${req.file.filename}`; // Ensure the correct path is set
+    avatar = `/uploads/${req.file.filename}`; // The path will be relative to the server's public directory
   }
 
   try {
@@ -28,6 +29,14 @@ export const updateProfile = async (req, res) => {
 
     if (!user) {
       return res.status(404).json({ success: false, message: "User not found" });
+    }
+
+    // If there's a new avatar and the user had a previous one, delete the old file
+    if (avatar && user.avatar) {
+      const oldAvatarPath = path.join(process.cwd(), user.avatar);
+      if (fs.existsSync(oldAvatarPath)) {
+        fs.unlinkSync(oldAvatarPath);
+      }
     }
 
     user.firstname = firstname || user.firstname;
@@ -39,19 +48,22 @@ export const updateProfile = async (req, res) => {
     user.telNumber = telNumber || user.telNumber;
     user.skills = skills || user.skills;
     if (avatar) {
-      user.avatar = avatar; // Update the avatar field
+      user.avatar = avatar;
     }
 
     await user.save();
 
+    // Create a clean user object for the response
+    const userResponse = {
+      ...user._doc,
+      avatar: user.avatar ? `http://localhost:3000${user.avatar}` : null,
+      password: undefined,
+    };
+
     res.status(200).json({
       success: true,
       message: "Profile updated successfully",
-      user: {
-        ...user._doc,
-        avatar: user.avatar, // Ensure avatar URL is included in the response
-        password: undefined, // Exclude password from response
-      },
+      user: userResponse,
     });
   } catch (error) {
     console.error("Error updating profile:", error);

@@ -11,9 +11,16 @@ import { TbLogout2 } from "react-icons/tb";
 
 const UserAvatar = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [avatarUrl, setAvatarUrl] = useState("");
   const { user, logout } = useAuthStore();
   const navigate = useNavigate();
   const dropdownRef = useRef(null);
+
+  useEffect(() => {
+    if (user?.avatar) {
+      setAvatarUrl(user.avatar);
+    }
+  }, [user?.avatar]);
 
   const handleLogout = async () => {
     try {
@@ -55,15 +62,15 @@ const UserAvatar = () => {
       >
         {user?.avatar ? (
           <img
-            src={`${axios.defaults.baseURL}${user.avatar}`} // Use the avatar URL
-            alt="User Avatar"
-            className="w-10 h-10 rounded-full object-cover border border-gray-300"
+            src={avatarUrl}
+            alt={user?.firstname ? `${user.firstname}'s avatar` : 'Default avatar'}
+            className="w-10 h-10 rounded-full object-cover border-2 border-gray"
           />
         ) : (
           <div
             className={`w-10 h-10 rounded-full shadow-sm bg-primary flex items-center justify-center text-white ${hover}`}
           >
-            {[user?.firstname?.charAt(0), user?.lastname?.charAt(0)] || "U"}
+            {user?.firstname && user?.lastname ? `${user.firstname[0]}${user.lastname[0]}` : "U"}
           </div>
         )}
       </button>
