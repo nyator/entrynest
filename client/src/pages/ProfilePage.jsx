@@ -4,10 +4,10 @@ import { useAuthStore } from "../store/authStore";
 import LoadingScreen from "../components/LoadingScreen";
 import { toast } from "react-toastify";
 import { Link } from "react-router-dom";
-import CustomDropdown from "../components/CustomDropdown"; 
+
+import CustomDropdown from "../components/CustomDropdown";
 
 import { skillsList, locationOptions } from "../constants/index";
-
 
 import { IoPersonCircleOutline } from "react-icons/io5";
 import { HiPlusCircle } from "react-icons/hi2";
@@ -15,7 +15,6 @@ import { HiMiniDocumentText } from "react-icons/hi2";
 import { MdSpaceDashboard } from "react-icons/md";
 import { TbLocationFilled } from "react-icons/tb";
 import { IoIosCloseCircle } from "react-icons/io";
-
 
 const ProfilePage = () => {
   const { user, setUser } = useAuthStore();
@@ -29,11 +28,24 @@ const ProfilePage = () => {
     location: user?.location || "",
     telNumber: user?.telNumber || "",
     skills: user?.skills || [],
+    cv: user?.cv || "",
   });
-  const [avatarPreview, setAvatarPreview] = useState(user?.avatar ? `http://localhost:3000${user.avatar}` : "");
+  const [avatarPreview, setAvatarPreview] = useState(
+    user?.avatar
+      ? user.avatar.startsWith("http")
+        ? user.avatar
+        : `${import.meta.env.VITE_API_URL}${user.avatar}`
+      : ""
+  );
+  const [cvPreview, setCvPreview] = useState(
+    user?.cv
+      ? user.cv.startsWith("http")
+        ? user.cv
+        : `${import.meta.env.VITE_API_URL}${user.cv}`
+      : ""
+  );
   const [loading, setLoading] = useState(true);
-  const [skills, setSkills] = useState(profileData.skills || []); 
-  
+  const [skills, setSkills] = useState(profileData.skills || []);
 
   useEffect(() => {
     if (user) {
@@ -48,8 +60,26 @@ const ProfilePage = () => {
         location: user.location || "",
         telNumber: user.telNumber || "",
         skills: user.skills || [],
+        cv: user.cv || "",
       });
-      setAvatarPreview(user.avatar ? `http://localhost:3000${user.avatar}` : "");
+      
+      // Update avatar preview when user data changes
+      if (user.avatar) {
+        const avatarUrl = user.avatar.startsWith("http")
+          ? user.avatar
+          : `${import.meta.env.VITE_API_URL}${user.avatar}`;
+        setAvatarPreview(avatarUrl);
+      } else {
+        setAvatarPreview("");
+      }
+      
+      setCvPreview(
+        user.cv
+          ? user.cv.startsWith("http")
+            ? user.cv
+            : `${import.meta.env.VITE_API_URL}${user.cv}`
+          : ""
+      );
       setSkills(user.skills || []);
       setLoading(false);
     }
@@ -66,13 +96,27 @@ const ProfilePage = () => {
   const handleAvatarChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      if (file.type.startsWith('image/')) {
-        setProfileData(prev => ({ ...prev, avatar: file }));
+      if (file.type.startsWith("image/")) {
+        setProfileData((prev) => ({ ...prev, avatar: file }));
         // Create a temporary URL for the preview
         const tempUrl = URL.createObjectURL(file);
         setAvatarPreview(tempUrl);
       } else {
         toast.error("Please select an image file");
+      }
+    }
+  };
+
+  const handleCvChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      if (file.type.startsWith("application/pdf")) {
+        setProfileData((prev) => ({ ...prev, cv: file }));
+        // Create a temporary URL for the preview
+        const tempUrl = URL.createObjectURL(file);
+        setCvPreview(tempUrl);
+      } else {
+        toast.error("Please select a PDF file");
       }
     }
   };
@@ -100,6 +144,9 @@ const ProfilePage = () => {
     if (profileData.avatar instanceof File) {
       formData.append("avatar", profileData.avatar);
     }
+    if (profileData.cv instanceof File) {
+      formData.append("cv", profileData.cv);
+    }
     formData.append("companyName", profileData.companyName);
     formData.append("biography", profileData.biography);
     formData.append("location", profileData.location);
@@ -112,34 +159,42 @@ const ProfilePage = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      
-      // Update user data with the new avatar URL
+
+      // Update user data with the new avatar and CV URLs
       const updatedUser = {
         ...response.data.user,
-        avatar: response.data.user.avatar
+        avatar: response.data.user.avatar,
+        cv: response.data.user.cv,
       };
       setUser(updatedUser);
-      
-      // Update avatar preview with the server URL
+
+      // Update previews with the server URLs
       if (response.data.user.avatar) {
-        setAvatarPreview(response.data.user.avatar);
-        setProfileData(prev => ({ ...prev, avatar: response.data.user.avatar }));
+        setAvatarPreview(
+          response.data.user.avatar.startsWith('http') 
+            ? response.data.user.avatar 
+            : `${import.meta.env.VITE_API_URL}${response.data.user.avatar}`
+        );
+        setProfileData((prev) => ({
+          ...prev,
+          avatar: response.data.user.avatar,
+        }));
       }
-      
+      if (response.data.user.cv) {
+        setCvPreview(
+          response.data.user.cv.startsWith('http')
+            ? response.data.user.cv
+            : `${import.meta.env.VITE_API_URL}${response.data.user.cv}`
+        );
+        setProfileData((prev) => ({ ...prev, cv: response.data.user.cv }));
+      }
+
       toast.success("Profile updated successfully!");
     } catch (error) {
       console.error("Profile update error:", error);
       toast.error("Failed to update profile.");
     }
   };
-
-  // Update initial avatar preview when component mounts
-  useEffect(() => {
-    if (user?.avatar) {
-      setAvatarPreview(user.avatar);
-      setProfileData(prev => ({ ...prev, avatar: user.avatar }));
-    }
-  }, [user]);
 
   if (loading) {
     return <LoadingScreen />;
@@ -216,7 +271,7 @@ const ProfilePage = () => {
                 onMouseLeave={(e) => (e.currentTarget.style.cursor = "default")}
               />
             ) : (
-              <div 
+              <div
                 className="size-20 rounded-full bg-gray-200 flex items-center justify-center cursor-pointer"
                 onClick={() => document.getElementById("avatarInput").click()}
               >
@@ -316,9 +371,7 @@ const ProfilePage = () => {
           {user.role === "jobseeker" && (
             <div className="mb-4 leading-normal">
               <div className="">
-                <label className="block text-gray-700 relative">
-                  Skills
-                </label>
+                <label className="block text-gray-700 relative">Skills</label>
                 <CustomDropdown
                   options={skillsList.filter(
                     (skill) => !skills.includes(skill)

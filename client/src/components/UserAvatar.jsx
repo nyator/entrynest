@@ -18,7 +18,10 @@ const UserAvatar = () => {
 
   useEffect(() => {
     if (user?.avatar) {
-      setAvatarUrl(user.avatar);
+      const avatarUrl = user.avatar.startsWith("http")
+        ? user.avatar
+        : `${import.meta.env.VITE_API_URL}${user.avatar}`;
+      setAvatarUrl(avatarUrl);
     }
   }, [user?.avatar]);
 
@@ -63,14 +66,18 @@ const UserAvatar = () => {
         {user?.avatar ? (
           <img
             src={avatarUrl}
-            alt={user?.firstname ? `${user.firstname}'s avatar` : 'Default avatar'}
+            alt={
+              user?.firstname ? `${user.firstname}'s avatar` : "Default avatar"
+            }
             className="w-10 h-10 rounded-full object-cover border-2 border-gray"
           />
         ) : (
           <div
             className={`w-10 h-10 rounded-full shadow-sm bg-primary flex items-center justify-center text-white ${hover}`}
           >
-            {user?.firstname && user?.lastname ? `${user.firstname[0]}${user.lastname[0]}` : "U"}
+            {user?.firstname && user?.lastname
+              ? `${user.firstname[0]}${user.lastname[0]}`
+              : "U"}
           </div>
         )}
       </button>

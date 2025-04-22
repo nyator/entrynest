@@ -17,7 +17,16 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 export const updateProfile = async (req, res) => {
-  const { firstname, lastname, email, companyName, biography, location, telNumber, skills } = req.body;
+  const {
+    firstname,
+    lastname,
+    email,
+    companyName,
+    biography,
+    location,
+    telNumber,
+    skills,
+  } = req.body;
   let avatar = null;
 
   if (req.file) {
@@ -28,7 +37,9 @@ export const updateProfile = async (req, res) => {
     const user = await User.findById(req.userId);
 
     if (!user) {
-      return res.status(404).json({ success: false, message: "User not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "User not found" });
     }
 
     // If there's a new avatar and the user had a previous one, delete the old file
@@ -56,7 +67,7 @@ export const updateProfile = async (req, res) => {
     // Create a clean user object for the response
     const userResponse = {
       ...user._doc,
-      avatar: user.avatar ? `http://localhost:3000${user.avatar}` : null,
+      avatar: user.avatar ? `${process.env.API_URL}${user.avatar}` : null,
       password: undefined,
     };
 
@@ -70,7 +81,8 @@ export const updateProfile = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to update profile",
-      errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
+      errorDetails:
+        process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
   }
 };
@@ -89,7 +101,8 @@ export const getAllEmployers = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to fetch employers",
-      errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
+      errorDetails:
+        process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
   }
 };
@@ -100,19 +113,27 @@ export const deleteEmployer = async (req, res) => {
     const employer = await User.findByIdAndDelete(id);
 
     if (!employer) {
-      return res.status(404).json({ success: false, message: "Employer not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Employer not found" });
     }
 
     // Delete all jobs posted by the employer
     await Job.deleteMany({ postedBy: id });
 
-    res.status(200).json({ success: true, message: "Employer and their jobs deleted successfully" });
+    res
+      .status(200)
+      .json({
+        success: true,
+        message: "Employer and their jobs deleted successfully",
+      });
   } catch (error) {
     console.error("Error deleting employer:", error);
     res.status(500).json({
       success: false,
       message: "Failed to delete employer",
-      errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
+      errorDetails:
+        process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
   }
 };
@@ -124,7 +145,9 @@ export const getEmployerById = async (req, res) => {
     const jobs = await Job.find({ postedBy: id });
 
     if (!employer) {
-      return res.status(404).json({ success: false, message: "Employer not found" });
+      return res
+        .status(404)
+        .json({ success: false, message: "Employer not found" });
     }
 
     res.status(200).json({ success: true, employer, jobs });
@@ -133,7 +156,8 @@ export const getEmployerById = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to fetch employer",
-      errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
+      errorDetails:
+        process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
   }
 };
@@ -171,7 +195,8 @@ export const getPlatformStats = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to fetch platform stats",
-      errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
+      errorDetails:
+        process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
   }
 };
@@ -192,14 +217,17 @@ export const getRecentEmployers = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to fetch recent employers",
-      errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
+      errorDetails:
+        process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
   }
 };
 
 export const getJobseekers = async (req, res) => {
   try {
-    const jobseekers = await User.find({ role: "jobseeker" }).select("-password");
+    const jobseekers = await User.find({ role: "jobseeker" }).select(
+      "-password"
+    );
     res.status(200).json({
       success: true,
       jobseekers,
@@ -209,7 +237,8 @@ export const getJobseekers = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to fetch jobseekers",
-      errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
+      errorDetails:
+        process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
   }
 };
