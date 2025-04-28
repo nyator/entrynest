@@ -644,38 +644,42 @@ const MentorDashboard = () => {
                 >
                   <div className="flex justify-between items-start">
                     <div>
-                  <h4 className="text-lg font-bold">{mentorship.title}</h4>
+                      <h4 className="text-lg font-bold">{mentorship.title}</h4>
                       <p className="text-gray-600">{mentorship.description}</p>
                       <div className="mt-2">
-                  <p>
-                    <strong>Skills Required:</strong>{" "}
-                    {mentorship.skillsRequired.join(", ")}
-                  </p>
-                  <p>
-                    <strong>Duration:</strong> {mentorship.duration}
-                  </p>
-                  <p>
+                        <p>
+                          <strong>Skills Required:</strong>{" "}
+                          {mentorship.skillsRequired.join(", ")}
+                        </p>
+                        <p>
+                          <strong>Duration:</strong> {mentorship.duration}
+                        </p>
+                        <p>
                           <strong>Max Applicants:</strong>{" "}
-                    {mentorship.maxApplicants}
-                  </p>
-                  <p>
+                          {mentorship.maxApplicants}
+                        </p>
+                        <p>
                           <strong>Current Applicants:</strong>{" "}
                           {mentorship.currentApplicants}
                         </p>
-                        {showApplicants?.mentorshipId === mentorship._id ? (
-                          <button
-                            onClick={() => setShowApplicants(null)}
-                            className="mt-2 bg-blue-500 text-white rounded px-2 py-1 text-sm"
-                          >
-                            Hide Applicants
-                          </button>
-                        ) : (
-                          <button
-                            onClick={() => handleViewApplicants(mentorship._id)}
-                            className="mt-2 bg-blue-500 text-white rounded px-2 py-1 text-sm"
-                          >
-                            View Applicants
-                          </button>
+                        {mentorship.currentApplicants > 0 && (
+                          <>
+                            {showApplicants?.mentorshipId === mentorship._id ? (
+                              <button
+                                onClick={() => setShowApplicants(null)}
+                                className="mt-2 bg-blue-500 text-white rounded px-2 py-1 text-sm"
+                              >
+                                Hide Applicants
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() => handleViewApplicants(mentorship._id)}
+                                className="mt-2 bg-blue-500 text-white rounded px-2 py-1 text-sm"
+                              >
+                                View Applicants
+                              </button>
+                            )}
+                          </>
                         )}
                       </div>
                     </div>
@@ -687,10 +691,10 @@ const MentorDashboard = () => {
                         Edit
                       </button>
                       <button
-                    onClick={() => handleDelete(mentorship._id)}
+                        onClick={() => handleDelete(mentorship._id)}
                         className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                  >
-                    Delete
+                      >
+                        Delete
                       </button>
                     </div>
                   </div>
@@ -716,7 +720,8 @@ const MentorDashboard = () => {
                               </p>
                               <p>
                                 <strong>Skills:</strong>{" "}
-                                {applicant.skills?.join(", ") || "No skills listed"}
+                                {applicant.skills?.join(", ") ||
+                                  "No skills listed"}
                               </p>
                               <p>
                                 <strong>Biography:</strong>{" "}
@@ -760,41 +765,45 @@ const MentorDashboard = () => {
 
         {activeTab === "postMentorship" && (
           <div className="w-full h-full bg-gray/10 p-4 rounded-2xl border border-gray/20">
-            <h2 className="text-xl font-bold mb-4">Post New Mentorship Opportunity</h2>
+            <h2 className="text-xl font-bold mb-4">
+              Post New Mentorship Opportunity
+            </h2>
             <form onSubmit={handlePostSubmit} className="space-y-4">
               <div className="flex flex-col md:flex-row justify-between items-start mb-4">
                 <div className="w-full mr-4">
                   <div className="mb-4">
                     <label className="block text-black/60">Title</label>
-                <input
-                  type="text"
-                  name="title"
+                    <input
+                      type="text"
+                      name="title"
                       value={postFormData.title}
                       onChange={handlePostChange}
                       className="w-full border-[1px] border-grayStroke rounded-lg p-2 text-black/70"
                       placeholder="Enter mentorship title"
-                  required
-                />
-              </div>
+                      required
+                    />
+                  </div>
 
                   <div className="mb-4">
                     <label className="block text-black/60">Duration</label>
-                <input
-                  type="text"
-                  name="duration"
+                    <input
+                      type="text"
+                      name="duration"
                       value={postFormData.duration}
                       onChange={handlePostChange}
                       className="w-full border-[1px] border-grayStroke rounded-lg p-2 text-black/70"
-                  placeholder="e.g., 3 months"
-                  required
-                />
-              </div>
+                      placeholder="e.g., 3 months"
+                      required
+                    />
+                  </div>
 
                   <div className="mb-4">
-                    <label className="block text-black/60">Max Applicants</label>
-                <input
-                  type="number"
-                  name="maxApplicants"
+                    <label className="block text-black/60">
+                      Max Applicants
+                    </label>
+                    <input
+                      type="number"
+                      name="maxApplicants"
                       value={postFormData.maxApplicants}
                       onChange={handlePostChange}
                       className="w-full border-[1px] border-grayStroke rounded-lg p-2 text-black/70"
@@ -804,9 +813,13 @@ const MentorDashboard = () => {
                   </div>
 
                   <div className="mb-4">
-                    <label className="block text-black/60">Skills Required</label>
+                    <label className="block text-black/60">
+                      Skills Required
+                    </label>
                     <CustomDropdown
-                      options={SKILLS.filter((skill) => !selectedSkills.includes(skill))}
+                      options={SKILLS.filter(
+                        (skill) => !selectedSkills.includes(skill)
+                      )}
                       value=""
                       onChange={handlePostSkillChange}
                       placeholder="Select a skill"
@@ -841,19 +854,19 @@ const MentorDashboard = () => {
                       onChange={handlePostChange}
                       className="w-full border-[1px] border-grayStroke rounded-lg p-2 text-black/70 h-48"
                       placeholder="Describe the mentorship opportunity"
-                  required
-                />
+                      required
+                    />
                   </div>
                 </div>
               </div>
 
               <div className="flex gap-2">
-              <button
-                type="submit"
+                <button
+                  type="submit"
                   className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-              >
-                Post Mentorship
-              </button>
+                >
+                  Post Mentorship
+                </button>
                 <button
                   type="button"
                   onClick={() => setActiveTab("openMentorships")}

@@ -1,6 +1,10 @@
 import { Job } from "../models/job.model.js";
 import { User } from "../models/user.model.js"; // Import User model
-import { sendNewPostingNotification } from "../utils/emailService.js";
+import { 
+  sendNewPostingNotification, 
+  sendApplicationApprovedEmail,
+  sendApplicationDeclinedEmail 
+} from "../utils/emailService.js";
 
 export const createJob = async (req, res) => {
   const { salaryRange, title, location, tags, type, style, aboutRole, qualification, responsibility, companyName } =
@@ -304,7 +308,7 @@ export const updateApplicationStatus = async (req, res) => {
         .json({ success: false, message: "Invalid status" });
     }
 
-    const job = await Job.findById(jobId);
+    const job = await Job.findById(jobId).populate('postedBy', 'companyName');
 
     if (!job) {
       return res.status(404).json({ success: false, message: "Job not found" });
@@ -325,6 +329,37 @@ export const updateApplicationStatus = async (req, res) => {
     }
 
     await job.save();
+
+    // Send appropriate email notification to the jobseeker
+    try {
+      const jobseeker = await User.findById(application.user);
+      if (jobseeker) {
+        if (status === "approved") {
+          await sendApplicationApprovedEmail(
+            jobseeker.email,
+            jobseeker.firstname,
+            {
+              jobTitle: job.title,
+              companyName: job.postedBy.companyName,
+              jobUrl: `${process.env.FRONTEND_URL}/jobs/${job._id}`
+            }
+          );
+        } else if (status === "declined") {
+          await sendApplicationDeclinedEmail(
+            jobseeker.email,
+            jobseeker.firstname,
+            {
+              jobTitle: job.title,
+              companyName: job.postedBy.companyName,
+              jobsUrl: `${process.env.FRONTEND_URL}/jobs`
+            }
+          );
+        }
+      }
+    } catch (error) {
+      console.error('Error sending status notification:', error);
+      // Don't fail the request if the email fails to send
+    }
 
     res
       .status(200)
