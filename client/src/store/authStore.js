@@ -6,11 +6,19 @@ const API_URL =
     ? "http://localhost:3000/api/auth"
     : "/api/auth";
 
-
+// Configure axios defaults
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL =
   import.meta.env.MODE === "development" ? "http://localhost:3000" : "";
 
+// Add request interceptor to add token to headers
+axios.interceptors.request.use((config) => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
 
 export const useAuthStore = create((set) => ({
   user: null,
@@ -37,6 +45,7 @@ export const useAuthStore = create((set) => ({
         password,
         role,
       });
+      localStorage.setItem('token', response.data.token);
       set({
         user: response.data.user,
         isAuthenticated: true,
@@ -44,7 +53,7 @@ export const useAuthStore = create((set) => ({
       });
     } catch (error) {
       set({
-        error: error.response.data.message || "Error signing up",
+        error: error.response?.data?.message || "Error signing up",
         isLoading: false,
       });
       throw error;
@@ -58,6 +67,7 @@ export const useAuthStore = create((set) => ({
         email,
         password,
       });
+      localStorage.setItem('token', response.data.token);
       set({
         isAuthenticated: true,
         user: response.data.user,
@@ -77,6 +87,7 @@ export const useAuthStore = create((set) => ({
     set({ isLoading: true, error: null });
     try {
       await axios.post(`${API_URL}/logout`);
+      localStorage.removeItem('token');
       set({
         user: null,
         isAuthenticated: false,
@@ -116,6 +127,7 @@ export const useAuthStore = create((set) => ({
         isCheckingAuth: false,
       });
     } catch (error) {
+      localStorage.removeItem('token');
       set({ error: null, isCheckingAuth: false, isAuthenticated: false });
     }
   },
@@ -142,10 +154,11 @@ export const useAuthStore = create((set) => ({
         password,
       });
       set({ message: response.data.message, isLoading: false });
+      return response.data;
     } catch (error) {
       set({
         isLoading: false,
-        error: error.response.data.message || "Error resetting password",
+        error: error.response?.data?.message || "Error resetting password",
       });
       throw error;
     }

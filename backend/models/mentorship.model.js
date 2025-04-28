@@ -26,6 +26,11 @@ const mentorshipSchema = new mongoose.Schema(
       type: Number,
       default: 0,
     },
+    mentor: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
     applicants: [
       {
         type: mongoose.Schema.Types.ObjectId,

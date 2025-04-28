@@ -11,7 +11,26 @@ const MentorshipsPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedSkill, setSelectedSkill] = useState("all");
+  const [selectedSkill, setSelectedSkill] = useState("All Skills");
+  const [currentUser, setCurrentUser] = useState(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const response = await fetch("http://localhost:3000/api/users/me", {
+          credentials: "include",
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setCurrentUser(data.user);
+        }
+      } catch (error) {
+        console.error("Error fetching user data:", error);
+      }
+    };
+
+    fetchUserData();
+  }, []);
 
   useEffect(() => {
     const fetchMentorships = async () => {
@@ -78,27 +97,40 @@ const MentorshipsPage = () => {
         {
           method: "POST",
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
             "Content-Type": "application/json",
           },
+          credentials: "include",
         }
       );
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const errorData = await response.json();
-        if (errorData.message === "No applicants found.") {
-          toast.info("No applicants yet. Be the first to apply!");
-        } else {
-          throw new Error(errorData.message || "Failed to apply for mentorship.");
+        if (response.status === 401) {
+          toast.error("Your session has expired. Please log in again.");
+          return;
         }
-        return;
+        throw new Error(data.message || "Failed to apply for mentorship");
       }
 
       toast.success("Application submitted successfully!");
+      // Refresh the mentorships list to update the application status
+      const updatedResponse = await fetch("http://localhost:3000/api/mentorships", {
+        method: "GET",
+        credentials: "include",
+      });
+      const updatedData = await updatedResponse.json();
+      setMentorships(updatedData.mentorships || []);
+      setFilteredMentorships(updatedData.mentorships || []);
     } catch (error) {
       console.error("Error applying for mentorship:", error);
-      toast.error(error.message || "Failed to apply for mentorship.");
+      toast.error(error.message || "Failed to apply for mentorship");
     }
+  };
+
+  const hasApplied = (mentorship) => {
+    if (!currentUser) return false;
+    return mentorship.applicants.some(applicant => applicant._id === currentUser._id);
   };
 
   if (loading) {
@@ -149,72 +181,120 @@ const MentorshipsPage = () => {
             "Node.js",
             "Design",
           ]}
-          value={selectedSkill || "Select Skill"}
-          onChange={(value) =>
-            // handleSkillFilterChange(value === "All Skills" ? "" : value)
-            handleSkillFilterChange(value === "All Skills" ? "" : value)
-            ("tag", value === "All Category" ? "" : value)
-          }
+          value={selectedSkill}
+          onChange={(value) => handleSkillFilterChange(value)}
           placeholder="Select Skill"
           classNameButton="min-w-[200px] w-fit bg-white shadow-sm border border-gray gap-2"
           classNameDrop="hover:bg-blue-100"
         />
       </div>
 
-      <h1 className="text-2xl font-SatoshiBold bg-gray/40 rounded-xl p-4 mb-4 ">
-        {/* {selectedEmployer ? "Jobs by: " + selectedEmployer : ""} */}
-      </h1>
-
       {/* Mentorship Cards or No Results Visualization */}
       {filteredMentorships.length > 0 ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 justify-between items-center mb-20 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredMentorships.map((mentorship) => (
             <div
               key={mentorship._id}
-              className="shadow-lg p-4 rounded-xl hover:ring-2 ring-primary transition-all"
+              className="group relative bg-white rounded-2xl overflow-hidden"
             >
-              <h2 className="text-lg font-bold">{mentorship.title}</h2>
-              <p className="text-sm text-gray-600">{mentorship.description}</p>
-              <p className="text-sm text-gray-600">
-                <strong>Skills Required:</strong>{" "}
-                {mentorship.skillsRequired.join(", ")}
-              </p>
-              <p className="text-sm text-gray-600">
-                <strong>Duration:</strong> {mentorship.duration}
-              </p>
-              <p className="text-sm text-gray-600">
-                <strong>Applicants:</strong> {mentorship.currentApplicants}/
-                {mentorship.maxApplicants}
-              </p>
-              {/* <button
-                onClick={() => handleApply(mentorship._id)}
-                className="mt-4 px-4 py-2 bg-primary text-white rounded hover:bg-primary/80 transition-all"
-              >
-                Apply
-              </button> */}
+              {/* Gradient Overlay */}
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              
+              {/* Content */}
+              <div className="relative p-5">
+                {/* Top Section */}
+                <div className="flex justify-between items-start mb-3">
+                  <div className="flex-1">
+                    <h2 className="text-lg font-semibold text-gray-900 line-clamp-2 group-hover:text-primary transition-colors">
+                      {mentorship.title}
+                    </h2>
+                  </div>
+                  <div className="flex items-center gap-1.5">
+                    <div className="w-2 h-2 rounded-full bg-primary/20" />
+                    <span className="text-xs text-gray-500">
+                      {mentorship.currentApplicants}/{mentorship.maxApplicants}
+                    </span>
+                  </div>
+                </div>
+
+                {/* Description */}
+                <p className="text-sm text-gray-600 line-clamp-2 mb-4 group-hover:text-gray-700 transition-colors">
+                  {mentorship.description}
+                </p>
+
+                {/* Skills */}
+                <div className="flex flex-wrap gap-2 mb-4">
+                  {mentorship.skillsRequired.map((skill, index) => (
+                    <span
+                      key={index}
+                      className="px-2.5 py-1 bg-gray-50 text-gray-600 rounded-full text-xs group-hover:bg-primary/5 group-hover:text-primary transition-colors"
+                    >
+                      {skill}
+                    </span>
+                  ))}
+                </div>
+
+                {/* Bottom Section */}
+                <div className="flex items-center justify-between pt-3 border-t border-gray/10">
+                  <div className="flex items-center gap-2">
+                    <svg className="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    <span className="text-xs text-gray-500">
+                      {mentorship.duration}
+                    </span>
+                  </div>
+                  {hasApplied(mentorship) ? (
+                    <button
+                      disabled
+                      className="text-xs px-3 py-1.5 rounded-full bg-gray-50 text-gray-400 border border-gray-200 flex items-center gap-1.5"
+                    >
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M5 13l4 4L19 7" />
+                      </svg>
+                      Applied
+                    </button>
+                  ) : (
+                    <button
+                      onClick={() => handleApply(mentorship._id)}
+                      className="text-xs px-3 py-1.5 rounded-full bg-primary/5 text-primary border border-primary/20 hover:bg-primary hover:text-white transition-all flex items-center gap-1.5 group-hover:shadow-sm"
+                    >
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                      </svg>
+                      Apply
+                    </button>
+                  )}
+                </div>
+              </div>
             </div>
           ))}
         </div>
       ) : (
-        <div className="flex flex-col items-center font-SatoshiMedium justify-center h-96">
-          <img
-            src={noresults}
-            alt="No results found"
-            className="w-36 h-36 mb-4"
-          />
-          <p className="text-gray-600 text-lg">
-            No mentorships match your filters. Try adjusting your search
-            criteria.
+        <div className="flex flex-col items-center justify-center h-96">
+          <div className="relative w-32 h-32 mb-4">
+            <div className="absolute inset-0 bg-primary/5 rounded-full animate-pulse" />
+            <img
+              src={noresults}
+              alt="No results found"
+              className="relative w-full h-full opacity-50"
+            />
+          </div>
+          <p className="text-gray-500 text-sm text-center max-w-xs mb-2">
+            No mentorships match your filters
           </p>
           <button
             onClick={() => {
               setSearchTerm("");
-              setSelectedSkill("all");
+              setSelectedSkill("All Skills");
               setFilteredMentorships(mentorships);
             }}
-            className="mt-4 px-4 py-2 hover:bg-primary/80 text-white rounded-lg bg-primary transition-all ease-in-out duration-300"
+            className="text-xs text-primary hover:text-primary/80 transition-colors flex items-center gap-1.5"
           >
-            Clear Filters
+            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            Clear filters
           </button>
         </div>
       )}

@@ -2,15 +2,72 @@ import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import LoadingScreen from "../components/LoadingScreen";
+import { useNavigate } from "react-router-dom";
+import { IoIosCloseCircle } from "react-icons/io";
+import CustomDropdown from "../components/CustomDropdown";
+import { IoMdPricetags } from "react-icons/io";
+
+const SKILLS = [
+  "JavaScript",
+  "Python",
+  "Java",
+  "C++",
+  "C#",
+  "Ruby",
+  "PHP",
+  "Swift",
+  "Kotlin",
+  "Go",
+  "Rust",
+  "TypeScript",
+  "React",
+  "Angular",
+  "Vue.js",
+  "Node.js",
+  "Express.js",
+  "Django",
+  "Flask",
+  "Spring Boot",
+  "Laravel",
+  "Ruby on Rails",
+  "ASP.NET",
+  "SQL",
+  "MongoDB",
+  "PostgreSQL",
+  "MySQL",
+  "Redis",
+  "GraphQL",
+  "RESTful APIs",
+  "Docker",
+  "Kubernetes",
+  "AWS",
+  "Azure",
+  "Google Cloud",
+  "DevOps",
+  "CI/CD",
+  "Git",
+  "Linux",
+  "Shell Scripting",
+  "Machine Learning",
+  "Data Science",
+  "Artificial Intelligence",
+  "Blockchain",
+  "Cybersecurity",
+  "UI/UX Design",
+  "Product Management",
+  "Agile/Scrum",
+  "Project Management",
+  "Technical Writing",
+];
 
 const MentorDashboard = () => {
   const [loading, setLoading] = useState(false);
   const [mentorships, setMentorships] = useState([]);
-  const [applicants, setApplicants] = useState([]); // State for mentorship applicants
-  const [mentees, setMentees] = useState([]); // State for approved applications
-  const [sessions, setSessions] = useState([]); // State for sessions
+  const [applicants, setApplicants] = useState([]);
+  const [mentees, setMentees] = useState([]);
+  const [sessions, setSessions] = useState([]);
   const [sessionForm, setSessionForm] = useState({
-    selectedMentees: [], // Array to hold selected mentees
+    selectedMentees: [],
     topic: "",
     date: "",
     startTime: "",
@@ -18,7 +75,17 @@ const MentorDashboard = () => {
     message: "",
   });
   const [activeTab, setActiveTab] = useState("myMentees");
-  const [formData, setFormData] = useState({
+  const [showApplicants, setShowApplicants] = useState(null);
+  const [editingMentorship, setEditingMentorship] = useState(null);
+  const [selectedSkills, setSelectedSkills] = useState([]);
+  const [postFormData, setPostFormData] = useState({
+    title: "",
+    description: "",
+    skillsRequired: "",
+    duration: "",
+    maxApplicants: "",
+  });
+  const [editFormData, setEditFormData] = useState({
     title: "",
     description: "",
     skillsRequired: "",
@@ -26,81 +93,203 @@ const MentorDashboard = () => {
     maxApplicants: "",
   });
 
+  const API_URL = import.meta.env.VITE_API_URL;
+  const navigate = useNavigate();
+
   const fetchMentorships = async () => {
     try {
-      const response = await axios.get("/mentorships", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+      const response = await axios.get(`${API_URL}/api/mentorships`, {
+        withCredentials: true,
       });
       setMentorships(response.data.mentorships);
     } catch (error) {
+      console.error("Error fetching mentorships:", error);
       toast.error("Failed to fetch mentorship opportunities");
     }
   };
 
   const fetchApplicants = async () => {
     try {
-      const response = await axios.get("/mentorships/applicants", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
+      const response = await axios.get(
+        `${API_URL}/api/mentorships/applicants`,
+        {
+          withCredentials: true,
+        }
+      );
       setApplicants(response.data.applicants);
     } catch (error) {
+      console.error("Error fetching applicants:", error);
       toast.error("Failed to fetch mentorship applicants");
     }
   };
 
   const fetchMentees = async () => {
     try {
-      const response = await axios.get("/mentorships/mentees", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+      const response = await axios.get(`${API_URL}/api/mentorships/mentees`, {
+        withCredentials: true,
       });
       setMentees(response.data.mentees);
     } catch (error) {
+      console.error("Error fetching mentees:", error);
       toast.error("Failed to fetch mentees");
     }
   };
 
   const fetchSessions = async () => {
     try {
-      const response = await axios.get("/mentorships/sessions", {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
+      const response = await axios.get(`${API_URL}/api/mentorships/sessions`, {
+        withCredentials: true,
       });
       setSessions(response.data.sessions);
     } catch (error) {
+      console.error("Error fetching sessions:", error);
       toast.error("Failed to fetch sessions");
     }
   };
 
   const handleDelete = async (mentorshipId) => {
+    // if (!window.confirm("Are you sure you want to delete this mentorship?")) {
+    //   return;
+    // }
+
     try {
-      const response = await fetch(
-        `http://localhost:3000/api/mentorships/${mentorshipId}`,
+      const response = await axios.delete(
+        `${API_URL}/api/mentorships/${mentorshipId}`,
         {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
+          withCredentials: true,
         }
       );
 
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to delete mentorship.");
+      if (response.data.success) {
+        setMentorships(mentorships.filter((m) => m._id !== mentorshipId));
+        toast.success("Mentorship deleted successfully");
       }
-
-      setMentorships((prev) => prev.filter((mentorship) => mentorship._id !== mentorshipId));
-      toast.success("Mentorship deleted successfully!");
     } catch (error) {
       console.error("Error deleting mentorship:", error);
-      toast.error(error.message || "Failed to delete mentorship.");
+      toast.error(
+        error.response?.data?.message || "Failed to delete mentorship"
+      );
     }
+  };
+
+  const handleApproveApplicant = async (mentorshipId, applicantId) => {
+    try {
+      const response = await axios.post(
+        `${API_URL}/api/mentorships/${mentorshipId}/approve/${applicantId}`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.data.success) {
+        toast.success("Applicant approved successfully!");
+        fetchApplicants();
+        fetchMentees();
+      }
+    } catch (error) {
+      console.error("Error approving applicant:", error);
+      toast.error(
+        error.response?.data?.message || "Failed to approve applicant."
+      );
+    }
+  };
+
+  const handleDeclineApplicant = async (mentorshipId, applicantId) => {
+    try {
+      const response = await axios.post(
+        `${API_URL}/api/mentorships/${mentorshipId}/decline/${applicantId}`,
+        {},
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.data.success) {
+        toast.success("Applicant declined successfully!");
+        fetchApplicants();
+      }
+    } catch (error) {
+      console.error("Error declining applicant:", error);
+      toast.error(
+        error.response?.data?.message || "Failed to decline applicant."
+      );
+    }
+  };
+
+  const handlePostSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        `${API_URL}/api/mentorships`,
+        postFormData,
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.data.success) {
+        toast.success("Mentorship opportunity created successfully");
+        setMentorships([...mentorships, response.data.mentorship]);
+        setPostFormData({
+          title: "",
+          description: "",
+          skillsRequired: "",
+          duration: "",
+          maxApplicants: "",
+        });
+        setActiveTab("openMentorships");
+      }
+    } catch (error) {
+      console.error("Error creating mentorship:", error);
+      toast.error(
+        error.response?.data?.message ||
+          "Failed to create mentorship opportunity"
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleSessionSubmit = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        `${API_URL}/api/mentorships/sessions`,
+        sessionForm,
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (response.data.success) {
+        toast.success("Session created successfully");
+        setSessions([...sessions, response.data.session]);
+        setSessionForm({
+          selectedMentees: [],
+          topic: "",
+          date: "",
+          startTime: "",
+          endTime: "",
+          message: "",
+        });
+      }
+    } catch (error) {
+      console.error("Error creating session:", error);
+      toast.error(error.response?.data?.message || "Failed to create session");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEdit = (mentorship) => {
+    navigate(`/edit-mentorship/${mentorship._id}`);
+  };
+
+  const handleViewApplicants = (mentorshipId) => {
+    navigate(`/mentorship-applicants/${mentorshipId}`);
   };
 
   useEffect(() => {
@@ -114,7 +303,7 @@ const MentorDashboard = () => {
       fetchMentees();
     }
     if (activeTab === "openMentorships") {
-      fetchMentorships(); // Fetch mentorships when the tab is active
+      fetchMentorships();
     }
     if (activeTab === "sessions") {
       fetchMentees();
@@ -122,13 +311,36 @@ const MentorDashboard = () => {
     }
   }, [activeTab]);
 
-  useEffect(() => {
-    fetchMentorships(); // Fetch mentorships on page load
-  }, []);
-
-  const handleChange = (e) => {
+  const handlePostChange = (e) => {
     const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    setPostFormData({ ...postFormData, [name]: value });
+  };
+
+  const handleEditChange = (e) => {
+    const { name, value } = e.target;
+    setEditFormData({ ...editFormData, [name]: value });
+  };
+
+  const handlePostSkillChange = (skill) => {
+    if (!selectedSkills.includes(skill)) {
+      setSelectedSkills([...selectedSkills, skill]);
+      setPostFormData((prev) => ({
+        ...prev,
+        skillsRequired: [...selectedSkills, skill].join(", "),
+      }));
+    }
+  };
+
+  const handleEditSkillChange = (e) => {
+    const selectedOptions = Array.from(
+      e.target.selectedOptions,
+      (option) => option.value
+    );
+    setSelectedSkills(selectedOptions);
+    setEditFormData((prev) => ({
+      ...prev,
+      skillsRequired: selectedOptions.join(", "),
+    }));
   };
 
   const handleSessionChange = (e) => {
@@ -148,49 +360,12 @@ const MentorDashboard = () => {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post("/mentorships", formData, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      toast.success("Mentorship opportunity created successfully");
-      setMentorships([...mentorships, response.data.mentorship]);
-      setFormData({
-        title: "",
-        description: "",
-        skillsRequired: "",
-        duration: "",
-        maxApplicants: "",
-      });
-    } catch (error) {
-      toast.error("Failed to create mentorship opportunity");
-    }
-  };
-
-  const handleSessionSubmit = async (e) => {
-    e.preventDefault();
-    try {
-      const response = await axios.post("/api/mentorships/sessions", sessionForm, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-      });
-      toast.success("Session created successfully");
-      setSessions([...sessions, response.data.session]);
-      setSessionForm({
-        selectedMentees: [],
-        topic: "",
-        date: "",
-        startTime: "",
-        endTime: "",
-        message: "",
-      });
-    } catch (error) {
-      toast.error("Failed to create session");
-    }
+  const handleRemoveSkill = (skill) => {
+    setSelectedSkills(selectedSkills.filter((s) => s !== skill));
+    setPostFormData((prev) => ({
+      ...prev,
+      skillsRequired: selectedSkills.filter((s) => s !== skill).join(", "),
+    }));
   };
 
   if (loading) {
@@ -309,17 +484,23 @@ const MentorDashboard = () => {
                     </p>
                     <div className="flex gap-4 mt-2">
                       <button
-                        onClick={() => {
-                          // Logic to approve the applicant
-                        }}
+                        onClick={() =>
+                          handleApproveApplicant(
+                            applicant.mentorshipId,
+                            applicant._id
+                          )
+                        }
                         className="px-4 py-2 bg-green-500 text-white rounded"
                       >
                         Approve
                       </button>
                       <button
-                        onClick={() => {
-                          // Logic to decline the applicant
-                        }}
+                        onClick={() =>
+                          handleDeclineApplicant(
+                            applicant.mentorshipId,
+                            applicant._id
+                          )
+                        }
                         className="px-4 py-2 bg-red-500 text-white rounded"
                       >
                         Decline
@@ -336,13 +517,17 @@ const MentorDashboard = () => {
             <h2 className="text-xl font-bold mb-4">Create Session</h2>
             <form onSubmit={handleSessionSubmit} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium">Select Mentees</label>
+                <label className="block text-sm font-medium">
+                  Select Mentees
+                </label>
                 <ul className="space-y-2 mt-2">
                   {mentees.map((mentee) => (
                     <li key={mentee._id} className="flex items-center gap-2">
                       <input
                         type="checkbox"
-                        checked={sessionForm.selectedMentees.includes(mentee._id)}
+                        checked={sessionForm.selectedMentees.includes(
+                          mentee._id
+                        )}
                         onChange={() => handleMenteeSelection(mentee._id)}
                       />
                       <label>
@@ -376,7 +561,9 @@ const MentorDashboard = () => {
               </div>
               <div className="flex gap-4">
                 <div>
-                  <label className="block text-sm font-medium">Start Time</label>
+                  <label className="block text-sm font-medium">
+                    Start Time
+                  </label>
                   <input
                     type="time"
                     name="startTime"
@@ -408,7 +595,10 @@ const MentorDashboard = () => {
                   placeholder="Add a message for the session"
                 />
               </div>
-              <button type="submit" className="px-4 py-2 bg-blue-500 text-white rounded">
+              <button
+                type="submit"
+                className="px-4 py-2 bg-blue-500 text-white rounded"
+              >
                 Create Session
               </button>
             </form>
@@ -419,17 +609,22 @@ const MentorDashboard = () => {
                 <li key={session._id} className="border p-4 rounded-xl">
                   <h4 className="text-lg font-bold">{session.topic}</h4>
                   <p>
-                    <strong>Date:</strong> {new Date(session.date).toLocaleDateString()}
+                    <strong>Date:</strong>{" "}
+                    {new Date(session.date).toLocaleDateString()}
                   </p>
                   <p>
-                    <strong>Time:</strong> {session.startTime} - {session.endTime}
+                    <strong>Time:</strong> {session.startTime} -{" "}
+                    {session.endTime}
                   </p>
                   <p>
-                    <strong>Message:</strong> {session.message || "No message provided"}
+                    <strong>Message:</strong>{" "}
+                    {session.message || "No message provided"}
                   </p>
                   <p>
                     <strong>Mentees:</strong>{" "}
-                    {session.mentees.map((mentee) => mentee.firstname).join(", ")}
+                    {session.mentees
+                      .map((mentee) => mentee.firstname)
+                      .join(", ")}
                   </p>
                 </li>
               ))}
@@ -438,14 +633,20 @@ const MentorDashboard = () => {
         )}
         {activeTab === "openMentorships" && (
           <div className="w-full h-full bg-gray/10 p-4 rounded-2xl border border-gray/20">
-            <h3 className="text-lg font-bold">
+            <h3 className="text-lg font-bold mb-4">
               Your Mentorship Opportunities
             </h3>
-            <ul className="space-y-4 mt-4">
+            <div className="space-y-4">
               {mentorships.map((mentorship) => (
-                <li key={mentorship._id} className="border p-4 rounded-xl">
+                <div
+                  key={mentorship._id}
+                  className="border p-4 rounded-xl bg-white"
+                >
+                  <div className="flex justify-between items-start">
+                    <div>
                   <h4 className="text-lg font-bold">{mentorship.title}</h4>
-                  <p>{mentorship.description}</p>
+                      <p className="text-gray-600">{mentorship.description}</p>
+                      <div className="mt-2">
                   <p>
                     <strong>Skills Required:</strong>{" "}
                     {mentorship.skillsRequired.join(", ")}
@@ -454,97 +655,213 @@ const MentorDashboard = () => {
                     <strong>Duration:</strong> {mentorship.duration}
                   </p>
                   <p>
-                    <strong>Applicants:</strong> {mentorship.currentApplicants}/
+                          <strong>Max Applicants:</strong>{" "}
                     {mentorship.maxApplicants}
                   </p>
                   <p>
-                    <strong>Status:</strong>{" "}
-                    {mentorship.isClosed ? "Closed" : "Open"}
-                  </p>
-                  {/* <button
+                          <strong>Current Applicants:</strong>{" "}
+                          {mentorship.currentApplicants}
+                        </p>
+                        {showApplicants?.mentorshipId === mentorship._id ? (
+                          <button
+                            onClick={() => setShowApplicants(null)}
+                            className="mt-2 bg-blue-500 text-white rounded px-2 py-1 text-sm"
+                          >
+                            Hide Applicants
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => handleViewApplicants(mentorship._id)}
+                            className="mt-2 bg-blue-500 text-white rounded px-2 py-1 text-sm"
+                          >
+                            View Applicants
+                          </button>
+                        )}
+                      </div>
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        onClick={() => handleEdit(mentorship)}
+                        className="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+                      >
+                        Edit
+                      </button>
+                      <button
                     onClick={() => handleDelete(mentorship._id)}
-                    className="mt-4 px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-all"
+                        className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
                   >
                     Delete
-                  </button> */}
-                </li>
+                      </button>
+                    </div>
+                  </div>
+
+                  {showApplicants?.mentorshipId === mentorship._id && (
+                    <div className="mt-4 border-t pt-4">
+                      <h5 className="font-bold mb-2">Applicants</h5>
+                      {showApplicants.applicants.length === 0 ? (
+                        <p>No applicants yet.</p>
+                      ) : (
+                        <ul className="space-y-2">
+                          {showApplicants.applicants.map((applicant) => (
+                            <li
+                              key={applicant._id}
+                              className="border p-2 rounded"
+                            >
+                              <p>
+                                <strong>Name:</strong> {applicant.firstname}{" "}
+                                {applicant.lastname}
+                              </p>
+                              <p>
+                                <strong>Email:</strong> {applicant.email}
+                              </p>
+                              <p>
+                                <strong>Skills:</strong>{" "}
+                                {applicant.skills?.join(", ") || "No skills listed"}
+                              </p>
+                              <p>
+                                <strong>Biography:</strong>{" "}
+                                {applicant.biography || "No biography provided"}
+                              </p>
+                              <div className="flex gap-2 mt-2">
+                                <button
+                                  onClick={() =>
+                                    handleApproveApplicant(
+                                      mentorship._id,
+                                      applicant._id
+                                    )
+                                  }
+                                  className="px-2 py-1 bg-green-500 text-white rounded text-sm"
+                                >
+                                  Approve
+                                </button>
+                                <button
+                                  onClick={() =>
+                                    handleDeclineApplicant(
+                                      mentorship._id,
+                                      applicant._id
+                                    )
+                                  }
+                                  className="px-2 py-1 bg-red-500 text-white rounded text-sm"
+                                >
+                                  Decline
+                                </button>
+                              </div>
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  )}
+                </div>
               ))}
-            </ul>
+            </div>
           </div>
         )}
 
         {activeTab === "postMentorship" && (
           <div className="w-full h-full bg-gray/10 p-4 rounded-2xl border border-gray/20">
-            <h2 className="text-xl font-bold mb-4">
-              Post Mentorship Opportunity
-            </h2>
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium">Title</label>
+            <h2 className="text-xl font-bold mb-4">Post New Mentorship Opportunity</h2>
+            <form onSubmit={handlePostSubmit} className="space-y-4">
+              <div className="flex flex-col md:flex-row justify-between items-start mb-4">
+                <div className="w-full mr-4">
+                  <div className="mb-4">
+                    <label className="block text-black/60">Title</label>
                 <input
                   type="text"
                   name="title"
-                  value={formData.title}
-                  onChange={handleChange}
-                  className="w-full border rounded p-2"
+                      value={postFormData.title}
+                      onChange={handlePostChange}
+                      className="w-full border-[1px] border-grayStroke rounded-lg p-2 text-black/70"
+                      placeholder="Enter mentorship title"
                   required
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium">Description</label>
-                <textarea
-                  name="description"
-                  value={formData.description}
-                  onChange={handleChange}
-                  className="w-full border rounded p-2"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium">
-                  Skills Required
-                </label>
-                <input
-                  type="text"
-                  name="skillsRequired"
-                  value={formData.skillsRequired}
-                  onChange={handleChange}
-                  className="w-full border rounded p-2"
-                  placeholder="Comma-separated skills"
-                  required
-                />
-              </div>
-              <div>
-                <label className="block text-sm font-medium">Duration</label>
+
+                  <div className="mb-4">
+                    <label className="block text-black/60">Duration</label>
                 <input
                   type="text"
                   name="duration"
-                  value={formData.duration}
-                  onChange={handleChange}
-                  className="w-full border rounded p-2"
+                      value={postFormData.duration}
+                      onChange={handlePostChange}
+                      className="w-full border-[1px] border-grayStroke rounded-lg p-2 text-black/70"
                   placeholder="e.g., 3 months"
                   required
                 />
               </div>
-              <div>
-                <label className="block text-sm font-medium">
-                  Max Applicants
-                </label>
+
+                  <div className="mb-4">
+                    <label className="block text-black/60">Max Applicants</label>
                 <input
                   type="number"
                   name="maxApplicants"
-                  value={formData.maxApplicants}
-                  onChange={handleChange}
-                  className="w-full border rounded p-2"
+                      value={postFormData.maxApplicants}
+                      onChange={handlePostChange}
+                      className="w-full border-[1px] border-grayStroke rounded-lg p-2 text-black/70"
+                      placeholder="Enter maximum number of applicants"
+                      required
+                    />
+                  </div>
+
+                  <div className="mb-4">
+                    <label className="block text-black/60">Skills Required</label>
+                    <CustomDropdown
+                      options={SKILLS.filter((skill) => !selectedSkills.includes(skill))}
+                      value=""
+                      onChange={handlePostSkillChange}
+                      placeholder="Select a skill"
+                      icon={<IoMdPricetags className="text-black/50" />}
+                    />
+                    <div className="flex flex-wrap mt-2 gap-2">
+                      {selectedSkills.map((skill, index) => (
+                        <div
+                          key={index}
+                          className="hover:translate-y-[0.5px] flex items-center border border-gray shadow-sm bg-white text-blue-500 px-3 py-1 rounded-full"
+                        >
+                          {skill}
+                          <button
+                            type="button"
+                            className="ml-2 text-black/50"
+                            onClick={() => handleRemoveSkill(skill)}
+                          >
+                            <IoIosCloseCircle className="text-black/60" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                <div className="w-full">
+                  <div className="mb-4">
+                    <label className="block text-black/60">Description</label>
+                    <textarea
+                      name="description"
+                      value={postFormData.description}
+                      onChange={handlePostChange}
+                      className="w-full border-[1px] border-grayStroke rounded-lg p-2 text-black/70 h-48"
+                      placeholder="Describe the mentorship opportunity"
                   required
                 />
+                  </div>
+                </div>
               </div>
+
+              <div className="flex gap-2">
               <button
                 type="submit"
-                className="px-4 py-2 bg-blue-500 text-white rounded"
+                  className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
               >
                 Post Mentorship
               </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveTab("openMentorships")}
+                  className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600"
+                >
+                  Cancel
+                </button>
+              </div>
             </form>
           </div>
         )}

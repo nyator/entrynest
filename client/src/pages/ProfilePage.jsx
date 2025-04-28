@@ -248,6 +248,21 @@ const ProfilePage = () => {
             </span>
           </>
         )}
+        {user.role === "mentor" && (
+          <>
+            <span className="text-black/70 font-bold inline-flex items-center">
+              <MdSpaceDashboard className="inline-block mr-1" />
+              <Link to="/mentor-dashboard" className="hover:underline">
+                Mentor Dashboard
+              </Link>{" "}
+            </span>
+            /
+            <span className="text-black/40 font-bold inline-flex items-center">
+              <HiMiniDocumentText className="inline-block mr-1" />
+              Profile
+            </span>
+          </>
+        )}
       </nav>
 
       <form onSubmit={handleSubmit}>

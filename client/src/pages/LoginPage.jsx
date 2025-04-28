@@ -43,8 +43,9 @@ function LoginPage() {
         email,
         password,
       });
-      const user = response.data.user;
+      const { user, token } = response.data;
       setUser(user); // Update the user state
+      localStorage.setItem("token", token); // Store the token
       toast.dismiss(); // Dismiss any existing toasts
       toast.success("Login successful");
 

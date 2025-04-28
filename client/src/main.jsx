@@ -10,32 +10,35 @@ import AuthRedirect from "./components/AuthRedirect";
 import "react-toastify/dist/ReactToastify.css";
 import "./index.css";
 
-import LandingPage from "../src/pages/LandingPage"; 
+import LandingPage from "../src/pages/LandingPage";
 import Layout from "./Layout";
 import NotFoundPage from "./pages/notFoundPage";
 import FindTalentPage from "./pages/FindTalentPage";
 import CommunityPage from "./pages/CommunityPage";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 import LoginPage from "../src/pages/LoginPage";
 import SignupPage from "../src/pages/SignupPage";
 import SupportPage from "./pages/SupportPage";
 import SignupJobSeeker from "./pages/SignupJobSeeker";
 import EmailVerificationPage from "./pages/EmailVerificationPage";
-import JsDashboard from "./pages/JsDashboard.jsx"; 
-import JobDetails from "./pages/JobDetails.jsx"; 
-import ProfilePage from "./pages/ProfilePage"; 
-import EmDashboard from "./pages/EmDashboard.jsx"; 
+import JsDashboard from "./pages/JsDashboard.jsx";
+import JobDetails from "./pages/JobDetails.jsx";
+import ProfilePage from "./pages/ProfilePage";
+import EmDashboard from "./pages/EmDashboard.jsx";
 import PostJob from "./pages/PostJob";
 import ViewEmployersPage from "./pages/ViewEmployersPage.jsx";
 import ResourcePage from "./pages/ResourcePage.jsx";
 import AdminDashboard from "./pages/AdminDashboard.jsx";
-import EmployerProfilePage from "./pages/EmployerProfilePage.jsx"; 
+import EmployerProfilePage from "./pages/EmployerProfilePage.jsx";
 import AdminJobDetails from "./pages/AdminJobDetails.jsx";
 import EditJob from "./pages/EditJob";
-import JobApplications from "./pages/JobApplications"; 
+import JobApplications from "./pages/JobApplications";
 import MentorDashboard from "./pages/MentorDashboard.jsx";
-import MentorshipsPage from "./pages/MentorshipsPage.jsx"; // Import the new page
+import MentorshipsPage from "./pages/MentorshipsPage.jsx";
+import EditMentorshipPage from "./pages/EditMentorshipPage";
+import MentorshipApplicants from "./pages/MentorshipApplicants";
 
 // Set the base URL for Axios
 const API_URL =
@@ -73,8 +76,6 @@ const router = createBrowserRouter([
         element: <SupportPage />,
       },
 
-
-
       {
         path: "/login",
         element: <LoginPage />,
@@ -96,6 +97,10 @@ const router = createBrowserRouter([
         element: <ForgotPasswordPage />,
       },
       {
+        path: "/reset-password/:token",
+        element: <ResetPasswordPage />,
+      },
+      {
         path: "/create-job",
         element: <PostJob />,
       },
@@ -103,8 +108,6 @@ const router = createBrowserRouter([
         path: "/view-employers",
         element: <ViewEmployersPage />,
       },
-      
-
 
       {
         path: "/jobs/:jobId",
@@ -123,11 +126,9 @@ const router = createBrowserRouter([
         element: <EditJob />,
       },
 
-
-
       {
         path: "/mentorships",
-        element: <MentorshipsPage />, // Add the new route
+        element: <MentorshipsPage />,
       },
       {
         path: "/jobs",
@@ -147,7 +148,15 @@ const router = createBrowserRouter([
       },
       {
         path: "/em-dashboard/applications/:jobId",
-        element: <JobApplications />, 
+        element: <JobApplications />,
+      },
+      {
+        path: "/edit-mentorship/:id",
+        element: <EditMentorshipPage />,
+      },
+      {
+        path: "/mentorship-applicants/:mentorshipId",
+        element: <MentorshipApplicants />,
       },
     ],
   },

@@ -61,7 +61,7 @@ const ResourcePage = () => {
                 onClick={() => setActiveTab(tab)}
                 className={`flex-1 py-3 px-4 rounded-lg text-center font-SatoshiMedium transition-all duration-300 ${
                   activeTab === tab
-                    ? "bg-white text-primary shadow-sm"
+                    ? "bg-gray/30 text-primary shadow-sm"
                     : "text-black/60 hover:text-black/80"
                 }`}
               >

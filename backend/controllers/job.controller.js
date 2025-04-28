@@ -1,5 +1,6 @@
 import { Job } from "../models/job.model.js";
 import { User } from "../models/user.model.js"; // Import User model
+import { sendNewPostingNotification } from "../utils/emailService.js";
 
 export const createJob = async (req, res) => {
   const { salaryRange, title, location, tags, type, style, aboutRole, qualification, responsibility, companyName } =
@@ -26,6 +27,31 @@ export const createJob = async (req, res) => {
     });
 
     await job.save();
+
+    // Send notifications to jobseekers
+    const jobseekers = await User.find({ role: "jobseeker" });
+    const postingUrl = `${process.env.FRONTEND_URL}/jobs/${job._id}`; // Assuming you have a frontend URL in your env
+
+    for (const jobseeker of jobseekers) {
+      try {
+        await sendNewPostingNotification(
+          jobseeker.email,
+          jobseeker.firstname,
+          {
+            type: "Job",
+            title: job.title,
+            companyName: job.companyName,
+            location: job.location,
+            jobType: job.type,
+            salaryRange: job.salaryRange,
+            postingUrl
+          }
+        );
+      } catch (error) {
+        console.error(`Failed to send notification to ${jobseeker.email}:`, error);
+        // Continue with other notifications even if one fails
+      }
+    }
 
     res.status(201).json({
       success: true,
