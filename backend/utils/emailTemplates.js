@@ -124,7 +124,7 @@ export const NEW_POSTING_NOTIFICATION_TEMPLATE = `
       font-family: "Sora", serif;
     }
   </style>
-  <title>New {type} Opportunity</title>
+  <title>📮 New {type} Opportunity</title>
 </head>
 <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
   <div style="background: linear-gradient(to right, #8B3AE1, #6B29B0); padding: 20px; text-align: center;">
@@ -165,7 +165,7 @@ export const APPLICATION_APPROVED_TEMPLATE = `
       font-family: "Sora", serif;
     }
   </style>
-  <title>Application Approved</title>
+  <title>📮 Application Approved</title>
 </head>
 <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
   <div style="background: linear-gradient(to right, #8B3AE1, #6B29B0); padding: 20px; text-align: center;">
@@ -205,7 +205,7 @@ export const APPLICATION_DECLINED_TEMPLATE = `
       font-family: "Sora", serif;
     }
   </style>
-  <title>Application Update</title>
+  <title>📮 Application Update</title>
 </head>
 <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
   <div style="background: linear-gradient(to right, #8B3AE1, #6B29B0); padding: 20px; text-align: center;">
@@ -251,7 +251,7 @@ export const MENTORSHIP_APPROVED_TEMPLATE = `
       font-family: "Sora", serif;
     }
   </style>
-  <title>Mentorship Application Approved</title>
+  <title>📮 Mentorship Application Approved</title>
 </head>
 <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
   <div style="background: linear-gradient(to right, #8B3AE1, #6B29B0); padding: 20px; text-align: center;">
@@ -291,7 +291,7 @@ export const MENTORSHIP_DECLINED_TEMPLATE = `
       font-family: "Sora", serif;
     }
   </style>
-  <title>Mentorship Application Update</title>
+  <title>📮 Mentorship Application Update</title>
 </head>
 <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
   <div style="background: linear-gradient(to right, #8B3AE1, #6B29B0); padding: 20px; text-align: center;">
