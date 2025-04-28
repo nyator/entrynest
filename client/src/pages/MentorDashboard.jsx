@@ -6,59 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { IoIosCloseCircle } from "react-icons/io";
 import CustomDropdown from "../components/CustomDropdown";
 import { IoMdPricetags } from "react-icons/io";
-
-const SKILLS = [
-  "JavaScript",
-  "Python",
-  "Java",
-  "C++",
-  "C#",
-  "Ruby",
-  "PHP",
-  "Swift",
-  "Kotlin",
-  "Go",
-  "Rust",
-  "TypeScript",
-  "React",
-  "Angular",
-  "Vue.js",
-  "Node.js",
-  "Express.js",
-  "Django",
-  "Flask",
-  "Spring Boot",
-  "Laravel",
-  "Ruby on Rails",
-  "ASP.NET",
-  "SQL",
-  "MongoDB",
-  "PostgreSQL",
-  "MySQL",
-  "Redis",
-  "GraphQL",
-  "RESTful APIs",
-  "Docker",
-  "Kubernetes",
-  "AWS",
-  "Azure",
-  "Google Cloud",
-  "DevOps",
-  "CI/CD",
-  "Git",
-  "Linux",
-  "Shell Scripting",
-  "Machine Learning",
-  "Data Science",
-  "Artificial Intelligence",
-  "Blockchain",
-  "Cybersecurity",
-  "UI/UX Design",
-  "Product Management",
-  "Agile/Scrum",
-  "Project Management",
-  "Technical Writing",
-];
+import {skillsList} from "../constants/index";
 
 const MentorDashboard = () => {
   const [loading, setLoading] = useState(false);
@@ -673,7 +621,9 @@ const MentorDashboard = () => {
                               </button>
                             ) : (
                               <button
-                                onClick={() => handleViewApplicants(mentorship._id)}
+                                onClick={() =>
+                                  handleViewApplicants(mentorship._id)
+                                }
                                 className="mt-2 bg-blue-500 text-white rounded px-2 py-1 text-sm"
                               >
                                 View Applicants
@@ -817,7 +767,7 @@ const MentorDashboard = () => {
                       Skills Required
                     </label>
                     <CustomDropdown
-                      options={SKILLS.filter(
+                      options={skillsList.filter(
                         (skill) => !selectedSkills.includes(skill)
                       )}
                       value=""

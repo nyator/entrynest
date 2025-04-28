@@ -178,6 +178,34 @@ export const getMentorshipApplicants = async (req, res) => {
   }
 };
 
+export const getAllMentorshipApplicants = async (req, res) => {
+  try {
+    const { mentorshipId } = req.params;
+
+    const mentorship = await Mentorship.findById(mentorshipId).populate({
+      path: "applicants",
+      select: "firstname lastname email avatar skills biography role",
+    });
+
+    if (!mentorship) {
+      return res.status(404).json({ message: "Mentorship not found" });
+    }
+
+    // Filter applicants to only include jobseekers
+    const jobseekerApplicants = mentorship.applicants.filter(
+      (applicant) => applicant.role === "jobseeker"
+    );
+
+    res.status(200).json({
+      success: true,
+      applicants: jobseekerApplicants,
+    });
+  } catch (error) {
+    console.error("Error fetching mentorship applicants:", error);
+    res.status(500).json({ message: "Error fetching mentorship applicants" });
+  }
+};
+
 export const getApprovedMentees = async (req, res) => {
   try {
     const mentorships = await Mentorship.find({ mentor: req.userId })
