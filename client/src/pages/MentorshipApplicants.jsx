@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { HiMiniDocumentText } from "react-icons/hi2";
 import { MdSpaceDashboard } from "react-icons/md";
 import { HiMiniArrowsUpDown } from "react-icons/hi2";
@@ -9,9 +9,7 @@ import { toast } from "react-toastify";
 import LoadingScreen from "../components/LoadingScreen";
 
 const MentorshipApplicants = () => {
-  const { mentorshipId } = useParams();
   const [applicants, setApplicants] = useState([]);
-  const [mentorship, setMentorship] = useState(null);
   const [loading, setLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState("all");
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -48,27 +46,24 @@ const MentorshipApplicants = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [mentorshipResponse, applicantsResponse] = await Promise.all([
-          axios.get(`${import.meta.env.VITE_API_URL}/api/mentorships/${mentorshipId}`, {
-            withCredentials: true
-          }),
-          axios.get(`${import.meta.env.VITE_API_URL}/api/mentorships/${mentorshipId}/applicants`, {
-            withCredentials: true
-          })
-        ]);
+        const applicantsResponse = await axios.get(
+          `${import.meta.env.VITE_API_URL}/api/mentorships/applicants/all`,
+          {
+            withCredentials: true,
+          }
+        );
 
-        setMentorship(mentorshipResponse.data.mentorship);
         setApplicants(applicantsResponse.data.applicants);
       } catch (error) {
         console.error("Error fetching data:", error);
-        toast.error("Failed to fetch mentorship data");
+        toast.error("Failed to fetch mentorship applicants");
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, [mentorshipId]);
+  }, []);
 
   const handleFilterChange = (status) => {
     setFilterStatus(status);
@@ -81,7 +76,7 @@ const MentorshipApplicants = () => {
     setSortDropdownOpen(false);
   };
 
-  const handleApproveApplicant = async (applicantId) => {
+  const handleApproveApplicant = async (applicantId, mentorshipId) => {
     try {
       await axios.post(
         `${import.meta.env.VITE_API_URL}/api/mentorships/${mentorshipId}/approve/${applicantId}`,
@@ -93,7 +88,7 @@ const MentorshipApplicants = () => {
       setMessage("");
       // Refresh applicants list
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/mentorships/${mentorshipId}/applicants`,
+        `${import.meta.env.VITE_API_URL}/api/mentorships/applicants/all`,
         { withCredentials: true }
       );
       setApplicants(response.data.applicants);
@@ -103,7 +98,7 @@ const MentorshipApplicants = () => {
     }
   };
 
-  const handleDeclineApplicant = async (applicantId) => {
+  const handleDeclineApplicant = async (applicantId, mentorshipId) => {
     try {
       await axios.post(
         `${import.meta.env.VITE_API_URL}/api/mentorships/${mentorshipId}/decline/${applicantId}`,
@@ -115,7 +110,7 @@ const MentorshipApplicants = () => {
       setMessage("");
       // Refresh applicants list
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/mentorships/${mentorshipId}/applicants`,
+        `${import.meta.env.VITE_API_URL}/api/mentorships/applicants/all`,
         { withCredentials: true }
       );
       setApplicants(response.data.applicants);
@@ -135,7 +130,7 @@ const MentorshipApplicants = () => {
     setShowDeclineDialog(true);
   };
 
-  const filteredApplicants = applicants.filter(applicant => {
+  const filteredApplicants = applicants.filter((applicant) => {
     if (filterStatus === "all") return true;
     return applicant.status === filterStatus;
   });
@@ -168,13 +163,11 @@ const MentorshipApplicants = () => {
         /{" "}
         <span className="text-gray-800 font-bold inline-flex items-center">
           <HiMiniDocumentText className="inline-block mr-1" />
-          Mentorship Applicants
+          All Mentorship Applicants
         </span>
       </nav>
 
-      <h1 className="text-2xl font-bold mb-4">
-        Applicants for: <span className="text-primary">{mentorship?.title}</span>
-      </h1>
+      <h1 className="text-2xl font-bold mb-4">All Mentorship Applicants</h1>
 
       {/* Filters and Sort */}
       <div className="md:inline-flex leading-none w-full">
@@ -189,7 +182,9 @@ const MentorshipApplicants = () => {
                 onClick={() => setDropdownOpen(!dropdownOpen)}
                 className="w-[120px] bg-white shadow-sm border border-gray gap-2 rounded-3xl px-4 py-2 text-start inline-flex items-center justify-between"
               >
-                {filterStatus === "all" ? "All" : filterStatus.charAt(0).toUpperCase() + filterStatus.slice(1)}
+                {filterStatus === "all"
+                  ? "All"
+                  : filterStatus.charAt(0).toUpperCase() + filterStatus.slice(1)}
                 <MdOutlineArrowDropDown className="size-5" />
               </button>
               {dropdownOpen && (
@@ -293,6 +288,9 @@ const MentorshipApplicants = () => {
                   <strong>Email:</strong> {applicant.email}
                 </p>
                 <p className="mb-2">
+                  <strong>Mentorship:</strong> {applicant.mentorshipTitle}
+                </p>
+                <p className="mb-2">
                   <strong>Skills:</strong> {applicant.skills?.join(", ") || "No skills listed"}
                 </p>
                 <p className="mb-2">
@@ -365,7 +363,7 @@ const MentorshipApplicants = () => {
                   Cancel
                 </button>
                 <button
-                  onClick={() => handleApproveApplicant(selectedApplicant._id)}
+                  onClick={() => handleApproveApplicant(selectedApplicant._id, selectedApplicant.mentorshipId)}
                   className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
                 >
                   Confirm Approval
@@ -401,7 +399,7 @@ const MentorshipApplicants = () => {
                   Cancel
                 </button>
                 <button
-                  onClick={() => handleDeclineApplicant(selectedApplicant._id)}
+                  onClick={() => handleDeclineApplicant(selectedApplicant._id, selectedApplicant.mentorshipId)}
                   className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
                 >
                   Confirm Decline
@@ -415,4 +413,4 @@ const MentorshipApplicants = () => {
   );
 };
 
-export default MentorshipApplicants; 
+export default MentorshipApplicants;

@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 import { IoIosCloseCircle } from "react-icons/io";
 import CustomDropdown from "../components/CustomDropdown";
 import { IoMdPricetags } from "react-icons/io";
-import {skillsList} from "../constants/index";
+import { skillsList } from "../constants/index";
 
 const MentorDashboard = () => {
   const [loading, setLoading] = useState(false);
@@ -22,7 +22,7 @@ const MentorDashboard = () => {
     endTime: "",
     message: "",
   });
-  const [activeTab, setActiveTab] = useState("myMentees");
+  const [activeTab, setActiveTab] = useState("applicants");
   const [showApplicants, setShowApplicants] = useState(null);
   const [editingMentorship, setEditingMentorship] = useState(null);
   const [selectedSkills, setSelectedSkills] = useState([]);
@@ -58,8 +58,9 @@ const MentorDashboard = () => {
 
   const fetchApplicants = async () => {
     try {
+      // Fetch all applicants for all mentorships in one call
       const response = await axios.get(
-        `${API_URL}/api/mentorships/applicants`,
+        `${API_URL}/api/mentorships/applicants/all`,
         {
           withCredentials: true,
         }
@@ -96,10 +97,6 @@ const MentorDashboard = () => {
   };
 
   const handleDelete = async (mentorshipId) => {
-    // if (!window.confirm("Are you sure you want to delete this mentorship?")) {
-    //   return;
-    // }
-
     try {
       const response = await axios.delete(
         `${API_URL}/api/mentorships/${mentorshipId}`,
@@ -241,7 +238,7 @@ const MentorDashboard = () => {
   };
 
   useEffect(() => {
-    if (activeTab === "postMentorships") {
+    if (activeTab === "postMentorship") {
       fetchMentorships();
     }
     if (activeTab === "applicants") {
@@ -424,12 +421,21 @@ const MentorDashboard = () => {
                       {applicant.firstname} {applicant.lastname}
                     </h3>
                     <p>
+                      <strong>Mentorship:</strong>{" "}
+                      {applicant.mentorshipTitle || "Unknown"}
+                    </p>
+                    <p>
                       <strong>Email:</strong> {applicant.email}
+                    </p>
+                    <p>
+                      <strong>Skills:</strong>{" "}
+                      {applicant.skills?.join(", ") || "No skills listed"}
                     </p>
                     <p>
                       <strong>Message:</strong>{" "}
                       {applicant.message || "No message provided"}
                     </p>
+
                     <div className="flex gap-4 mt-2">
                       <button
                         onClick={() =>
