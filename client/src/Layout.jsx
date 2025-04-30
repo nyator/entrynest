@@ -28,6 +28,41 @@ const Layout = () => {
     }
   }, [user]); // Re-run whenever the user state changes
 
+  useEffect(() => {
+    // Update the document title based on the current route
+    const routeTitles = {
+      "/": "Home - entrynest",
+      "/find_talent": "Find Talent - entrynest",
+      "/profile": "Profile - entrynest",
+      "/resources": "Resources - entrynest",
+      "/community": "Community - entrynest",
+      "/support": "Support - entrynest",
+      "/login": "Login - entrynest",
+      "/signup": "Sign Up - entrynest",
+      "/signup-jobseeker": "Sign Up as Jobseeker - entrynest",
+      "/verify-email": "Verify Email - entrynest",
+      "/forgot-password": "Forgot Password - entrynest",
+      "/reset-password": "Reset Password - entrynest",
+      "/create-job": "Post a Job - entrynest",
+      "/view-employers": "View Employers - entrynest",
+      "/jobs": "Jobs - entrynest",
+      "/jobs/:jobId": "Job Details - entrynest",
+      "/job-details/:jobId": "Admin Job Details - entrynest",
+      "/employer-profile/:userId": "Employer Profile - entrynest",
+      "/edit-job/:jobId": "Edit Job - entrynest",
+      "/mentorships": "Mentorships - entrynest",
+      "/em-dashboard": "Employer Dashboard - entrynest",
+      "/admin-dashboard": "Admin Dashboard - entrynest",
+      "/mentor-dashboard": "Mentor Dashboard - entrynest",
+      "/em-dashboard/applications/:jobId": "Job Applications - entrynest",
+      "/edit-mentorship/:id": "Edit Mentorship - entrynest",
+      "/mentorship-applicants/:mentorshipId": "Mentorship Applicants - entrynest",
+    };
+
+    const defaultTitle = "entrynest";
+    document.title = routeTitles[location.pathname] || defaultTitle;
+  }, [location.pathname]); // Re-run whenever the route changes
+
   return (
     <>
       <main className="w-11/12 mx-auto my-[25px]">

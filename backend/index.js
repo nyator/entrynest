@@ -35,8 +35,8 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 app.use("/api/auth", authRoutes); // Ensure this line is present
 app.use("/api/user", userRoutes); // Ensure this line exists
 app.use("/api/jobs", jobRoutes); // Use job routes
+app.use("/api/mentorships/sessions", sessionRoutes); // Ensure this line is mounted before dynamic mentorship routes
 app.use("/api/mentorships", mentorshipRoutes); // Mount mentorship routes
-app.use("/api/mentorships/sessions", sessionRoutes); // Mount session routes under /api/mentorships/sessions
 
 app.listen(PORT, () => {
   connectDB();

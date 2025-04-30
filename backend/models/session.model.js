@@ -10,9 +10,17 @@ const sessionSchema = new mongoose.Schema(
       type: Date,
       required: true,
     },
-    time: {
+    startTime: {
       type: String,
       required: true,
+    },
+    endTime: {
+      type: String,
+      required: true,
+    },
+    message: {
+      type: String,
+      default: "",
     },
     mentor: {
       type: mongoose.Schema.Types.ObjectId,
@@ -22,9 +30,19 @@ const sessionSchema = new mongoose.Schema(
     mentees: [
       {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "User",
+        ref: "User", // Ensure the reference to the User model is correct
       },
     ],
+    link: {
+      type: String,
+      default: "",
+      validate: {
+        validator: function (v) {
+          return /^(https?:\/\/)?([\w\-]+\.)+[\w\-]+(\/[\w\-._~:/?#[\]@!$&'()*+,;=]*)?$/.test(v);
+        },
+        message: "Invalid URL format",
+      },
+    },
   },
   { timestamps: true }
 );

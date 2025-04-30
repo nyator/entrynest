@@ -23,6 +23,7 @@ const MentorDashboard = () => {
     startTime: "",
     endTime: "",
     message: "",
+    link: "", // Add link field
   });
   const [activeTab, setActiveTab] = useState("myMentees");
   const [showApplicants, setShowApplicants] = useState(null);
@@ -53,6 +54,8 @@ const MentorDashboard = () => {
     openMentorships: false,
     postMentorship: false,
   });
+
+  const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
 
   const fetchMentorships = async () => {
     try {
@@ -118,11 +121,12 @@ const MentorDashboard = () => {
 
   const fetchSessions = async () => {
     try {
+      console.log("Fetching sessions from:", `${API_URL}/api/mentorships/sessions`);
       const response = await axios.get(`${API_URL}/api/mentorships/sessions`, {
         withCredentials: true,
       });
 
-      console.log("Sessions API Response:", response.data); // Debugging log to verify API response structure
+      console.log("Sessions API Response:", response.data);
 
       if (response.data && response.data.sessions) {
         setSessions(response.data.sessions);
@@ -131,9 +135,9 @@ const MentorDashboard = () => {
         toast.error("Failed to fetch sessions due to unexpected response structure.");
       }
     } catch (error) {
-      console.error("Error fetching sessions:", error); // Log the error for debugging
+      console.error("Error fetching sessions:", error);
       if (error.response) {
-        console.error("Server Response:", error.response.data); // Log server response if available
+        console.error("Server Response:", error.response.data);
         toast.error(
           error.response.data.message || "Failed to fetch sessions. Please try again later."
         );
@@ -237,6 +241,15 @@ const MentorDashboard = () => {
   const handleSessionSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
+    // Validate the link field
+    const urlRegex = /^(https?:\/\/)?([\w\-]+\.)+[\w\-]+(\/[\w\-._~:/?#[\]@!$&'()*+,;=]*)?$/;
+    if (sessionForm.link && !urlRegex.test(sessionForm.link)) {
+      toast.error("Invalid session link format. Please enter a valid URL.");
+      setLoading(false);
+      return;
+    }
+
     try {
       const response = await axios.post(
         `${API_URL}/api/mentorships/sessions`,
@@ -256,6 +269,7 @@ const MentorDashboard = () => {
           startTime: "",
           endTime: "",
           message: "",
+          link: "",
         });
       }
     } catch (error) {
@@ -272,6 +286,30 @@ const MentorDashboard = () => {
 
   const handleViewApplicants = (mentorshipId) => {
     navigate(`/mentorship-applicants/${mentorshipId}`);
+  };
+
+  const handleDeleteSession = async (sessionId) => {
+    try {
+      const response = await axios.delete(`${API_URL}/api/mentorships/sessions/${sessionId}`, {
+        withCredentials: true,
+      });
+
+      if (response.data.success) {
+        toast.success("Session deleted successfully");
+        setSessions((prevSessions) => prevSessions.filter((session) => session._id !== sessionId));
+      }
+    } catch (error) {
+      console.error("Error deleting session:", error);
+      toast.error(error.response?.data?.message || "Failed to delete session");
+    }
+  };
+
+  const formatTime = (time) => {
+    const [hour, minute] = time.split(":");
+    const hourInt = parseInt(hour, 10);
+    const ampm = hourInt >= 12 ? "PM" : "AM";
+    const formattedHour = hourInt % 12 || 12; // Convert 0 to 12 for 12-hour format
+    return `${formattedHour}:${minute} ${ampm}`;
   };
 
   useEffect(() => {
@@ -569,7 +607,8 @@ const MentorDashboard = () => {
                           />
                           <label>
                             {mentee.firstname} {mentee.lastname} -{" "}
-                            {mentee.email}
+                            {mentee.email} -{" "}
+                            {mentee.mentorshipTitle}
                           </label>
                         </li>
                       ))}
@@ -594,6 +633,7 @@ const MentorDashboard = () => {
                       value={sessionForm.date}
                       onChange={handleSessionChange}
                       className="w-full border rounded p-2"
+                      min={today} // Restrict to dates ahead
                       required
                     />
                   </div>
@@ -635,6 +675,17 @@ const MentorDashboard = () => {
                       placeholder="Add a message for the session"
                     />
                   </div>
+                  <div>
+                    <label className="block text-sm font-medium">Session Link</label>
+                    <input
+                      type="url"
+                      name="link"
+                      value={sessionForm.link}
+                      onChange={handleSessionChange}
+                      className="w-full border rounded p-2"
+                      placeholder="Enter session link (e.g., Zoom, Google Meet)"
+                    />
+                  </div>
                   <button
                     type="submit"
                     className="px-4 py-2 bg-blue-500 text-white rounded"
@@ -653,19 +704,34 @@ const MentorDashboard = () => {
                         {new Date(session.date).toLocaleDateString()}
                       </p>
                       <p>
-                        <strong>Time:</strong> {session.startTime} -{" "}
-                        {session.endTime}
+                        <strong>Time:</strong> {formatTime(session.startTime)} - {formatTime(session.endTime)}
                       </p>
                       <p>
                         <strong>Message:</strong>{" "}
                         {session.message || "No message provided"}
                       </p>
                       <p>
+                        <strong>Link:</strong>{" "}
+                        {session.link ? (
+                          <a href={session.link} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
+                            {session.link}
+                          </a>
+                        ) : (
+                          "No link provided"
+                        )}
+                      </p>
+                      <p>
                         <strong>Mentees:</strong>{" "}
                         {session.mentees
-                          .map((mentee) => mentee.firstname)
+                          .map((mentee) => `${mentee.firstname} ${mentee.lastname}`)
                           .join(", ")}
                       </p>
+                      <button
+                        onClick={() => handleDeleteSession(session._id)}
+                        className="mt-2 px-4 py-2 bg-red-500 text-white rounded"
+                      >
+                        Delete Session
+                      </button>
                     </li>
                   ))}
                 </ul>
