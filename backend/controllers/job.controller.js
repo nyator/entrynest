@@ -76,21 +76,25 @@ export const createJob = async (req, res) => {
 
 export const getJobs = async (req, res) => {
   try {
-    const jobs = await Job.find().populate("postedBy", "firstname lastname avatar");
+    const jobs = await Job.find().populate("postedBy", "firstname lastname avatar companyName");
+    const userId = req.userId; // Get the logged-in user's ID
 
-    const jobsWithFullAvatarUrl = jobs.map((job) => ({
+    const jobsWithApplicationStatus = jobs.map((job) => ({
       ...job._doc,
       postedBy: {
         ...job.postedBy._doc,
         avatar: job.postedBy.avatar
-          ? `${process.env.API_URL}${job.postedBy.avatar}` // Ensure full URL
+          ? `${process.env.API_URL}${job.postedBy.avatar}`
           : null,
       },
+      hasApplied: job.applications.some(
+        (application) => application.user.toString() === userId
+      ),
     }));
 
     res.status(200).json({
       success: true,
-      jobs: jobsWithFullAvatarUrl,
+      jobs: jobsWithApplicationStatus,
     });
   } catch (error) {
     console.error("Error fetching jobs:", error);
@@ -148,8 +152,12 @@ export const deleteJob = async (req, res) => {
   }
 };
 
-export const applyToJob = async (req, res) => {
+export const applyForJob = async (req, res) => {
   try {
+    if (!req.file) {
+      return res.status(400).json({ message: "Resume file is required." });
+    }
+
     const { id } = req.params;
     const { message } = req.body;
     const cv = req.file?.path; // Ensure multer is configured correctly
@@ -188,13 +196,9 @@ export const applyToJob = async (req, res) => {
       .status(201)
       .json({ success: true, message: "Application submitted successfully" });
   } catch (error) {
-    console.error("Error applying to job:", error.message);
-    console.error("Stack trace:", error.stack);
+    console.error("Error applying for job:", error);
     res.status(500).json({
-      success: false,
-      message: "Failed to apply to job",
-      errorDetails:
-        process.env.NODE_ENV === "development" ? error.stack : undefined,
+      message: error.message || "Failed to apply for the job.",
     });
   }
 };
@@ -413,5 +417,54 @@ export const getAllSubmittedCVs = async (req, res) => {
       errorDetails:
         process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
+  }
+};
+
+export const applyToJob = async (req, res) => {
+  try {
+    const { jobId } = req.params;
+    const userId = req.userId;
+
+    // Check if a file was uploaded
+    if (!req.file) {
+      console.error("Resume file is missing in the request.");
+      return res.status(400).json({ message: "Resume file is required." });
+    }
+
+    // Validate job existence
+    const job = await Job.findById(jobId);
+    if (!job) {
+      console.error(`Job with ID ${jobId} not found.`);
+      return res.status(404).json({ message: "Job not found." });
+    }
+
+    // Check if the user has already applied
+    const alreadyApplied = job.applications.some(
+      (application) => application.user.toString() === userId
+    );
+    if (alreadyApplied) {
+      console.error(`User with ID ${userId} has already applied for job ${jobId}.`);
+      return res.status(400).json({ message: "You have already applied for this job." });
+    }
+
+    // Add the application to the job
+    const application = {
+      user: userId,
+      cvUrl: req.file.path, // Ensure cvUrl is explicitly set
+      message: req.body.message || "", // Optional message
+    };
+
+    // Use `updateOne` to add the application without modifying `updatedAt`
+    await Job.updateOne(
+      { _id: jobId },
+      { $push: { applications: application } },
+      { timestamps: false } // Prevent `updatedAt` from being updated
+    );
+
+    console.log(`Application submitted successfully for job ${jobId} by user ${userId}.`);
+    res.status(200).json({ message: "Application submitted successfully." });
+  } catch (error) {
+    console.error("Error applying to job:", error.message);
+    res.status(500).json({ message: "Failed to apply to the job." });
   }
 };

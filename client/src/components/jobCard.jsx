@@ -20,6 +20,7 @@ const JobCard = ({
   tags,
   onViewDetails,
   salaryRange,
+  hasApplied, // Add this prop to indicate if the user has applied
 }) => {
   const isValidDate = (date) => {
     return !isNaN(Date.parse(date));
@@ -95,12 +96,16 @@ const JobCard = ({
         <h1>
           posted by <span>{postedBy || "NaN"}</span>
         </h1>
-        <button
-          className={`${cardButton} rounded-full`}
-          onClick={onViewDetails}
-        >
-          View Details
-        </button>
+        {hasApplied ? (
+          <span className="text-gray-500 font-medium">Already Applied</span>
+        ) : (
+          <button
+            className={`${cardButton} rounded-full`}
+            onClick={onViewDetails}
+          >
+            View Details
+          </button>
+        )}
       </div>
     </div>
   );

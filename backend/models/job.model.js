@@ -4,7 +4,7 @@ const applicationSchema = new mongoose.Schema(
   {
     user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true },
     message: { type: String },
-    cvUrl: { type: String, required: true },
+    cvUrl: { type: String, required: true }, // Ensure this field is required
     status: {
       type: String,
       enum: ["pending", "approved", "declined"],

@@ -66,7 +66,14 @@ const JsDashboard = () => {
         const response = await axios.get("http://localhost:3000/api/jobs", {
           withCredentials: true,
         });
-        setJobs(response.data.jobs);
+        const userId = localStorage.getItem("userId"); // Get the logged-in user's ID
+        const jobsWithApplicationStatus = response.data.jobs.map((job) => ({
+          ...job,
+          hasApplied: job.applications.some(
+            (application) => application.user === userId
+          ),
+        }));
+        setJobs(jobsWithApplicationStatus);
       } catch (error) {
         console.error("Error fetching jobs:", error);
       } finally {
@@ -119,6 +126,36 @@ const JsDashboard = () => {
           selectedEmployer
         : true
     );
+
+  const handleFileUpload = (file) => {
+    if (file && file.type !== "application/pdf") {
+      alert("Only .pdf files are allowed!");
+      return false;
+    }
+    return true;
+  };
+
+  const handleSubmitApplication = async (jobId, file) => {
+    if (!handleFileUpload(file)) return; // Validate file before proceeding
+
+    const formData = new FormData();
+    formData.append("resume", file);
+
+    try {
+      const response = await axios.post(
+        `http://localhost:3000/api/jobs/${jobId}/apply`,
+        formData,
+        {
+          headers: { "Content-Type": "multipart/form-data" },
+          withCredentials: true,
+        }
+      );
+      alert("Application submitted successfully!");
+    } catch (error) {
+      console.error("Error submitting application:", error);
+      alert(error.response?.data?.message || "Failed to submit application.");
+    }
+  };
 
   if (loading) {
     return (
@@ -238,6 +275,7 @@ const JsDashboard = () => {
               timePosted={job.updatedAt || job.createdAt}
               postedBy={`${job.postedBy.firstname} ${job.postedBy.lastname}`}
               salaryRange={job.salaryRange}
+              hasApplied={job.hasApplied} // Pass the hasApplied prop
               onViewDetails={() => handleViewDetails(job._id)}
             />
           ))}
