@@ -1,6 +1,6 @@
 import { Mentorship } from "../models/mentorship.model.js";
 import { User } from "../models/user.model.js";
-import { sendNewPostingNotification } from "../utils/emailService.js";
+import { sendNewPostingNotification, sendMentorshipApprovedEmail, sendMentorshipDeclinedEmail } from "../utils/emailService.js";
 
 export const createMentorship = async (req, res) => {
   const { title, description, skillsRequired, duration, maxApplicants } =
@@ -195,48 +195,51 @@ export const getAllMentorshipApplicants = async (req, res) => {
     });
 
     if (!mentorships || mentorships.length === 0) {
-      return res.status(404).json({ message: "No mentorships found" });
+      return res.status(200).json({ success: true, applicants: [] });
     }
 
-    // Aggregate all applicants from all mentorships
-    let allApplicants = [];
-    mentorships.forEach((mentorship) => {
-      const jobseekerApplicants = mentorship.applicants.filter(
-        (applicant) => applicant.user && applicant.user.role === "jobseeker"
-      );
-
-      const applicantsWithMentorship = jobseekerApplicants.map((applicant) => ({
+    const allApplicants = mentorships.flatMap((mentorship) =>
+      mentorship.applicants.map((applicant) => ({
         _id: applicant._id,
         status: applicant.status,
         message: applicant.message,
         mentorshipId: mentorship._id,
         mentorshipTitle: mentorship.title,
-        ...applicant.user.toObject(),
-      }));
+        ...(applicant.user ? applicant.user.toObject() : {}),
+      }))
+    );
 
-      allApplicants = allApplicants.concat(applicantsWithMentorship);
-    });
-
-    res.status(200).json({
-      success: true,
-      applicants: allApplicants,
-    });
+    res.status(200).json({ success: true, applicants: allApplicants });
   } catch (error) {
-    console.error("Error fetching all mentorship applicants:", error.stack || error);
-    res.status(500).json({ message: "Error fetching all mentorship applicants" });
+    console.error("Error fetching all mentorship applicants:", error);
+    res.status(500).json({ success: false, message: "Failed to fetch applicants." });
   }
 };
 
 export const getApprovedMentees = async (req, res) => {
   try {
-    const mentorships = await Mentorship.find({ mentor: req.userId })
-      .populate("applicants", "firstname lastname email")
-      .select("applicants");
+    const mentorships = await Mentorship.find({ mentor: req.userId }).populate({
+      path: "applicants.user",
+      select: "firstname lastname email",
+    });
+
+    if (!mentorships || mentorships.length === 0) {
+      return res.status(200).json({
+        success: true,
+        mentees: [],
+      });
+    }
 
     const mentees = mentorships.flatMap((mentorship) =>
-      mentorship.applicants.filter(
-        (applicant) => applicant.status === "approved"
-      )
+      mentorship.applicants
+        .filter((applicant) => applicant.status === "approved" && applicant.user)
+        .map((applicant) => ({
+          _id: applicant.user._id,
+          firstname: applicant.user.firstname,
+          lastname: applicant.user.lastname,
+          email: applicant.user.email,
+          message: applicant.message,
+        }))
     );
 
     res.status(200).json({
@@ -247,7 +250,7 @@ export const getApprovedMentees = async (req, res) => {
     console.error("Error fetching approved mentees:", error);
     res.status(500).json({
       success: false,
-      message: "Failed to fetch approved mentees",
+      message: "Failed to fetch approved mentees.",
       errorDetails:
         process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
@@ -257,7 +260,7 @@ export const getApprovedMentees = async (req, res) => {
 export const approveApplicant = async (req, res) => {
   try {
     const { mentorshipId, applicantId } = req.params;
-    const mentorship = await Mentorship.findById(mentorshipId);
+    const mentorship = await Mentorship.findById(mentorshipId).populate("applicants.user");
 
     if (!mentorship) {
       return res.status(404).json({ success: false, message: "Mentorship not found" });
@@ -271,6 +274,14 @@ export const approveApplicant = async (req, res) => {
     applicant.status = "approved";
     await mentorship.save();
 
+    // Send approval email
+    if (applicant.user) {
+      await sendMentorshipApprovedEmail(applicant.user.email, applicant.user.firstname, {
+        title: mentorship.title,
+        mentorshipUrl: `${process.env.FRONTEND_URL}/mentorships/${mentorshipId}`,
+      });
+    }
+
     res.status(200).json({ success: true, message: "Applicant approved successfully" });
   } catch (error) {
     console.error("Error approving applicant:", error);
@@ -281,7 +292,7 @@ export const approveApplicant = async (req, res) => {
 export const declineApplicant = async (req, res) => {
   try {
     const { mentorshipId, applicantId } = req.params;
-    const mentorship = await Mentorship.findById(mentorshipId);
+    const mentorship = await Mentorship.findById(mentorshipId).populate("applicants.user");
 
     if (!mentorship) {
       return res.status(404).json({ success: false, message: "Mentorship not found" });
@@ -294,6 +305,14 @@ export const declineApplicant = async (req, res) => {
 
     applicant.status = "declined";
     await mentorship.save();
+
+    // Send decline email
+    if (applicant.user) {
+      await sendMentorshipDeclinedEmail(applicant.user.email, applicant.user.firstname, {
+        title: mentorship.title,
+        mentorshipsUrl: `${process.env.FRONTEND_URL}/mentorships`,
+      });
+    }
 
     res.status(200).json({ success: true, message: "Applicant declined successfully" });
   } catch (error) {

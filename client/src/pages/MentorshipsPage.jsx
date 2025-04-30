@@ -12,25 +12,6 @@ const MentorshipsPage = () => {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSkill, setSelectedSkill] = useState("All Skills");
-  const [currentUser, setCurrentUser] = useState(null);
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const response = await fetch("http://localhost:3000/api/users/me", {
-          credentials: "include",
-        });
-        if (response.ok) {
-          const data = await response.json();
-          setCurrentUser(data.user);
-        }
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-
-    fetchUserData();
-  }, []);
 
   useEffect(() => {
     const fetchMentorships = async () => {
@@ -58,17 +39,6 @@ const MentorshipsPage = () => {
 
     fetchMentorships();
   }, []);
-
-  const handleSearchChange = (e) => {
-    const term = e.target.value.toLowerCase();
-    setSearchTerm(term);
-    filterMentorships(term, selectedSkill);
-  };
-
-  const handleSkillFilterChange = (skill) => {
-    setSelectedSkill(skill);
-    filterMentorships(searchTerm, skill);
-  };
 
   const filterMentorships = (term, skill) => {
     let filtered = mentorships;
@@ -103,9 +73,8 @@ const MentorshipsPage = () => {
         }
       );
 
-      const data = await response.json();
-
       if (!response.ok) {
+        const data = await response.json();
         if (response.status === 401) {
           toast.error("Your session has expired. Please log in again.");
           return;
@@ -114,23 +83,41 @@ const MentorshipsPage = () => {
       }
 
       toast.success("Application submitted successfully!");
-      // Refresh the mentorships list to update the application status
-      const updatedResponse = await fetch("http://localhost:3000/api/mentorships", {
-        method: "GET",
-        credentials: "include",
-      });
-      const updatedData = await updatedResponse.json();
-      setMentorships(updatedData.mentorships || []);
-      setFilteredMentorships(updatedData.mentorships || []);
+
+      // Simulate the current user ID for testing purposes
+      const currentUserId = "currentUserId";
+
+      // Update the mentorships state to reflect the applied status
+      setMentorships((prevMentorships) =>
+        prevMentorships.map((mentorship) =>
+          mentorship._id === mentorshipId
+            ? {
+                ...mentorship,
+                applicants: mentorship.applicants
+                  ? [...mentorship.applicants, { _id: currentUserId }]
+                  : [{ _id: currentUserId }],
+              }
+            : mentorship
+        )
+      );
+
+      // Update the filteredMentorships state to reflect the applied status
+      setFilteredMentorships((prevFiltered) =>
+        prevFiltered.map((mentorship) =>
+          mentorship._id === mentorshipId
+            ? {
+                ...mentorship,
+                applicants: mentorship.applicants
+                  ? [...mentorship.applicants, { _id: currentUserId }]
+                  : [{ _id: currentUserId }],
+              }
+            : mentorship
+        )
+      );
     } catch (error) {
       console.error("Error applying for mentorship:", error);
       toast.error(error.message || "Failed to apply for mentorship");
     }
-  };
-
-  const hasApplied = (mentorship) => {
-    if (!currentUser) return false;
-    return mentorship.applicants.some(applicant => applicant._id === currentUser._id);
   };
 
   if (loading) {
@@ -158,7 +145,11 @@ const MentorshipsPage = () => {
             type="text"
             placeholder="Search mentorships by title or description..."
             value={searchTerm}
-            onChange={handleSearchChange}
+            onChange={(e) => {
+              const term = e.target.value.toLowerCase();
+              setSearchTerm(term);
+              filterMentorships(term, selectedSkill);
+            }}
             className="w-full border border-gray rounded-full p-4 h-14 pr-16"
           />
           <button className="absolute right-2 top-1/2 transform -translate-y-1/2 px-4 py-2 bg-primary text-white rounded-full hover:bg-primary/80 transition-all">
@@ -182,7 +173,10 @@ const MentorshipsPage = () => {
             "Design",
           ]}
           value={selectedSkill}
-          onChange={(value) => handleSkillFilterChange(value)}
+          onChange={(skill) => {
+            setSelectedSkill(skill);
+            filterMentorships(searchTerm, skill);
+          }}
           placeholder="Select Skill"
           classNameButton="min-w-[200px] w-fit bg-white shadow-sm border border-gray gap-2"
           classNameDrop="hover:bg-blue-100"
@@ -199,7 +193,7 @@ const MentorshipsPage = () => {
             >
               {/* Gradient Overlay */}
               <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              
+
               {/* Content */}
               <div className="relative p-5">
                 {/* Top Section */}
@@ -237,31 +231,35 @@ const MentorshipsPage = () => {
                 {/* Bottom Section */}
                 <div className="flex items-center justify-between pt-3 border-t border-gray/10">
                   <div className="flex items-center gap-2">
-                    <svg className="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    <svg
+                      className="w-3.5 h-3.5 text-gray-400"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth="1.5"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
                     </svg>
                     <span className="text-xs text-gray-500">
                       {mentorship.duration}
                     </span>
                   </div>
-                  {hasApplied(mentorship) ? (
+                  {mentorship.currentApplicants >= mentorship.maxApplicants ? (
                     <button
                       disabled
                       className="text-xs px-3 py-1.5 rounded-full bg-gray-50 text-gray-400 border border-gray-200 flex items-center gap-1.5"
                     >
-                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M5 13l4 4L19 7" />
-                      </svg>
-                      Applied
+                      Closed
                     </button>
                   ) : (
                     <button
                       onClick={() => handleApply(mentorship._id)}
                       className="text-xs px-3 py-1.5 rounded-full bg-primary/5 text-primary border border-primary/20 hover:bg-primary hover:text-white transition-all flex items-center gap-1.5 group-hover:shadow-sm"
                     >
-                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-                      </svg>
                       Apply
                     </button>
                   )}
@@ -291,9 +289,6 @@ const MentorshipsPage = () => {
             }}
             className="text-xs text-primary hover:text-primary/80 transition-colors flex items-center gap-1.5"
           >
-            <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-            </svg>
             Clear filters
           </button>
         </div>
