@@ -52,9 +52,9 @@ const JobCard = ({
             {company || "Company's Name"}
           </h1>
           <img
-            src={avatar || fr}
+            src={avatar || fr} // Use the avatar passed from the parent or fallback to placeholder
             alt="avatar"
-            className="rounded-full w-[43px] h-[43px] ring-2 ring-black/20 "
+            className="rounded-full w-[43px] h-[43px] object-cover ring-2 ring-black/20 "
           />
         </div>
         <div className="flex sm:flex-col md:flex-row o:flex-row items-start md:items-center justify-between md:gap-4  text-clampSm">

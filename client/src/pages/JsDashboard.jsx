@@ -227,7 +227,7 @@ const JsDashboard = () => {
                 `${job.postedBy.firstname} ${job.postedBy.lastname}` ||
                 "NaN"
               }
-              avatar={job.postedBy.avatar}
+              avatar={job.postedBy.avatar || null} // Use the avatar directly from the API response
               location={job.location}
               tags={job.tags}
               type={job.type}

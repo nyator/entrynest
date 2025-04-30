@@ -168,7 +168,16 @@ export const getEmployerById = async (req, res) => {
         .json({ success: false, message: "Employer not found" });
     }
 
-    res.status(200).json({ success: true, employer, jobs });
+    res.status(200).json({
+      success: true,
+      employer: {
+        ...employer._doc,
+        avatar: employer.avatar
+          ? `${process.env.API_URL}${employer.avatar}`
+          : null, // Ensure avatar URL is included
+      },
+      jobs,
+    });
   } catch (error) {
     console.error("Error fetching employer:", error);
     res.status(500).json({

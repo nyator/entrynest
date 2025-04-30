@@ -76,14 +76,24 @@ export const createJob = async (req, res) => {
 
 export const getJobs = async (req, res) => {
   try {
-    const jobs = await Job.find().populate("postedBy", "firstname lastname");
+    const jobs = await Job.find().populate("postedBy", "firstname lastname avatar");
+
+    const jobsWithFullAvatarUrl = jobs.map((job) => ({
+      ...job._doc,
+      postedBy: {
+        ...job.postedBy._doc,
+        avatar: job.postedBy.avatar
+          ? `${process.env.API_URL}${job.postedBy.avatar}` // Ensure full URL
+          : null,
+      },
+    }));
+
     res.status(200).json({
       success: true,
-      jobs,
+      jobs: jobsWithFullAvatarUrl,
     });
   } catch (error) {
     console.error("Error fetching jobs:", error);
-    console.error("Error details:", error);
     res.status(500).json({
       success: false,
       message: "Failed to fetch jobs",
