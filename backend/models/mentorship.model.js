@@ -33,6 +33,10 @@ const mentorshipSchema = new mongoose.Schema(
     },
     applicants: [
       {
+        _id: {
+          type: mongoose.Schema.Types.ObjectId,
+          auto: true, // Ensure each applicant has a unique _id
+        },
         user: {
           type: mongoose.Schema.Types.ObjectId,
           ref: "User",

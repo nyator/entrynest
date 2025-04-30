@@ -1,6 +1,10 @@
 import { Mentorship } from "../models/mentorship.model.js";
 import { User } from "../models/user.model.js";
-import { sendNewPostingNotification, sendMentorshipApprovedEmail, sendMentorshipDeclinedEmail } from "../utils/emailService.js";
+import {
+  sendNewPostingNotification,
+  sendMentorshipApprovedEmail,
+  sendMentorshipDeclinedEmail,
+} from "../utils/emailService.js";
 
 export const createMentorship = async (req, res) => {
   const { title, description, skillsRequired, duration, maxApplicants } =
@@ -24,21 +28,20 @@ export const createMentorship = async (req, res) => {
 
     for (const jobseeker of jobseekers) {
       try {
-        await sendNewPostingNotification(
-          jobseeker.email,
-          jobseeker.firstname,
-          {
-            type: "Mentorship",
-            title: mentorship.title,
-            companyName: "Mentorship Program", // Since mentorships don't have company names
-            location: "Remote", // Default to remote since mentorships are typically remote
-            jobType: mentorship.duration,
-            salaryRange: "", // Mentorships don't have salary ranges
-            postingUrl
-          }
-        );
+        await sendNewPostingNotification(jobseeker.email, jobseeker.firstname, {
+          type: "Mentorship",
+          title: mentorship.title,
+          companyName: "Mentorship Program", // Since mentorships don't have company names
+          location: "Remote", // Default to remote since mentorships are typically remote
+          jobType: mentorship.duration,
+          salaryRange: "", // Mentorships don't have salary ranges
+          postingUrl,
+        });
       } catch (error) {
-        console.error(`Failed to send notification to ${jobseeker.email}:`, error);
+        console.error(
+          `Failed to send notification to ${jobseeker.email}:`,
+          error
+        );
         // Continue with other notifications even if one fails
       }
     }
@@ -182,7 +185,10 @@ export const getMentorshipApplicants = async (req, res) => {
       applicants: applicantsWithUserDetails,
     });
   } catch (error) {
-    console.error("Error fetching mentorship applicants:", error.stack || error);
+    console.error(
+      "Error fetching mentorship applicants:",
+      error.stack || error
+    );
     res.status(500).json({ message: "Error fetching mentorship applicants" });
   }
 };
@@ -212,7 +218,9 @@ export const getAllMentorshipApplicants = async (req, res) => {
     res.status(200).json({ success: true, applicants: allApplicants });
   } catch (error) {
     console.error("Error fetching all mentorship applicants:", error);
-    res.status(500).json({ success: false, message: "Failed to fetch applicants." });
+    res
+      .status(500)
+      .json({ success: false, message: "Failed to fetch applicants." });
   }
 };
 
@@ -232,7 +240,9 @@ export const getApprovedMentees = async (req, res) => {
 
     const mentees = mentorships.flatMap((mentorship) =>
       mentorship.applicants
-        .filter((applicant) => applicant.status === "approved" && applicant.user)
+        .filter(
+          (applicant) => applicant.status === "approved" && applicant.user
+        )
         .map((applicant) => ({
           _id: applicant.user._id,
           firstname: applicant.user.firstname,
@@ -257,69 +267,75 @@ export const getApprovedMentees = async (req, res) => {
   }
 };
 
-export const approveApplicant = async (req, res) => {
+const updateApplicantStatus = async (req, res, status) => {
   try {
     const { mentorshipId, applicantId } = req.params;
-    const mentorship = await Mentorship.findById(mentorshipId).populate("applicants.user");
+
+    console.log("Mentorship ID:", mentorshipId); // Debugging
+    console.log("Applicant ID:", applicantId); // Debugging
+
+    // Fetch the mentorship document
+    const mentorship = await Mentorship.findById(mentorshipId).populate(
+      "applicants.user"
+    );
 
     if (!mentorship) {
-      return res.status(404).json({ success: false, message: "Mentorship not found" });
+      console.log("Mentorship not found");
+      return res
+        .status(404)
+        .json({ success: false, message: "Mentorship not found" });
     }
 
-    const applicant = mentorship.applicants.id(applicantId);
+    // Ensure the logged-in user is the mentor of the mentorship
+    if (mentorship.mentor.toString() !== req.userId) {
+      console.log("Unauthorized action by user:", req.userId);
+      return res
+        .status(403)
+        .json({ success: false, message: "Unauthorized action" });
+    }
+
+    console.log(
+      "Fetched Mentorship Applicants:",
+      mentorship.applicants.map((app) => ({
+        applicantId: app._id.toString(),
+        userId: app.user._id.toString(),
+      }))
+    ); // Debugging
+
+    // Find the applicant by their `_id` or `user` field
+    const applicant = mentorship.applicants.find(
+      (applicant) =>
+        applicant._id.toString() === applicantId ||
+        applicant.user._id.toString() === applicantId
+    );
+
     if (!applicant) {
-      return res.status(404).json({ success: false, message: "Applicant not found" });
+      console.log("Applicant not found in mentorship");
+      return res
+        .status(404)
+        .json({ success: false, message: "Applicant not found" });
     }
 
-    applicant.status = "approved";
+    // Update the applicant's status
+    applicant.status = status;
     await mentorship.save();
 
-    // Send approval email
-    if (applicant.user) {
-      await sendMentorshipApprovedEmail(applicant.user.email, applicant.user.firstname, {
-        title: mentorship.title,
-        mentorshipUrl: `${process.env.FRONTEND_URL}/mentorships/${mentorshipId}`,
-      });
-    }
-
-    res.status(200).json({ success: true, message: "Applicant approved successfully" });
+    console.log(`Applicant status updated to ${status}`);
+    res
+      .status(200)
+      .json({ success: true, message: `Applicant ${status} successfully` });
   } catch (error) {
-    console.error("Error approving applicant:", error);
-    res.status(500).json({ success: false, message: "Failed to approve applicant" });
+    console.error(`Error updating applicant status to ${status}:`, error);
+    res
+      .status(500)
+      .json({ success: false, message: `Failed to ${status} applicant` });
   }
 };
 
-export const declineApplicant = async (req, res) => {
-  try {
-    const { mentorshipId, applicantId } = req.params;
-    const mentorship = await Mentorship.findById(mentorshipId).populate("applicants.user");
-
-    if (!mentorship) {
-      return res.status(404).json({ success: false, message: "Mentorship not found" });
-    }
-
-    const applicant = mentorship.applicants.id(applicantId);
-    if (!applicant) {
-      return res.status(404).json({ success: false, message: "Applicant not found" });
-    }
-
-    applicant.status = "declined";
-    await mentorship.save();
-
-    // Send decline email
-    if (applicant.user) {
-      await sendMentorshipDeclinedEmail(applicant.user.email, applicant.user.firstname, {
-        title: mentorship.title,
-        mentorshipsUrl: `${process.env.FRONTEND_URL}/mentorships`,
-      });
-    }
-
-    res.status(200).json({ success: true, message: "Applicant declined successfully" });
-  } catch (error) {
-    console.error("Error declining applicant:", error);
-    res.status(500).json({ success: false, message: "Failed to decline applicant" });
-  }
-};
+export const approveApplicant = (req, res) =>
+  updateApplicantStatus(req, res, "approved");
+export const declineApplicant = (req, res) =>
+  updateApplicantStatus(req, res, "declined");
 
 export const deleteMentorship = async (req, res) => {
   const { mentorshipId } = req.params;
@@ -336,12 +352,10 @@ export const deleteMentorship = async (req, res) => {
 
     // Check if the logged-in user is the mentor who created the mentorship
     if (mentorship.mentor.toString() !== userId) {
-      return res
-        .status(403)
-        .json({
-          success: false,
-          message: "You are not authorized to delete this mentorship.",
-        });
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized to delete this mentorship.",
+      });
     }
 
     await mentorship.deleteOne();
@@ -377,12 +391,10 @@ export const updateMentorship = async (req, res) => {
 
     // Check if the logged-in user is the mentor who created the mentorship
     if (!mentorship.mentor || mentorship.mentor.toString() !== userId) {
-      return res
-        .status(403)
-        .json({
-          success: false,
-          message: "You are not authorized to update this mentorship.",
-        });
+      return res.status(403).json({
+        success: false,
+        message: "You are not authorized to update this mentorship.",
+      });
     }
 
     // Update the mentorship details

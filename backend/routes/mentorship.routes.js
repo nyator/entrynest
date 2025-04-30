@@ -26,7 +26,7 @@ router.post("/:mentorshipId/apply", verifyToken, applyToMentorship); // Protect 
 router.put("/:mentorshipId", verifyToken, updateMentorship);
 router.delete("/:mentorshipId", verifyToken, deleteMentorship); // Protect the route with authentication middleware
 
-router.post("/:mentorshipId/approve/:applicantId", verifyToken, approveApplicant);
-router.post("/:mentorshipId/decline/:applicantId", verifyToken, declineApplicant);
+router.post("/:mentorshipId/approve/:applicantId", verifyToken, approveApplicant); // Approve applicant route
+router.post("/:mentorshipId/decline/:applicantId", verifyToken, declineApplicant); // Decline applicant route
 
 export default router;

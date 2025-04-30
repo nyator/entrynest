@@ -7,6 +7,8 @@ import { IoIosCloseCircle } from "react-icons/io";
 import CustomDropdown from "../components/CustomDropdown";
 import { IoMdPricetags } from "react-icons/io";
 import { skillsList } from "../constants/index";
+import { MdPendingActions } from "react-icons/md";
+import { MdPeople, MdEventNote, MdWork, MdPostAdd } from "react-icons/md";
 
 const MentorDashboard = () => {
   const [loading, setLoading] = useState(false);
@@ -22,7 +24,7 @@ const MentorDashboard = () => {
     endTime: "",
     message: "",
   });
-  const [activeTab, setActiveTab] = useState("applicants");
+  const [activeTab, setActiveTab] = useState("myMentees");
   const [showApplicants, setShowApplicants] = useState(null);
   const [editingMentorship, setEditingMentorship] = useState(null);
   const [selectedSkills, setSelectedSkills] = useState([]);
@@ -73,7 +75,10 @@ const MentorDashboard = () => {
         }
       );
       console.log("Applicants API Response:", response.data); // Log the response
-      setApplicants(response.data.applicants);
+      const filteredApplicants = response.data.applicants.filter(
+        (applicant) => applicant.status !== "approved" // Exclude approved applicants
+      );
+      setApplicants(filteredApplicants);
     } catch (error) {
       console.error("Error fetching applicants:", error);
       toast.error("Failed to fetch mentorship applicants");
@@ -85,10 +90,29 @@ const MentorDashboard = () => {
       const response = await axios.get(`${API_URL}/api/mentorships/mentees`, {
         withCredentials: true,
       });
-      setMentees(response.data.mentees);
+
+      console.log("Mentees API Response:", response.data); // Debugging log to verify API response structure
+
+      if (response.data && response.data.mentees) {
+        const menteesWithMentorshipDetails = response.data.mentees.map(
+          (mentee) => ({
+            ...mentee,
+            mentorshipTitle: mentee.mentorship?.title || "Unknown", // Ensure mentorship title is extracted
+            mentorshipDescription:
+              mentee.mentorship?.description || "No description provided",
+          })
+        );
+
+        setMentees(menteesWithMentorshipDetails);
+      } else {
+        console.error("Unexpected API response structure:", response.data);
+        toast.error(
+          "Failed to fetch mentees due to unexpected response structure."
+        );
+      }
     } catch (error) {
       console.error("Error fetching mentees:", error);
-      toast.error("Failed to fetch approved applicants");
+      toast.error("Failed to fetch approved mentees");
     }
   };
 
@@ -97,10 +121,25 @@ const MentorDashboard = () => {
       const response = await axios.get(`${API_URL}/api/mentorships/sessions`, {
         withCredentials: true,
       });
-      setSessions(response.data.sessions);
+
+      console.log("Sessions API Response:", response.data); // Debugging log to verify API response structure
+
+      if (response.data && response.data.sessions) {
+        setSessions(response.data.sessions);
+      } else {
+        console.error("Unexpected API response structure:", response.data);
+        toast.error("Failed to fetch sessions due to unexpected response structure.");
+      }
     } catch (error) {
-      console.error("Error fetching sessions:", error);
-      toast.error("Failed to fetch sessions");
+      console.error("Error fetching sessions:", error); // Log the error for debugging
+      if (error.response) {
+        console.error("Server Response:", error.response.data); // Log server response if available
+        toast.error(
+          error.response.data.message || "Failed to fetch sessions. Please try again later."
+        );
+      } else {
+        toast.error("Failed to fetch sessions. Please check your network connection.");
+      }
     }
   };
 
@@ -128,17 +167,12 @@ const MentorDashboard = () => {
   const handleApproveApplicant = async (mentorshipId, applicantId) => {
     try {
       const url = `${API_URL}/api/mentorships/${mentorshipId}/approve/${applicantId}`;
-      console.log(`Approving applicant with URL: ${url}`); // Log the URL
-  
       const response = await axios.post(url, {}, { withCredentials: true });
-      console.log("Approve API Response:", response.data); // Log the response
-  
+
       if (response.data.success) {
         toast.success("Applicant approved successfully!");
         fetchApplicants();
         fetchMentees();
-      } else {
-        toast.error("Failed to approve applicant.");
       }
     } catch (error) {
       console.error("Error approving applicant:", error);
@@ -147,24 +181,15 @@ const MentorDashboard = () => {
       );
     }
   };
-  
+
   const handleDeclineApplicant = async (mentorshipId, applicantId) => {
     try {
-      console.log(`Declining applicant ${applicantId} for mentorship ${mentorshipId}`); // Debug log
-      const response = await axios.post(
-        `${API_URL}/api/mentorships/${mentorshipId}/decline/${applicantId}`,
-        {},
-        {
-          withCredentials: true,
-        }
-      );
-      console.log("Decline API Response:", response.data); // Log the response
-  
+      const url = `${API_URL}/api/mentorships/${mentorshipId}/decline/${applicantId}`;
+      const response = await axios.post(url, {}, { withCredentials: true });
+
       if (response.data.success) {
         toast.success("Applicant declined successfully!");
         fetchApplicants();
-      } else {
-        toast.error("Failed to decline applicant.");
       }
     } catch (error) {
       console.error("Error declining applicant:", error);
@@ -343,6 +368,7 @@ const MentorDashboard = () => {
       {/* Sidebar */}
       <div className="overflow-x-auto pt-5 w-full md:w-auto md:bg-gray-200 md:h-fit md:p-4 md:rounded-2xl md:bg-gray/10 md:my-4 md:font-SatoshiMedium md:border-gray/20 md:border flex-shrink-0">
         <ul className="w-full flex text-nowrap bg-gray/10 flex-row md:flex-col gap-4">
+          {/* My Mentees Tab */}
           <li
             className={`cursor-pointer px-6 py-2 inline-flex items-center gap-2 relative ${
               activeTab === "myMentees"
@@ -351,8 +377,11 @@ const MentorDashboard = () => {
             }`}
             onClick={() => setActiveTab("myMentees")}
           >
+            <MdPeople className="text-blue-500" />
             My Mentees
           </li>
+
+          {/* Applicants Tab */}
           <li
             className={`cursor-pointer px-6 py-2 inline-flex items-center gap-2 relative ${
               activeTab === "applicants"
@@ -361,8 +390,16 @@ const MentorDashboard = () => {
             }`}
             onClick={() => setActiveTab("applicants")}
           >
+            <MdPendingActions className="text-yellow-500" />
             Applicants
+            {applicants.length > 0 && (
+              <span className="rounded-full p-2 bg-purple-300 border border-primaryStroke h-6 w-6 text-breadcrumb absolute -top-2 -right-2 flex justify-center items-center">
+                {applicants.length}
+              </span>
+            )}
           </li>
+
+          {/* Sessions Tab */}
           <li
             className={`cursor-pointer px-6 py-2 inline-flex items-center gap-2 relative ${
               activeTab === "sessions"
@@ -371,8 +408,11 @@ const MentorDashboard = () => {
             }`}
             onClick={() => setActiveTab("sessions")}
           >
+            <MdEventNote className="text-green-500" />
             Sessions
           </li>
+
+          {/* Open Mentorships Tab */}
           <li
             className={`cursor-pointer px-6 py-2 inline-flex items-center gap-2 relative ${
               activeTab === "openMentorships"
@@ -381,8 +421,11 @@ const MentorDashboard = () => {
             }`}
             onClick={() => setActiveTab("openMentorships")}
           >
+            <MdWork className="text-purple-500" />
             Open Mentorships
           </li>
+
+          {/* Post Mentorship Tab */}
           <li
             className={`cursor-pointer px-6 py-2 inline-flex items-center gap-2 relative ${
               activeTab === "postMentorship"
@@ -391,6 +434,7 @@ const MentorDashboard = () => {
             }`}
             onClick={() => setActiveTab("postMentorship")}
           >
+            <MdPostAdd className="text-white" />
             Post Mentorship
           </li>
         </ul>
@@ -424,12 +468,21 @@ const MentorDashboard = () => {
                           <strong>Message:</strong>{" "}
                           {mentee.message || "No message provided"}
                         </p>
+                        <p>
+                          <strong>Mentorship Title:</strong>{" "}
+                          {mentee.mentorshipTitle}
+                        </p>
+                        <p>
+                          <strong>Description:</strong>{" "}
+                          {mentee.mentorshipDescription}
+                        </p>
                       </li>
                     ))}
                   </ul>
                 )}
               </div>
             )}
+
             {activeTab === "applicants" && (
               <div className="w-full h-full bg-gray/10 p-4 rounded-2xl border border-gray/20">
                 <h2 className="text-xl font-bold mb-4">
@@ -492,6 +545,7 @@ const MentorDashboard = () => {
                 )}
               </div>
             )}
+            
             {activeTab === "sessions" && (
               <div className="w-full h-full bg-gray/10 p-4 rounded-2xl border border-gray/20">
                 <h2 className="text-xl font-bold mb-4">Create Session</h2>
@@ -617,6 +671,7 @@ const MentorDashboard = () => {
                 </ul>
               </div>
             )}
+
             {activeTab === "openMentorships" && (
               <div className="w-full h-full bg-gray/10 p-4 rounded-2xl border border-gray/20">
                 <h3 className="text-lg font-bold mb-4">

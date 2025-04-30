@@ -26,10 +26,16 @@ const MentorshipApplicants = () => {
   const [message, setMessage] = useState(""); // Ensure message state is defined
 
   const handleClickOutside = (event) => {
-    if (filterDropdownRef.current && !filterDropdownRef.current.contains(event.target)) {
+    if (
+      filterDropdownRef.current &&
+      !filterDropdownRef.current.contains(event.target)
+    ) {
       setDropdownOpen(false);
     }
-    if (sortDropdownRef.current && !sortDropdownRef.current.contains(event.target)) {
+    if (
+      sortDropdownRef.current &&
+      !sortDropdownRef.current.contains(event.target)
+    ) {
       setSortDropdownOpen(false);
     }
   };
@@ -72,16 +78,19 @@ const MentorshipApplicants = () => {
   const handleSortOrderChange = (order) => {
     setSortOrder(order);
     setSortDropdownOpen(false);
+    setCurrentPage(1); // Reset to the first page when sort order changes
   };
 
-  const handleApproveApplicant = async (applicantId, mentorshipId) => {
+  const handleApplicantAction = async (applicantId, mentorshipId, action) => {
+    console.log(`Performing ${action} action for applicant ID:`, applicantId); // Debugging
+    console.log(`Mentorship ID:`, mentorshipId); // Debugging
+
     try {
-      const url = `${import.meta.env.VITE_API_URL}/api/mentorships/${mentorshipId}/approve/${applicantId}`;
+      const url = `${import.meta.env.VITE_API_URL}/api/mentorships/${mentorshipId}/${action}/${applicantId}`;
       const response = await axios.post(url, {}, { withCredentials: true });
 
       if (response.data.success) {
-        toast.success("Applicant approved successfully");
-        // Refresh applicants list
+        toast.success(`Applicant ${action} successfully`);
         const refreshedApplicants = await axios.get(
           `${import.meta.env.VITE_API_URL}/api/mentorships/applicants/all`,
           { withCredentials: true }
@@ -89,29 +98,19 @@ const MentorshipApplicants = () => {
         setApplicants(refreshedApplicants.data.applicants);
       }
     } catch (error) {
-      console.error("Error approving applicant:", error);
-      toast.error(error.response?.data?.message || "Failed to approve applicant.");
+      console.error(`Error ${action} applicant:`, error);
+      toast.error(error.response?.data?.message || `Failed to ${action} applicant.`);
     }
   };
 
-  const handleDeclineApplicant = async (applicantId, mentorshipId) => {
-    try {
-      const url = `${import.meta.env.VITE_API_URL}/api/mentorships/${mentorshipId}/decline/${applicantId}`;
-      const response = await axios.post(url, {}, { withCredentials: true });
+  // Usage for approving an applicant
+  const handleApproveApplicant = (applicantId, mentorshipId) => {
+    handleApplicantAction(applicantId, mentorshipId, "approve");
+  };
 
-      if (response.data.success) {
-        toast.success("Applicant declined successfully");
-        // Refresh applicants list
-        const refreshedApplicants = await axios.get(
-          `${import.meta.env.VITE_API_URL}/api/mentorships/applicants/all`,
-          { withCredentials: true }
-        );
-        setApplicants(refreshedApplicants.data.applicants);
-      }
-    } catch (error) {
-      console.error("Error declining applicant:", error);
-      toast.error(error.response?.data?.message || "Failed to decline applicant.");
-    }
+  // Usage for declining an applicant
+  const handleDeclineApplicant = (applicantId, mentorshipId) => {
+    handleApplicantAction(applicantId, mentorshipId, "decline");
   };
 
   const filteredApplicants = applicants.filter((applicant) => {
@@ -168,7 +167,8 @@ const MentorshipApplicants = () => {
               >
                 {filterStatus === "all"
                   ? "All"
-                  : filterStatus.charAt(0).toUpperCase() + filterStatus.slice(1)}
+                  : filterStatus.charAt(0).toUpperCase() +
+                    filterStatus.slice(1)}
                 <MdOutlineArrowDropDown className="size-5" />
               </button>
               {dropdownOpen && (
@@ -275,21 +275,33 @@ const MentorshipApplicants = () => {
                   <strong>Mentorship:</strong> {applicant.mentorshipTitle}
                 </p>
                 <p className="mb-2">
-                  <strong>Skills:</strong> {applicant.skills?.join(", ") || "No skills listed"}
+                  <strong>Skills:</strong>{" "}
+                  {applicant.skills?.join(", ") || "No skills listed"}
                 </p>
                 <p className="mb-2">
-                  <strong>Biography:</strong> {applicant.biography || "No biography provided"}
+                  <strong>Biography:</strong>{" "}
+                  {applicant.biography || "No biography provided"}
                 </p>
                 {applicant.status === "pending" && (
                   <div className="flex flex-col md:flex-row gap-4 items-end md:items-center absolute -top-2 md:top-0 right-0 p-4">
                     <button
-                      onClick={() => handleApproveApplicant(applicant._id, applicant.mentorshipId)}
+                      onClick={() =>
+                        handleApproveApplicant(
+                          applicant._id,
+                          applicant.mentorshipId
+                        )
+                      }
                       className="px-2 py-1 sm:px-4 md:py-2 bg-green-500 text-white rounded border border-green-600 hover:bg-green-600 transition-colors"
                     >
                       Approve
                     </button>
                     <button
-                      onClick={() => handleDeclineApplicant(applicant._id, applicant.mentorshipId)}
+                      onClick={() =>
+                        handleDeclineApplicant(
+                          applicant._id,
+                          applicant.mentorshipId
+                        )
+                      }
                       className="px-2 py-1 sm:px-4 md:py-2 bg-red-500 text-white rounded border border-red-600 hover:bg-red-600 transition-colors"
                     >
                       Decline
@@ -302,7 +314,11 @@ const MentorshipApplicants = () => {
             <div className="flex justify-center items-center mt-4 space-x-2 absolute bottom-3 left-1/2 transform -translate-x-1/2">
               <div className="border-t border-gray w-full h-1 absolute -top-5"></div>
               {Array.from(
-                { length: Math.ceil(sortedApplicants.length / applicantsPerPage) },
+                {
+                  length: Math.ceil(
+                    sortedApplicants.length / applicantsPerPage
+                  ),
+                },
                 (_, index) => (
                   <button
                     key={index + 1}
