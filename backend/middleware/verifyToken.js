@@ -7,6 +7,7 @@ export const verifyToken = (req, res, next) => {
   
   // If no token in header, try to get from cookie
   if (!token) {
+    console.error("No token provided in Authorization header or cookies.");
     const cookieToken = req.cookies.token;
     if (!cookieToken) {
       return res.status(401).json({ 
@@ -19,13 +20,15 @@ export const verifyToken = (req, res, next) => {
     req.token = token;
   }
 
+  console.log("Token received:", req.token); // Log the token for debugging
+
   // Validate token format only if a token is present
   const isValidTokenFormat = (token) => {
     return typeof token === 'string' && token.split('.').length === 3;
   };
 
   if (req.token && !isValidTokenFormat(req.token)) {
-    console.error("Malformed token detected.");
+    console.error("Malformed token detected:", req.token); // Log malformed token
     return res.status(400).json({ 
       success: false, 
       message: "Bad Request - Malformed token" 
@@ -43,6 +46,7 @@ export const verifyToken = (req, res, next) => {
       });
     }
 
+    console.log("Token successfully decoded:", decoded); // Log decoded token
     req.userId = decoded.userId;
     next();
   } catch (error) {

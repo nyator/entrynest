@@ -79,33 +79,37 @@ const AdminDashboard = () => {
     const fetchApplications = async () => {
       setTabLoading(true);
       try {
+        const token = localStorage.getItem("token"); // Retrieve token from localStorage
+        if (!token) {
+          console.warn("No token found in localStorage. Skipping fetchApplications.");
+          setApplications([]); // Set applications to an empty array
+          return;
+        }
+
         const response = await axios.get("/jobs/applications/all", {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            Authorization: `Bearer ${token}`, // Ensure token is included
           },
           withCredentials: true,
         });
 
-        // Group applications by job and applicant, ignoring status
-        const groupedApplications = response.data.applications.reduce(
-          (acc, app) => {
-            const key = `${app.jobId}-${app.user._id}`; // Unique key based on job and applicant
-            if (!acc[key]) {
-              acc[key] = {
-                jobTitle: app.jobTitle,
-                applicantName: `${app.user.firstname} ${app.user.lastname}`,
-                cvUrl: app.cvUrl,
-                message: app.message,
-              };
-            }
-            return acc;
-          },
-          {}
-        );
+        // Group applications by job and applicant
+        const groupedApplications = response.data.applications.map((app) => ({
+          jobTitle: app.jobTitle,
+          applicantName: `${app.applicantName} ${app.applicantLastname}`,
+          cvUrl: app.cvUrl,
+          message: app.message,
+        }));
 
-        setApplications(Object.values(groupedApplications)); // Convert grouped object to array
+        setApplications(groupedApplications);
       } catch (error) {
-        toast.error("Failed to fetch applications");
+        if (error.response?.status === 404) {
+          console.warn("No applications found.");
+          setApplications([]); // Set applications to an empty array if none are found
+        } else {
+          console.error("Error fetching applications:", error.response?.data || error.message);
+          toast.error(error.response?.data?.message || "Failed to fetch applications");
+        }
       } finally {
         setTabLoading(false);
       }
@@ -589,7 +593,7 @@ const AdminDashboard = () => {
                   <h2 className="text-lg font-SatoshiMedium mb-2">
                     Recent Employers / Mentor
                   </h2>
-                  <ul className="space-y-4 grid grid-cols-1 sm:grid-cols-2 gap-4 justify-start">
+                  <ul className="grid grid-cols-1 sm:grid-cols-2 gap-4 justify-start">
                     {recentEmployers.slice(0, 5).map((employer) => (
                       <li
                         key={employer._id}

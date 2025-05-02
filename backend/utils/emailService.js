@@ -75,31 +75,47 @@ export const sendPasswordResetSuccessEmail = async (email, firstname) => {
 
 export const sendNewPostingNotification = async (email, firstname, postingData) => {
   try {
-    const { type, title, companyName, location, jobType, salaryRange, postingUrl } = postingData;
-    
-    // Format salary range for the email template
-    const salaryRangeHtml = salaryRange 
-      ? `<p><strong>Salary Range:</strong> ${salaryRange}</p>`
-      : '';
+    // Log postingData for debugging
+    console.log("Posting data received:", postingData);
 
+    // Destructure and validate postingData
+    const {
+      type = "Job", // Default to "Job" if type is missing
+      title = "Untitled",
+      companyName = "Unknown Company",
+      location = "Not specified",
+      jobType = "Not specified",
+      salaryRange = null,
+      postingUrl = "#",
+    } = postingData;
+
+    // Format salary range for the email template
+    const formattedSalaryRange = salaryRange
+      ? `<p><strong>Salary Range:</strong> ${salaryRange}</p>`
+      : "";
+
+    // Replace placeholders in the email template
     const html = NEW_POSTING_NOTIFICATION_TEMPLATE
-      .replace('{type}', type)
-      .replace('{firstname}', firstname)
-      .replace('{title}', title)
-      .replace('{companyName}', companyName)
-      .replace('{location}', location)
-      .replace('{jobType}', jobType)
-      .replace('{salaryRange}', salaryRangeHtml)
-      .replace('{postingUrl}', postingUrl);
+      .replace(/{type}/g, type) // Use global replacement for all occurrences
+      .replace("{firstname}", firstname)
+      .replace("{title}", title)
+      .replace("{companyName}", companyName)
+      .replace("{location}", location)
+      .replace("{jobType}", jobType)
+      .replace("{salaryRange}", formattedSalaryRange)
+      .replace("{postingUrl}", postingUrl);
+
+    // Replace placeholders in the plain text version
+    const text = `Hello ${firstname},\n\nA new ${type} opportunity has been posted:\n\nTitle: ${title}\nCompany: ${companyName}\nLocation: ${location}\nType: ${jobType}\n${salaryRange ? `Salary Range: ${salaryRange}\n` : ""}\nView the full details here: ${postingUrl}\n\nBest regards,\nentrynest Team`;
 
     await sendEmail({
       to: email,
-      subject: `New ${type} Opportunity: ${title}`,
+      subject: `📮 New ${type} Opportunity: ${title}`,
       html,
-      text: `Hello ${firstname},\n\nA new ${type} opportunity has been posted:\n\nTitle: ${title}\nCompany: ${companyName}\nLocation: ${location}\nType: ${jobType}\n${salaryRange ? `Salary Range: ${salaryRange}\n` : ''}\nView the full details here: ${postingUrl}\n\nBest regards,\nentrynest Team`
+      text,
     });
   } catch (error) {
-    console.error('Error sending posting notification email:', error);
+    console.error("Error sending posting notification email:", error);
     throw new Error(`Error sending posting notification email: ${error.message}`);
   }
 };

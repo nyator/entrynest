@@ -34,7 +34,7 @@ export const createJob = async (req, res) => {
 
     // Send notifications to jobseekers
     const jobseekers = await User.find({ role: "jobseeker" });
-    const postingUrl = `${process.env.FRONTEND_URL}/jobs/${job._id}`; // Assuming you have a frontend URL in your env
+    const postingUrl = `${process.env.CLIENT_URL}/jobs/${job._id}`; // Assuming you have a frontend URL in your env
 
     for (const jobseeker of jobseekers) {
       try {

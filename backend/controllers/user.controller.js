@@ -287,3 +287,55 @@ export const getMentors = async (req, res) => {
     });
   }
 };
+
+export const getAllApplications = async (req, res) => {
+  try {
+    console.log("Fetching all job applications for userId:", req.userId); // Debugging log
+    const applications = await Job.aggregate([
+      { $unwind: "$applications" },
+      {
+        $lookup: {
+          from: "users",
+          localField: "applications.user",
+          foreignField: "_id",
+          as: "applicantDetails",
+        },
+      },
+      {
+        $project: {
+          jobTitle: "$title",
+          company: "$company",
+          applicantName: {
+            $arrayElemAt: ["$applicantDetails.firstname", 0],
+          },
+          applicantLastname: {
+            $arrayElemAt: ["$applicantDetails.lastname", 0],
+          },
+          cvUrl: "$applications.cvUrl",
+          message: "$applications.message",
+        },
+      },
+    ]);
+
+    if (!applications || applications.length === 0) {
+      console.warn("No applications found.");
+      return res.status(404).json({
+        success: false,
+        message: "No applications found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      applications,
+    });
+  } catch (error) {
+    console.error("Error fetching job applications:", error.message);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch job applications",
+      errorDetails:
+        process.env.NODE_ENV === "development" ? error.stack : undefined,
+    });
+  }
+};

@@ -34,6 +34,7 @@ const PostJob = () => {
   const [qualification, setQualification] = useState("");
   const [responsibility, setResponsibility] = useState("");
   const [salaryRange, setSalaryRange] = useState("");
+  const [isLoading, setIsLoading] = useState(false); // State for loading animation
   const navigate = useNavigate();
 
   const handleAddTag = (tag) => {
@@ -48,6 +49,7 @@ const PostJob = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsLoading(true); // Start loading animation
     try {
       await axios.post(
         "http://localhost:3000/api/jobs",
@@ -78,10 +80,11 @@ const PostJob = () => {
       setQualification("");
       setResponsibility("");
       setSalaryRange("");
-      // navigate(-1);
     } catch (error) {
       console.error("Error posting job:", error);
       toast.error("Failed to post job.");
+    } finally {
+      setIsLoading(false); // Stop loading animation
     }
   };
 
@@ -243,14 +246,38 @@ const PostJob = () => {
         <div className="flex space-x-3">
           <button
             type="submit"
-            className={`${button} text-sm font-SatoshiMedium`}
+            className={`${button} text-sm font-SatoshiMedium flex items-center`}
+            disabled={isLoading} // Disable button while loading
           >
-            Post Job
+            {isLoading ? (
+              <svg
+                className="animate-spin h-5 w-5 mr-2 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8v8H4z"
+                ></path>
+              </svg>
+            ) : null}
+            {isLoading ? "Posting..." : "Post Job"}
           </button>
           <button
             type="button"
             className={`font-normal text-primary text-sm font-SatoshiMedium`}
             onClick={handleClear}
+            disabled={isLoading} // Disable clear button while loading
           >
             Clear
           </button>

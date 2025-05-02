@@ -17,7 +17,7 @@ const EmDashboard = () => {
   const [loading, setLoading] = useState(false);
   const [activeTab, setActiveTab] = useState("manageJobs");
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 3; // Unified items per page for jobs and applications
+  const itemsPerPage = 4; // Unified items per page for jobs and applications
   const [jobs, setJobs] = useState([]);
   const navigate = useNavigate();
   const [pendingApplicationsCount, setPendingApplicationsCount] = useState(0);
