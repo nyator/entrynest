@@ -19,6 +19,19 @@ export const verifyToken = (req, res, next) => {
     req.token = token;
   }
 
+  // Validate token format only if a token is present
+  const isValidTokenFormat = (token) => {
+    return typeof token === 'string' && token.split('.').length === 3;
+  };
+
+  if (req.token && !isValidTokenFormat(req.token)) {
+    console.error("Malformed token detected.");
+    return res.status(400).json({ 
+      success: false, 
+      message: "Bad Request - Malformed token" 
+    });
+  }
+
   try {
     const decoded = jwt.verify(req.token, process.env.JWT_SECRET);
 

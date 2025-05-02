@@ -56,7 +56,7 @@ function SignupPage() {
       toast.success(
         "Signup successful! Please check your email for verification. If you do not see it, please check your spam folder."
       );
-      navigate("/jobs"); // Redirect to jobs page after successful signup
+      navigate("/verify-email"); // Redirect to email verification page
     } catch (error) {
       console.error("Signup error:", error.response?.data?.message);
       const errorMessage =

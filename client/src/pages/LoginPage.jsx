@@ -157,7 +157,7 @@ function LoginPage() {
           </div>
         </div>
       </div>
-      <div
+      {/* <div
         className="fixed bottom-1 right-1 justify-center w-fit items-center rounded-l-xl rounded-se-xl bg-primary text-white px-4 py-2 cursor-pointer animate-bounce"
         onClick={handleAdminLogin}
       >
@@ -200,7 +200,7 @@ function LoginPage() {
             </button>
           </div>
         </div>
-      )}
+      )} */}
     </>
   );
 }
