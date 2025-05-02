@@ -145,6 +145,27 @@ const AdminDashboard = () => {
       }
     };
 
+    const fetchMentors = async () => {
+      setTabLoading(true);
+      try {
+        const response = await axios.get("/user/mentors", {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          withCredentials: true,
+        });
+        setMentors(response.data.mentors); // Set mentors data
+      } catch (error) {
+        console.error(
+          "Error fetching mentors:",
+          error.response?.data || error.message
+        );
+        toast.error("Failed to fetch mentors");
+      } finally {
+        setTabLoading(false);
+      }
+    };
+
     if (activeTab === "Employees") fetchEmployers();
     if (activeTab === "Jobs") fetchJobs();
     if (activeTab === "allApplications") fetchApplications();
@@ -153,6 +174,7 @@ const AdminDashboard = () => {
       fetchRecentEmployers();
     }
     if (activeTab === "Jobseekers") fetchJobseekers();
+    if (activeTab === "Mentors") fetchMentors(); // Fetch mentors when Mentors tab is active
   }, [activeTab]);
 
   const handleDelete = async (id) => {
@@ -197,7 +219,7 @@ const AdminDashboard = () => {
     {
       name: "Status",
       cell: (row) =>
-        row.verified ? (
+        row.isVerified ? (
           <span className={`${verified}`}>Verified</span>
         ) : (
           <span className={`${notVerified}`}>Not Verified</span>
@@ -239,7 +261,7 @@ const AdminDashboard = () => {
     {
       name: "Status",
       cell: (row) =>
-        row.verified ? (
+        row.isVerified ? (
           <span className={`${verified}`}>Verified</span>
         ) : (
           <span className={`${notVerified}`}>Not Verified</span>
@@ -357,6 +379,16 @@ const AdminDashboard = () => {
       sortable: true,
     },
     {
+      name: "Status",
+      cell: (row) =>
+        row.isVerified ? (
+          <span className={`${verified}`}>Verified</span>
+        ) : (
+          <span className={`${notVerified}`}>Not Verified</span>
+        ),
+      sortable: true,
+    },
+    {
       name: "Actions",
       cell: (row) => (
         <div className="flex gap-4 items-center">
@@ -432,15 +464,16 @@ const AdminDashboard = () => {
           </li>
           <li
             className={`cursor-pointer px-6 py-2 inline-flex items-center gap-2 ${
-              activeTab === "Jobs"
+              activeTab === "Jobseekers"
                 ? "bg-white rounded-lg transition-all ease-linear duration-150 border-gray/90 border"
                 : "hover:bg-white/50 rounded-lg transition-all ease-linear duration-150 border-gray/20 border"
             }`}
-            onClick={() => setActiveTab("Jobs")}
+            onClick={() => setActiveTab("Jobseekers")}
           >
-            <BsFilePost />
-            Jobs
+            <FaUsers />
+            Jobseekers
           </li>
+
           <li
             className={`cursor-pointer px-6 py-2 inline-flex items-center gap-2 ${
               activeTab === "allApplications"
@@ -454,14 +487,14 @@ const AdminDashboard = () => {
           </li>
           <li
             className={`cursor-pointer px-6 py-2 inline-flex items-center gap-2 ${
-              activeTab === "Jobseekers"
+              activeTab === "Jobs"
                 ? "bg-white rounded-lg transition-all ease-linear duration-150 border-gray/90 border"
                 : "hover:bg-white/50 rounded-lg transition-all ease-linear duration-150 border-gray/20 border"
             }`}
-            onClick={() => setActiveTab("Jobseekers")}
+            onClick={() => setActiveTab("Jobs")}
           >
-            <FaUsers />
-            Jobseekers
+            <BsFilePost />
+            Jobs
           </li>
           <li
             className={`cursor-pointer px-6 py-2 inline-flex items-center gap-2 ${

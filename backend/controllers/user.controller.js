@@ -269,3 +269,21 @@ export const getJobseekers = async (req, res) => {
     });
   }
 };
+
+export const getMentors = async (req, res) => {
+  try {
+    const mentors = await User.find({ role: "mentor" }).select("-password");
+    res.status(200).json({
+      success: true,
+      mentors,
+    });
+  } catch (error) {
+    console.error("Error fetching mentors:", error);
+    res.status(500).json({
+      success: false,
+      message: "Failed to fetch mentors",
+      errorDetails:
+        process.env.NODE_ENV === "development" ? error.stack : undefined,
+    });
+  }
+};
