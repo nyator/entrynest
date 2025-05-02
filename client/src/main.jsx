@@ -38,7 +38,6 @@ import MentorDashboard from "./pages/MentorDashboard.jsx";
 import MentorshipsPage from "./pages/MentorshipsPage.jsx";
 import EditMentorshipPage from "./pages/EditMentorshipPage";
 import MentorshipApplicants from "./pages/MentorshipApplicants";
-import ProfileSetupPage from "./pages/ProfileSetupPage";
 
 // Set the base URL for Axios
 const API_URL =
@@ -154,10 +153,7 @@ const router = createBrowserRouter([
         path: "/mentorship-applicants/:mentorshipId",
         element: <MentorshipApplicants />,
       },
-      {
-        path: "/profile-setup",
-        element: <ProfileSetupPage />,
-      },
+
     ],
   },
 ]);

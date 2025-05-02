@@ -9,6 +9,7 @@ import { IoMdPricetags } from "react-icons/io";
 import { skillsList } from "../constants/index";
 import { MdPendingActions } from "react-icons/md";
 import { MdPeople, MdEventNote, MdWork, MdPostAdd } from "react-icons/md";
+import { FaCircleXmark } from "react-icons/fa6";
 
 const MentorDashboard = () => {
   const [loading, setLoading] = useState(false);
@@ -121,7 +122,10 @@ const MentorDashboard = () => {
 
   const fetchSessions = async () => {
     try {
-      console.log("Fetching sessions from:", `${API_URL}/api/mentorships/sessions`);
+      console.log(
+        "Fetching sessions from:",
+        `${API_URL}/api/mentorships/sessions`
+      );
       const response = await axios.get(`${API_URL}/api/mentorships/sessions`, {
         withCredentials: true,
       });
@@ -132,17 +136,22 @@ const MentorDashboard = () => {
         setSessions(response.data.sessions);
       } else {
         console.error("Unexpected API response structure:", response.data);
-        toast.error("Failed to fetch sessions due to unexpected response structure.");
+        toast.error(
+          "Failed to fetch sessions due to unexpected response structure."
+        );
       }
     } catch (error) {
       console.error("Error fetching sessions:", error);
       if (error.response) {
         console.error("Server Response:", error.response.data);
         toast.error(
-          error.response.data.message || "Failed to fetch sessions. Please try again later."
+          error.response.data.message ||
+            "Failed to fetch sessions. Please try again later."
         );
       } else {
-        toast.error("Failed to fetch sessions. Please check your network connection.");
+        toast.error(
+          "Failed to fetch sessions. Please check your network connection."
+        );
       }
     }
   };
@@ -243,7 +252,8 @@ const MentorDashboard = () => {
     setLoading(true);
 
     // Validate the link field
-    const urlRegex = /^(https?:\/\/)?([\w\-]+\.)+[\w\-]+(\/[\w\-._~:/?#[\]@!$&'()*+,;=]*)?$/;
+    const urlRegex =
+      /^(https?:\/\/)?([\w\-]+\.)+[\w\-]+(\/[\w\-._~:/?#[\]@!$&'()*+,;=]*)?$/;
     if (sessionForm.link && !urlRegex.test(sessionForm.link)) {
       toast.error("Invalid session link format. Please enter a valid URL.");
       setLoading(false);
@@ -290,13 +300,18 @@ const MentorDashboard = () => {
 
   const handleDeleteSession = async (sessionId) => {
     try {
-      const response = await axios.delete(`${API_URL}/api/mentorships/sessions/${sessionId}`, {
-        withCredentials: true,
-      });
+      const response = await axios.delete(
+        `${API_URL}/api/mentorships/sessions/${sessionId}`,
+        {
+          withCredentials: true,
+        }
+      );
 
       if (response.data.success) {
         toast.success("Session deleted successfully");
-        setSessions((prevSessions) => prevSessions.filter((session) => session._id !== sessionId));
+        setSessions((prevSessions) =>
+          prevSessions.filter((session) => session._id !== sessionId)
+        );
       }
     } catch (error) {
       console.error("Error deleting session:", error);
@@ -488,7 +503,10 @@ const MentorDashboard = () => {
               <div className="w-full h-full bg-gray/10 p-4 rounded-2xl border border-gray/20">
                 <h1 className="text-2xl font-bold mb-4">My Mentees</h1>
                 {mentees.length === 0 ? (
-                  <p>No approved mentees found.</p>
+                  <div className="flex flex-col justify-center items-center h-full">
+                    <FaCircleXmark className="text-red-500 text-4xl" />
+                    <h2 className="text-lg font-bold ml-2">No mentees yet.</h2>
+                  </div>
                 ) : (
                   <ul className="space-y-4">
                     {mentees.map((mentee) => (
@@ -527,7 +545,12 @@ const MentorDashboard = () => {
                   Mentorship Applicants
                 </h2>
                 {applicants.length === 0 ? (
-                  <p>No applicants found.</p>
+                  <div className="flex flex-col justify-center items-center h-full">
+                    <FaCircleXmark className="text-red-500 text-4xl" />
+                    <h2 className="text-lg font-bold ml-2">
+                      No applicants found.
+                    </h2>
+                  </div>
                 ) : (
                   <ul className="space-y-4">
                     {applicants.map((applicant) => (
@@ -583,7 +606,7 @@ const MentorDashboard = () => {
                 )}
               </div>
             )}
-            
+
             {activeTab === "sessions" && (
               <div className="w-full h-full bg-gray/10 p-4 rounded-2xl border border-gray/20">
                 <h2 className="text-xl font-bold mb-4">Create Session</h2>
@@ -607,8 +630,7 @@ const MentorDashboard = () => {
                           />
                           <label>
                             {mentee.firstname} {mentee.lastname} -{" "}
-                            {mentee.email} -{" "}
-                            {mentee.mentorshipTitle}
+                            {mentee.email} - {mentee.mentorshipTitle}
                           </label>
                         </li>
                       ))}
@@ -676,7 +698,9 @@ const MentorDashboard = () => {
                     />
                   </div>
                   <div>
-                    <label className="block text-sm font-medium">Session Link</label>
+                    <label className="block text-sm font-medium">
+                      Session Link
+                    </label>
                     <input
                       type="url"
                       name="link"
@@ -704,7 +728,8 @@ const MentorDashboard = () => {
                         {new Date(session.date).toLocaleDateString()}
                       </p>
                       <p>
-                        <strong>Time:</strong> {formatTime(session.startTime)} - {formatTime(session.endTime)}
+                        <strong>Time:</strong> {formatTime(session.startTime)} -{" "}
+                        {formatTime(session.endTime)}
                       </p>
                       <p>
                         <strong>Message:</strong>{" "}
@@ -713,7 +738,12 @@ const MentorDashboard = () => {
                       <p>
                         <strong>Link:</strong>{" "}
                         {session.link ? (
-                          <a href={session.link} target="_blank" rel="noopener noreferrer" className="text-blue-500 underline">
+                          <a
+                            href={session.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-500 underline"
+                          >
                             {session.link}
                           </a>
                         ) : (
@@ -723,7 +753,9 @@ const MentorDashboard = () => {
                       <p>
                         <strong>Mentees:</strong>{" "}
                         {session.mentees
-                          .map((mentee) => `${mentee.firstname} ${mentee.lastname}`)
+                          .map(
+                            (mentee) => `${mentee.firstname} ${mentee.lastname}`
+                          )
                           .join(", ")}
                       </p>
                       <button
@@ -743,137 +775,146 @@ const MentorDashboard = () => {
                 <h3 className="text-lg font-bold mb-4">
                   Your Mentorship Opportunities
                 </h3>
-                <div className="space-y-4">
-                  {mentorships.map((mentorship) => (
-                    <div
-                      key={mentorship._id}
-                      className="border p-4 rounded-xl bg-white"
-                    >
-                      <div className="flex justify-between items-start">
-                        <div>
-                          <h4 className="text-lg font-bold">
-                            {mentorship.title}
-                          </h4>
-                          <p className="text-gray-600">
-                            {mentorship.description}
-                          </p>
-                          <div className="mt-2">
-                            <p>
-                              <strong>Skills Required:</strong>{" "}
-                              {mentorship.skillsRequired.join(", ")}
+                <div className="space-y-4 w-full h-full">
+                  {mentorships.length === 0 ? (
+                    <div className="flex flex-col justify-center items-center h-full">
+                      <FaCircleXmark className="text-red-500 text-4xl" />
+                      <h2 className="text-lg font-bold ml-2">
+                        No mentorship opportunities found.
+                      </h2>
+                    </div>
+                  ) : (
+                    mentorships.map((mentorship) => (
+                      <div
+                        key={mentorship._id}
+                        className="border p-4 rounded-xl bg-white"
+                      >
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <h4 className="text-lg font-bold">
+                              {mentorship.title}
+                            </h4>
+                            <p className="text-gray-600">
+                              {mentorship.description}
                             </p>
-                            <p>
-                              <strong>Duration:</strong> {mentorship.duration}
-                            </p>
-                            <p>
-                              <strong>Max Applicants:</strong>{" "}
-                              {mentorship.maxApplicants}
-                            </p>
-                            <p>
-                              <strong>Current Applicants:</strong>{" "}
-                              {mentorship.currentApplicants}
-                            </p>
-                            {mentorship.currentApplicants > 0 && (
-                              <>
-                                {showApplicants?.mentorshipId ===
-                                mentorship._id ? (
-                                  <button
-                                    onClick={() => setShowApplicants(null)}
-                                    className="mt-2 bg-blue-500 text-white rounded px-2 py-1 text-sm"
-                                  >
-                                    Hide Applicants
-                                  </button>
-                                ) : (
-                                  <button
-                                    onClick={() =>
-                                      handleViewApplicants(mentorship._id)
-                                    }
-                                    className="mt-2 bg-blue-500 text-white rounded px-2 py-1 text-sm"
-                                  >
-                                    View Applicants
-                                  </button>
-                                )}
-                              </>
-                            )}
+                            <div className="mt-2">
+                              <p>
+                                <strong>Skills Required:</strong>{" "}
+                                {mentorship.skillsRequired.join(", ")}
+                              </p>
+                              <p>
+                                <strong>Duration:</strong> {mentorship.duration}
+                              </p>
+                              <p>
+                                <strong>Max Applicants:</strong>{" "}
+                                {mentorship.maxApplicants}
+                              </p>
+                              <p>
+                                <strong>Current Applicants:</strong>{" "}
+                                {mentorship.currentApplicants}
+                              </p>
+                              {mentorship.currentApplicants > 0 && (
+                                <>
+                                  {showApplicants?.mentorshipId ===
+                                  mentorship._id ? (
+                                    <button
+                                      onClick={() => setShowApplicants(null)}
+                                      className="mt-2 bg-blue-500 text-white rounded px-2 py-1 text-sm"
+                                    >
+                                      Hide Applicants
+                                    </button>
+                                  ) : (
+                                    <button
+                                      onClick={() =>
+                                        handleViewApplicants(mentorship._id)
+                                      }
+                                      className="mt-2 bg-blue-500 text-white rounded px-2 py-1 text-sm"
+                                    >
+                                      View Applicants
+                                    </button>
+                                  )}
+                                </>
+                              )}
+                            </div>
+                          </div>
+                          <div className="flex gap-2">
+                            <button
+                              onClick={() => handleEdit(mentorship)}
+                              className="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+                            >
+                              Edit
+                            </button>
+                            <button
+                              onClick={() => handleDelete(mentorship._id)}
+                              className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
+                            >
+                              Delete
+                            </button>
                           </div>
                         </div>
-                        <div className="flex gap-2">
-                          <button
-                            onClick={() => handleEdit(mentorship)}
-                            className="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
-                          >
-                            Edit
-                          </button>
-                          <button
-                            onClick={() => handleDelete(mentorship._id)}
-                            className="px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </div>
 
-                      {showApplicants?.mentorshipId === mentorship._id && (
-                        <div className="mt-4 border-t pt-4">
-                          <h5 className="font-bold mb-2">Applicants</h5>
-                          {showApplicants.applicants.length === 0 ? (
-                            <p>No applicants yet.</p>
-                          ) : (
-                            <ul className="space-y-2">
-                              {showApplicants.applicants.map((applicant) => (
-                                <li
-                                  key={applicant._id}
-                                  className="border p-2 rounded"
-                                >
-                                  <p>
-                                    <strong>Name:</strong> {applicant.firstname}{" "}
-                                    {applicant.lastname}
-                                  </p>
-                                  <p>
-                                    <strong>Email:</strong> {applicant.email}
-                                  </p>
-                                  <p>
-                                    <strong>Skills:</strong>{" "}
-                                    {applicant.skills?.join(", ") ||
-                                      "No skills listed"}
-                                  </p>
-                                  <p>
-                                    <strong>Biography:</strong>{" "}
-                                    {applicant.biography ||
-                                      "No biography provided"}
-                                  </p>
-                                  <div className="flex gap-2 mt-2">
-                                    <button
-                                      onClick={() =>
-                                        handleApproveApplicant(
-                                          mentorship._id,
-                                          applicant._id
-                                        )
-                                      }
-                                      className="px-2 py-1 bg-green-500 text-white rounded text-sm"
-                                    >
-                                      Approve
-                                    </button>
-                                    <button
-                                      onClick={() =>
-                                        handleDeclineApplicant(
-                                          mentorship._id,
-                                          applicant._id
-                                        )
-                                      }
-                                      className="px-2 py-1 bg-red-500 text-white rounded text-sm"
-                                    >
-                                      Decline
-                                    </button>
-                                  </div>
-                                </li>
-                              ))}
-                            </ul>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  ))}
+                        {showApplicants?.mentorshipId === mentorship._id && (
+                          <div className="mt-4 border-t pt-4">
+                            <h5 className="font-bold mb-2">Applicants</h5>
+                            {showApplicants.applicants.length === 0 ? (
+                              <p>No applicants yet.</p>
+                            ) : (
+                              <ul className="space-y-2">
+                                {showApplicants.applicants.map((applicant) => (
+                                  <li
+                                    key={applicant._id}
+                                    className="border p-2 rounded"
+                                  >
+                                    <p>
+                                      <strong>Name:</strong> {applicant.firstname}{" "}
+                                      {applicant.lastname}
+                                    </p>
+                                    <p>
+                                      <strong>Email:</strong> {applicant.email}
+                                    </p>
+                                    <p>
+                                      <strong>Skills:</strong>{" "}
+                                      {applicant.skills?.join(", ") ||
+                                        "No skills listed"}
+                                    </p>
+                                    <p>
+                                      <strong>Biography:</strong>{" "}
+                                      {applicant.biography ||
+                                        "No biography provided"}
+                                    </p>
+                                    <div className="flex gap-2 mt-2">
+                                      <button
+                                        onClick={() =>
+                                          handleApproveApplicant(
+                                            mentorship._id,
+                                            applicant._id
+                                          )
+                                        }
+                                        className="px-2 py-1 bg-green-500 text-white rounded text-sm"
+                                      >
+                                        Approve
+                                      </button>
+                                      <button
+                                        onClick={() =>
+                                          handleDeclineApplicant(
+                                            mentorship._id,
+                                            applicant._id
+                                          )
+                                        }
+                                        className="px-2 py-1 bg-red-500 text-white rounded text-sm"
+                                      >
+                                        Decline
+                                      </button>
+                                    </div>
+                                  </li>
+                                ))}
+                              </ul>
+                            )}
+                          </div>
+                        )}
+                      </div>
+                    ))
+                  )}
                 </div>
               </div>
             )}
