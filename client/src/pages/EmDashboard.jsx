@@ -3,7 +3,6 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import PostJob from "./PostJob";
 import { useNavigate } from "react-router-dom";
-
 import LoadingScreen from "../components/LoadingScreen";
 import { FaDownload } from "react-icons/fa6";
 import { MdPendingActions } from "react-icons/md";
@@ -11,6 +10,7 @@ import { MdOutlineBookmark } from "react-icons/md";
 import { FaCircleXmark } from "react-icons/fa6";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { MdOutlinePostAdd } from "react-icons/md";
+import Swal from "sweetalert2"; // Import SweetAlert2 for confirmation popups
 
 const EmDashboard = () => {
   const [applications, setApplications] = useState([]);
@@ -219,18 +219,30 @@ const EmDashboard = () => {
   };
 
   const handleDeleteJob = async (jobId) => {
-    try {
-      await axios.delete(`/jobs/${jobId}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`,
-        },
-        withCredentials: true,
-      });
-      setJobs((prev) => prev.filter((job) => job._id !== jobId));
-      toast.success("Job deleted successfully");
-    } catch (error) {
-      console.error("Error deleting job:", error);
-      toast.error("Failed to delete job");
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "This action cannot be undone!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await axios.delete(`/jobs/${jobId}`, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          withCredentials: true,
+        });
+        setJobs((prev) => prev.filter((job) => job._id !== jobId));
+        toast.success("Job deleted successfully");
+      } catch (error) {
+        console.error("Error deleting job:", error);
+        toast.error("Failed to delete job");
+      }
     }
   };
 

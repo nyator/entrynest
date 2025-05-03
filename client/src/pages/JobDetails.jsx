@@ -9,6 +9,7 @@ import { BsFilePersonFill } from "react-icons/bs";
 import { LiaIndustrySolid } from "react-icons/lia";
 import { IoChevronBackOutline } from "react-icons/io5";
 import { AiOutlineUpload } from "react-icons/ai"; // Import upload icon
+import LoadingScreen from "../components/LoadingScreen";
 
 const JobDetails = () => {
   const { jobId } = useParams();
@@ -40,7 +41,11 @@ const JobDetails = () => {
     }
 
     // Validate file type
-    const allowedTypes = ["application/pdf", "application/msword", "application/vnd.openxmlformats-officedocument.wordprocessingml.document"];
+    const allowedTypes = [
+      "application/pdf",
+      "application/msword",
+      "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    ];
     if (!allowedTypes.includes(cv.type)) {
       toast.error("Only .pdf, .doc, and .docx files are allowed.");
       return;
@@ -58,30 +63,37 @@ const JobDetails = () => {
         },
         withCredentials: true,
       });
-      toast.success("Your application has been submitted!");
+      toast.success("Your application has been submitted successfully!");
       navigate(-1);
     } catch (error) {
       console.error("Error submitting application:", error);
-      const errorMessage = error.response?.data?.message || "Failed to submit application.";
+      const errorMessage =
+        error.response?.data?.message || "Failed to submit application.";
       toast.error(errorMessage);
     }
   };
 
   if (!job) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <LoadingScreen />
+      </div>
+    );
   }
 
   return (
     <div className="mx-auto md:w-4/5 p-4">
       <ToastContainer />
-      <h1 className="text-2xl text-center md:text-start font-SatoshiBold mb-4 underline underline-offset-4">{job.title}</h1>
+      <h1 className="text-2xl text-center md:text-start font-SatoshiBold mb-4 underline underline-offset-4">
+        {job.title}
+      </h1>
       <div className="flex flex-col md:flex-row leading-tight items-center gap-1 md:gap-5 text-black/70 text-jobcard1">
         <p className="flex justify-start items-center font-SatoshiRegular text-black/70 gap-1">
           <IoLocationOutline className="text-jobcard1" /> {job.location}
         </p>
         <p className="flex justify-start items-center font-SatoshiRegular gap-1">
-          <BsFilePersonFill className="text-jobcard1" /> {job.postedBy.firstname}{" "}
-          {job.postedBy.lastname}
+          <BsFilePersonFill className="text-jobcard1" />{" "}
+          {job.postedBy.firstname} {job.postedBy.lastname}
         </p>
         <p className="flex justify-start items-center text-jobcard1 font-SatoshiRegular gap-1">
           <LiaIndustrySolid /> {job.tags?.join(" | ") || "No tags available"}
@@ -114,7 +126,9 @@ const JobDetails = () => {
         </h2>
         <form onSubmit={handleApply} className="space-y-6">
           <div>
-            <label className="block mb-2 font-SatoshiMedium text-gray-700">Upload CV:</label>
+            <label className="block mb-2 font-SatoshiMedium text-gray-700">
+              Upload CV:
+            </label>
             <div className="relative">
               <input
                 type="file"
@@ -132,7 +146,9 @@ const JobDetails = () => {
             </div>
           </div>
           <div>
-            <label className="block mb-2 font-SatoshiMediumm text-gray-700">Message:</label>
+            <label className="block mb-2 font-SatoshiMediumm text-gray-700">
+              Message:
+            </label>
             <textarea
               value={message}
               onChange={(e) => setMessage(e.target.value)}
