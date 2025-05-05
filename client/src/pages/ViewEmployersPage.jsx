@@ -18,12 +18,26 @@ const ViewEmployersPage = () => {
   useEffect(() => {
     const fetchEmployers = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/jobs");
+        const token = localStorage.getItem("token"); // Retrieve the token from localStorage
+        console.log("Token used for request:", token); // Log the token for debugging
+
+        const response = await fetch("http://localhost:3000/api/jobs", {
+          headers: {
+            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+          },
+          credentials: "include", // Ensure cookies are sent with the request
+        });
+
+        console.log("Response status:", response.status); // Log the response status
         if (!response.ok) {
-          throw new Error("Failed to fetch employers");
+          const errorData = await response.json();
+          console.error("Error response data:", errorData); // Log the error response data
+          throw new Error(errorData.message || "Failed to fetch employers");
         }
+
         const data = await response.json();
-        
+        console.log("Fetched data:", data); // Log the fetched data
+
         // Group jobs by employer and collect their information
         const employerMap = new Map();
         data.jobs.forEach(job => {
@@ -46,6 +60,7 @@ const ViewEmployersPage = () => {
 
         setEmployers(Array.from(employerMap.values()));
       } catch (err) {
+        console.error("Error fetching employers: ", err);
         setError(err.message);
         toast.error("Failed to load employers. Please try again later.");
       } finally {
@@ -57,6 +72,7 @@ const ViewEmployersPage = () => {
   }, []);
 
   const handleEmployerClick = (employer) => {
+    // Navigate to the jobs page with the employer's name as a query parameter
     navigate(`/jobs?employer=${encodeURIComponent(employer.name)}`);
   };
 
@@ -64,17 +80,6 @@ const ViewEmployersPage = () => {
     return (
       <div className="flex items-center justify-center h-screen">
         <LoadingScreen />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-red-600 mb-4">Error</h2>
-          <p className="text-gray-600">{error}</p>
-        </div>
       </div>
     );
   }
@@ -117,7 +122,7 @@ const ViewEmployersPage = () => {
                       />
                     </div>
                     <div>
-                      <h3 className="font-SatoshiBold text-lg">{employer.name}</h3>
+                      <h3 className="font-SatoshiBold text-lg">{employer.companyName}</h3>
                       <p className="text-sm text-gray-500">Active Employer</p>
                     </div>
                   </div>

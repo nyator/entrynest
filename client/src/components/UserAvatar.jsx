@@ -89,6 +89,7 @@ const UserAvatar = () => {
               {user?.firstname} {user?.lastname}
             </p>
             <p className="text-clampSm text-black/50">{user?.email}</p>
+            <p className="text-clampSm text-primary capitalize">{user.role}</p>
           </div>
           <div className="border border-gray/40">
             <button
