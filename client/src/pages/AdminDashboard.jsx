@@ -96,7 +96,7 @@ const AdminDashboard = () => {
         // Group applications by job and applicant
         const groupedApplications = response.data.applications.map((app) => ({
           jobTitle: app.jobTitle,
-          applicantName: `${app.applicantName} ${app.applicantLastname}`,
+          applicantName: `${app.user.firstname} ${app.user.lastname}`,
           cvUrl: app.cvUrl,
           message: app.message,
         }));
@@ -301,7 +301,7 @@ const AdminDashboard = () => {
     },
     {
       name: "Company",
-      selector: (row) => row.company,
+      selector: (row) => row.companyName,
       sortable: true,
     },
     {
