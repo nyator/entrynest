@@ -85,7 +85,12 @@ const UserAvatar = () => {
       {isOpen && (
         <div className="absolute right-0 mt-2 w-60 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-10">
           <div className="block px-4 py-2  text-sm text-black/70 leading-tight">
-          <p className="text-clampSm bg-primary text-white py-1 px-2 rounded-sm text-center">{user?.companyName}</p>
+            {user?.companyName && (
+              <p className="text-clampSm bg-primary/50 text-white py-1 px-2 rounded-sm text-center">
+                {user.companyName}
+              </p>
+            )}
+
             <p className="text-clampSm font-semibold text-black/80">
               {user?.firstname} {user?.lastname}
             </p>
