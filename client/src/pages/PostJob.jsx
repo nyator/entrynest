@@ -34,6 +34,7 @@ const PostJob = () => {
   const [qualification, setQualification] = useState("");
   const [responsibility, setResponsibility] = useState("");
   const [salaryRange, setSalaryRange] = useState("");
+  const [externalLinks, setExternalLinks] = useState(""); // New state for external links
   const [isLoading, setIsLoading] = useState(false); // State for loading animation
   const navigate = useNavigate();
 
@@ -64,6 +65,7 @@ const PostJob = () => {
           qualification,
           responsibility,
           salaryRange,
+          externalLinks, // Include externalLinks
         },
         {
           withCredentials: true,
@@ -80,6 +82,7 @@ const PostJob = () => {
       setQualification("");
       setResponsibility("");
       setSalaryRange("");
+      setExternalLinks(""); // Reset externalLinks
     } catch (error) {
       console.error("Error posting job:", error);
       toast.error("Failed to post job.");
@@ -99,6 +102,7 @@ const PostJob = () => {
     setQualification("");
     setResponsibility("");
     setSalaryRange("");
+    setExternalLinks(""); // Reset externalLinks
   };
 
   return (
@@ -241,6 +245,20 @@ const PostJob = () => {
                 required
               />
             </div>
+            {user.role === "admin" && ( // Render company name input only for admin
+              <div className="mb-4">
+                <label className="block text-black/60">
+                  External Links (optional)
+                </label>
+                <input
+                  type="text"
+                  value={externalLinks}
+                  onChange={(e) => setExternalLinks(e.target.value)}
+                  className="w-full border-[1px] border-grayStroke rounded-lg p-2 text-black/70"
+                  placeholder="Add external links separated by commas"
+                />
+              </div>
+            )}
           </div>
         </div>
         <div className="flex space-x-3">

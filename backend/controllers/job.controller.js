@@ -11,8 +11,19 @@ dotenv.config();
 const API_URL = process.env.VITE_API_URL || "http://localhost:3000"; // Define API base URL
 
 export const createJob = async (req, res) => {
-  const { salaryRange, title, location, tags, type, style, aboutRole, qualification, responsibility, companyName } =
-    req.body;
+  const {
+    salaryRange,
+    title,
+    location,
+    tags,
+    type,
+    style,
+    aboutRole,
+    qualification,
+    responsibility,
+    companyName,
+    externalLinks, // Add externalLinks field
+  } = req.body;
 
   try {
     const user = await User.findById(req.userId); // Fetch the user to check their role
@@ -32,6 +43,7 @@ export const createJob = async (req, res) => {
       salaryRange,
       companyName: user.role === "admin" ? companyName : user.companyName, // Use provided companyName only if admin
       postedBy: req.userId,
+      externalLinks, // Save externalLinks in the job document
     });
 
     await job.save();
