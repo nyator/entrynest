@@ -6,6 +6,7 @@ import LoadingScreen from "../components/LoadingScreen";
 import DataTable from "react-data-table-component"; // Import react-data-table-component
 import { verified, notVerified } from "../constants/styles";
 import PostJob from "./PostJob";
+import Swal from "sweetalert2"; // Import SweetAlert2
 
 import { FcStatistics } from "react-icons/fc";
 import { FaUsers } from "react-icons/fa";
@@ -38,6 +39,8 @@ const AdminDashboard = () => {
   });
   const [recentEmployers, setRecentEmployers] = useState([]); // State for recent employers
   const navigate = useNavigate();
+
+  const API_URL = "http://localhost:3000"; // Define API base URL
 
   useEffect(() => {
     const fetchEmployers = async () => {
@@ -81,7 +84,9 @@ const AdminDashboard = () => {
       try {
         const token = localStorage.getItem("token"); // Retrieve token from localStorage
         if (!token) {
-          console.warn("No token found in localStorage. Skipping fetchApplications.");
+          console.warn(
+            "No token found in localStorage. Skipping fetchApplications."
+          );
           setApplications([]); // Set applications to an empty array
           return;
         }
@@ -107,8 +112,13 @@ const AdminDashboard = () => {
           console.warn("No applications found.");
           setApplications([]); // Set applications to an empty array if none are found
         } else {
-          console.error("Error fetching applications:", error.response?.data || error.message);
-          toast.error(error.response?.data?.message || "Failed to fetch applications");
+          console.error(
+            "Error fetching applications:",
+            error.response?.data || error.message
+          );
+          toast.error(
+            error.response?.data?.message || "Failed to fetch applications"
+          );
         }
       } finally {
         setTabLoading(false);
@@ -182,6 +192,18 @@ const AdminDashboard = () => {
   }, [activeTab]);
 
   const handleDelete = async (id) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    });
+  
+    if (!result.isConfirmed) return; // Exit if the user cancels
+  
     try {
       await axios.delete(`/user/employers/${id}`);
       setEmployers(employers.filter((employer) => employer._id !== id));
@@ -190,12 +212,24 @@ const AdminDashboard = () => {
       toast.error("Failed to delete employer");
     }
   };
-
+  
   const handleViewProfile = (id) => {
     navigate(`/employer-profile/${id}`);
   };
 
   const handleDeleteJob = async (id) => {
+    const result = await Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+    });
+  
+    if (!result.isConfirmed) return; // Exit if the user cancels
+  
     try {
       await axios.delete(`/jobs/${id}`);
       setJobs(jobs.filter((job) => job._id !== id));
@@ -204,7 +238,7 @@ const AdminDashboard = () => {
       toast.error("Failed to delete job");
     }
   };
-
+  
   const handleViewJobDetails = (id) => {
     navigate(`/job-details/${id}`);
   };
@@ -241,7 +275,7 @@ const AdminDashboard = () => {
             View Profile
           </button>
           <button
-            onClick={() => handleDelete(row._id)}
+            onClick={() => handleDelete(row._id)} // Add confirmation before deleting
             className="bg-red-500 text-white px-4 py-2 rounded"
           >
             Delete
@@ -328,7 +362,7 @@ const AdminDashboard = () => {
             View Details
           </button>
           <button
-            onClick={() => handleDeleteJob(row._id)}
+            onClick={() => handleDeleteJob(row._id)} // Add confirmation before deleting
             className="bg-red-500 text-white px-4 py-2 rounded"
           >
             Delete
@@ -352,12 +386,12 @@ const AdminDashboard = () => {
     {
       name: "Actions",
       cell: (row) => (
-        <div>
+        <div className="flex gap-4 items-center">
           <a
-            href={row.cvUrl}
+            href={`${API_URL}/${row.cvUrl.replace(/\\/g, "/")}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-600/80 mr-4 text-sm"
+            className="text-blue-500 underline"
           >
             Open CV
           </a>
@@ -396,29 +430,16 @@ const AdminDashboard = () => {
       name: "Actions",
       cell: (row) => (
         <div className="flex gap-4 items-center">
-          {row.cvUrl ? (
+          {row.cv ? (
             <>
               <a
-                href={row.cvUrl}
+                href={`${API_URL}${row.cv.replace(/\\/g, "/")}`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-blue-500 underline"
               >
-                <button className="px-4 py-2 bg-blue-500 text-white rounded">
-                  Open CV
-                </button>
+                Open CV
               </a>
-              <button
-                onClick={() => {
-                  const link = document.createElement("a");
-                  link.href = row.cvUrl;
-                  link.download = row.cvUrl.split("/").pop();
-                  link.click();
-                }}
-                className="px-4 py-2 bg-green-500 text-white rounded"
-              >
-                Download CV
-              </button>
             </>
           ) : (
             <p className="text-red-500">No CV uploaded</p>

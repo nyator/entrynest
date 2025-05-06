@@ -122,11 +122,37 @@ const JobApplications = () => {
     fetchJobTitle();
   }, [jobId]);
 
-  const handleDownload = (cvUrl) => {
-    const link = document.createElement("a");
-    link.href = cvUrl;
-    link.download = cvUrl.split("/").pop();
-    link.click();
+  const handleDownload = async (cvUrl) => {
+    if (!cvUrl) {
+      console.error("CV URL is missing.");
+      toast.error("CV URL is not available.");
+      return;
+    }
+  
+    try {
+      // Fetch the file as a Blob
+      const response = await axios.get(cvUrl, {
+        responseType: "blob", // Ensure the response is a Blob
+      });
+  
+      // Create a temporary URL for the Blob
+      const blob = new Blob([response.data]);
+      const url = window.URL.createObjectURL(blob);
+  
+      // Create a temporary anchor element for downloading
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", cvUrl.split("/").pop()); // Set the file name
+      document.body.appendChild(link);
+      link.click(); // Trigger the download
+      document.body.removeChild(link);
+  
+      // Revoke the temporary URL
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Error downloading CV:", error);
+      toast.error("Failed to download CV.");
+    }
   };
 
   const handleUpdateStatus = async (applicationId, status) => {
@@ -328,7 +354,7 @@ const JobApplications = () => {
                 )}
                 <div className="flex gap-4 items-center">
                   <a
-                    href={app.cvUrl}
+                    href={app.cvUrl} // Use the full CV URL
                     target="_blank"
                     rel="noopener noreferrer"
                     className="text-blue-500 underline"
@@ -336,7 +362,7 @@ const JobApplications = () => {
                     <button>Open CV</button>
                   </a>
                   <button
-                    onClick={() => handleDownload(app.cvUrl)}
+                    onClick={() => handleDownload(app.cvUrl)} // Use the updated download handler
                     className="px-4 py-2 bg-primary inline-flex text-white rounded gap-3"
                   >
                     Download CV

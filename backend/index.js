@@ -32,6 +32,9 @@ app.use(cookieParser());
 // Serve static files from the uploads directory
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
+// Log the static folder path for debugging
+// console.log("Serving static files from:", path.join(__dirname, "uploads"));
+
 app.use("/api/auth", authRoutes); // Ensure this line is present
 app.use("/api/user", userRoutes); // Ensure this line exists
 app.use("/api/jobs", jobRoutes); // Use job routes

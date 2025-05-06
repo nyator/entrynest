@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import LoadingScreen from "../components/LoadingScreen";
 
 import { IoLocationOutline } from "react-icons/io5";
 import { BsFilePersonFill } from "react-icons/bs";
@@ -47,7 +48,11 @@ const AdminJobDetails = () => {
   };
 
   if (!job) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <LoadingScreen />
+      </div>
+    );
   }
 
   return (

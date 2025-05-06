@@ -5,6 +5,10 @@ import {
   sendApplicationApprovedEmail,
   sendApplicationDeclinedEmail 
 } from "../utils/emailService.js";
+import dotenv from "dotenv";
+dotenv.config();
+
+const API_URL = process.env.VITE_API_URL || "http://localhost:3000"; // Define API base URL
 
 export const createJob = async (req, res) => {
   const { salaryRange, title, location, tags, type, style, aboutRole, qualification, responsibility, companyName } =
@@ -77,10 +81,14 @@ export const createJob = async (req, res) => {
 export const getJobs = async (req, res) => {
   try {
     const jobs = await Job.find().populate("postedBy", "firstname lastname avatar companyName");
-    const userId = req.userId; // Get the logged-in user's ID
+    const userId = req.userId;
 
     const jobsWithApplicationStatus = jobs.map((job) => ({
       ...job._doc,
+      applications: job.applications.map((app) => ({
+        ...app,
+        cvUrl: app.cvUrl ? `${API_URL}/${app.cvUrl}` : null, // Include full CV URL
+      })),
       postedBy: {
         ...job.postedBy._doc,
         avatar: job.postedBy.avatar
@@ -160,7 +168,7 @@ export const applyForJob = async (req, res) => {
 
     const { id } = req.params;
     const { message } = req.body;
-    const cv = req.file?.path; // Ensure multer is configured correctly
+    const cv = req.file?.path;
 
     if (!cv) {
       console.error("CV file is missing in the request.");
@@ -177,17 +185,10 @@ export const applyForJob = async (req, res) => {
     }
 
     const application = {
-      user: req.userId, // Ensure `req.userId` is populated by the authentication middleware
+      user: req.userId,
       message,
-      cvUrl: cv,
+      cvUrl: `${API_URL}/${cv.replace(/\\/g, "/")}`, // Ensure the full URL is returned
     };
-
-    if (!req.userId) {
-      console.error(
-        "User ID is missing in the request. Ensure authentication middleware is working."
-      );
-      return res.status(401).json({ success: false, message: "Unauthorized" });
-    }
 
     job.applications.push(application);
     await job.save();
@@ -204,7 +205,6 @@ export const applyForJob = async (req, res) => {
 };
 
 export const getEmployerApplications = async (req, res) => {
-  // Ensure this endpoint is returning applications correctly
   try {
     const jobs = await Job.find({ postedBy: req.userId }).populate(
       "applications.user",
@@ -222,6 +222,7 @@ export const getEmployerApplications = async (req, res) => {
         jobId: job._id,
         jobTitle: job.title,
         ...app.toObject(),
+        cvUrl: app.cvUrl ? `${API_URL}/${app.cvUrl.replace(/\\/g, "/")}` : null, // Ensure the full URL is returned
       }))
     );
 
