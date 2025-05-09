@@ -630,7 +630,7 @@ const MentorDashboard = () => {
                           />
                           <label>
                             {mentee.firstname} {mentee.lastname} -{" "}
-                            {mentee.email} - {mentee.mentorshipTitle}
+                            {mentee.email} 
                           </label>
                         </li>
                       ))}
@@ -750,14 +750,14 @@ const MentorDashboard = () => {
                           "No link provided"
                         )}
                       </p>
-                      <p>
+                      {/* <p>
                         <strong>Mentees:</strong>{" "}
                         {session.mentees
                           .map(
                             (mentee) => `${mentee.firstname} ${mentee.lastname}`
                           )
                           .join(", ")}
-                      </p>
+                      </p> */}
                       <button
                         onClick={() => handleDeleteSession(session._id)}
                         className="mt-2 px-4 py-2 bg-red-500 text-white rounded"
@@ -866,8 +866,8 @@ const MentorDashboard = () => {
                                     className="border p-2 rounded"
                                   >
                                     <p>
-                                      <strong>Name:</strong> {applicant.firstname}{" "}
-                                      {applicant.lastname}
+                                      <strong>Name:</strong>{" "}
+                                      {applicant.firstname} {applicant.lastname}
                                     </p>
                                     <p>
                                       <strong>Email:</strong> {applicant.email}

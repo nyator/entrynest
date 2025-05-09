@@ -112,7 +112,7 @@ export const PASSWORD_RESET_REQUEST_TEMPLATE = `
 </html>
 `;
 
-export const NEW_POSTING_NOTIFICATION_TEMPLATE = `
+export const NEW_JOB_POSTING_NOTIFICATION_TEMPLATE = `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -124,15 +124,15 @@ export const NEW_POSTING_NOTIFICATION_TEMPLATE = `
       font-family: "Sora", serif;
     }
   </style>
-  <title>New {type} Opportunity</title>
+  <title>New Job Opportunity</title>
 </head>
 <body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
   <div style="background: linear-gradient(to right, #8B3AE1, #6B29B0); padding: 20px; text-align: center;">
-    <h1 style="color: white; margin: 0;">New {type} Opportunity</h1>
+    <h1 style="color: white; margin: 0;">New Job Opportunity</h1>
   </div>
   <div style="background-color: #f9f9f9; padding: 20px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
     <p>Hello {firstname},</p>
-    <p>A new {type} opportunity has been posted that might interest you:</p>
+    <p>A new job opportunity has been posted that might interest you:</p>
     <div style="background-color: white; padding: 20px; border-radius: 5px; margin: 20px 0;">
       <h2 style="color: #6B29B0; margin-top: 0;">{title}</h2>
       <p><strong>Company:</strong> {companyName}</p>
@@ -140,9 +140,49 @@ export const NEW_POSTING_NOTIFICATION_TEMPLATE = `
       <p><strong>Type:</strong> {jobType}</p>
       {salaryRange}
     </div>
-    <p>Click the button below to view the full details and apply:</p>
+    <p>Click the button below to view the job details:</p>
     <div style="text-align: center; margin: 30px 0;">
-      <a href="{postingUrl}" style="background-color: #6B29B0; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">View {type}</a>
+      <a href="{postingUrl}" style="background-color: #6B29B0; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">View Job</a>
+    </div>
+    <p>Best regards,<br>entrynest Team</p>
+  </div>
+  <div style="text-align: center; margin-top: 20px; color: #888; font-size: 0.8em;">
+    <p>This is an automated message, please do not reply to this email.</p>
+  </div>
+</body>
+</html>
+`;
+
+export const NEW_MENTORSHIP_POSTING_NOTIFICATION_TEMPLATE = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap" rel="stylesheet">
+  <style>
+    h1, p {
+      font-family: "Sora", serif;
+    }
+  </style>
+  <title>New Mentorship Opportunity</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="background: linear-gradient(to right, #8B3AE1, #6B29B0); padding: 20px; text-align: center;">
+    <h1 style="color: white; margin: 0;">New Mentorship Opportunity</h1>
+  </div>
+  <div style="background-color: #f9f9f9; padding: 20px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <p>Hello {firstname},</p>
+    <p>A new mentorship opportunity has been posted that might interest you:</p>
+    <div style="background-color: white; padding: 20px; border-radius: 5px; margin: 20px 0;">
+      <h2 style="color: #6B29B0; margin-top: 0;">{title}</h2>
+      <p><strong>Mentor:</strong> {mentorName}</p>
+      <p><strong>Duration:</strong> {duration}</p>
+      <p><strong>Skills Required:</strong> {skillsRequired}</p>
+    </div>
+    <p>Click the button below to view all mentorship opportunities:</p>
+    <div style="text-align: center; margin: 30px 0;">
+      <a href="{generalMentorshipUrl}" style="background-color: #6B29B0; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">View Mentorships</a>
     </div>
     <p>Best regards,<br>entrynest Team</p>
   </div>
@@ -267,9 +307,6 @@ export const MENTORSHIP_APPROVED_TEMPLATE = `
     </div>
     <p>Your mentor will be in touch with you shortly to discuss the next steps and schedule your first session.</p>
     <p>In the meantime, you can review the mentorship details and prepare for your journey:</p>
-    <div style="text-align: center; margin: 30px 0;">
-      <a href="{mentorshipUrl}" style="background-color: #6B29B0; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">View Mentorship Details</a>
-    </div>
     <p>Best regards,<br>entrynest Team</p>
   </div>
   <div style="text-align: center; margin-top: 20px; color: #888; font-size: 0.8em;">
@@ -316,6 +353,44 @@ export const MENTORSHIP_DECLINED_TEMPLATE = `
     <div style="text-align: center; margin: 30px 0;">
       <a href="{mentorshipsUrl}" style="background-color: #6B29B0; color: white; padding: 12px 20px; text-decoration: none; border-radius: 5px; font-weight: bold;">Browse More Mentorships</a>
     </div>
+    <p>Best regards,<br>entrynest Team</p>
+  </div>
+  <div style="text-align: center; margin-top: 20px; color: #888; font-size: 0.8em;">
+    <p>This is an automated message, please do not reply to this email.</p>
+  </div>
+</body>
+</html>
+`;
+
+export const SESSION_CREATED_TEMPLATE = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@100..800&display=swap" rel="stylesheet">
+  <style>
+    h1, p {
+      font-family: "Sora", serif;
+    }
+  </style>
+  <title>New Session Scheduled</title>
+</head>
+<body style="font-family: Arial, sans-serif; line-height: 1.6; color: #333; max-width: 600px; margin: 0 auto; padding: 20px;">
+  <div style="background: linear-gradient(to right, #8B3AE1, #6B29B0); padding: 20px; text-align: center;">
+    <h1 style="color: white; margin: 0;">New Session Scheduled</h1>
+  </div>
+  <div style="background-color: #f9f9f9; padding: 20px; border-radius: 0 0 5px 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <p>Hello {firstname},</p>
+    <p>A new session has been scheduled with the following details:</p>
+    <ul>
+      <li><strong>Topic:</strong> {topic}</li>
+      <li><strong>Date:</strong> {date}</li>
+      <li><strong>Time:</strong> {startTime} - {endTime}</li>
+      <li><strong>Message:</strong> {message}</li>
+      <li><strong>Link:</strong> <a href="{link}" target="_blank">{lin}</a></li>
+    </ul>
+    <p>Please make sure to join the session on time.</p>
     <p>Best regards,<br>entrynest Team</p>
   </div>
   <div style="text-align: center; margin-top: 20px; color: #888; font-size: 0.8em;">

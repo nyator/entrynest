@@ -1,5 +1,6 @@
 import { Session } from "../models/session.model.js";
 import cron from "node-cron";
+import { sendSessionCreatedEmail } from "../utils/emailService.js";
 
 export const getSessionsByMentor = async (req, res) => {
   try {
@@ -37,6 +38,27 @@ export const createSession = async (req, res) => {
     });
 
     await session.save();
+
+    // Fetch mentee details for email
+    const mentees = await Session.findById(session._id)
+      .populate("mentees", "firstname lastname email")
+      .select("mentees");
+
+    // Send email to mentees
+    mentees.mentees.forEach((mentee) => {
+      sendSessionCreatedEmail({
+        email: mentee.email,
+        firstname: mentee.firstname,
+        sessionDetails: {
+          topic,
+          date,
+          startTime,
+          endTime,
+          message,
+          link,
+        },
+      });
+    });
 
     res.status(201).json({
       success: true,

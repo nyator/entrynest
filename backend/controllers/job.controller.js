@@ -1,7 +1,7 @@
 import { Job } from "../models/job.model.js";
 import { User } from "../models/user.model.js"; // Import User model
 import { 
-  sendNewPostingNotification, 
+  sendNewJobPostingNotification, // Correct function name
   sendApplicationApprovedEmail,
   sendApplicationDeclinedEmail 
 } from "../utils/emailService.js";
@@ -54,7 +54,7 @@ export const createJob = async (req, res) => {
 
     for (const jobseeker of jobseekers) {
       try {
-        await sendNewPostingNotification(
+        await sendNewJobPostingNotification(
           jobseeker.email,
           jobseeker.firstname,
           {

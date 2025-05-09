@@ -1,7 +1,7 @@
 import { Mentorship } from "../models/mentorship.model.js";
 import { User } from "../models/user.model.js";
 import {
-  sendNewPostingNotification,
+  sendNewMentorshipPostingNotification,
   sendMentorshipApprovedEmail,
   sendMentorshipDeclinedEmail,
 } from "../utils/emailService.js";
@@ -28,7 +28,7 @@ export const createMentorship = async (req, res) => {
 
     for (const jobseeker of jobseekers) {
       try {
-        await sendNewPostingNotification(jobseeker.email, jobseeker.firstname, {
+        await sendNewMentorshipPostingNotification(jobseeker.email, jobseeker.firstname, {
           type: "Mentorship",
           title: mentorship.title,
           companyName: "Mentorship Program", // Since mentorships don't have company names
@@ -319,6 +319,27 @@ const updateApplicantStatus = async (req, res, status) => {
     // Update the applicant's status
     applicant.status = status;
     await mentorship.save();
+
+    // Send email notification to the applicant
+    if (status === "approved") {
+      await sendMentorshipApprovedEmail(
+        applicant.user.email,
+        applicant.user.firstname,
+        {
+          title: mentorship.title,
+          // mentorshipUrl: `${process.env.FRONTEND_URL}/mentorships/${mentorship._id}`,
+        }
+      );
+    } else if (status === "declined") {
+      await sendMentorshipDeclinedEmail(
+        applicant.user.email,
+        applicant.user.firstname,
+        {
+          title: mentorship.title,
+          // mentorshipsUrl: `${process.env.FRONTEND_URL}/mentorships`,
+        }
+      );
+    }
 
     console.log(`Applicant status updated to ${status}`);
     res
