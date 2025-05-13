@@ -10,6 +10,7 @@ import { skillsList } from "../constants/index";
 import { MdPendingActions } from "react-icons/md";
 import { MdPeople, MdEventNote, MdWork, MdPostAdd } from "react-icons/md";
 import { FaCircleXmark } from "react-icons/fa6";
+import { ImSpinner6 } from "react-icons/im";
 
 const MentorDashboard = () => {
   const [loading, setLoading] = useState(false);
@@ -55,6 +56,10 @@ const MentorDashboard = () => {
     openMentorships: false,
     postMentorship: false,
   });
+
+  const [loadingApproveIds, setLoadingApproveIds] = useState([]); // Track loading state for specific "Approve" buttons
+  const [loadingDeclineIds, setLoadingDeclineIds] = useState([]); // Track loading state for specific "Decline" buttons
+  const [loadingCreateSession, setLoadingCreateSession] = useState(false); // Track loading state for "Create Session" button
 
   const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
 
@@ -178,6 +183,8 @@ const MentorDashboard = () => {
   };
 
   const handleApproveApplicant = async (mentorshipId, applicantId) => {
+    setLoadingApproveIds((prev) => [...prev, applicantId]); // Add applicant ID to loadingApproveIds
+
     try {
       const url = `${API_URL}/api/mentorships/${mentorshipId}/approve/${applicantId}`;
       const response = await axios.post(url, {}, { withCredentials: true });
@@ -192,10 +199,16 @@ const MentorDashboard = () => {
       toast.error(
         error.response?.data?.message || "Failed to approve applicant."
       );
+    } finally {
+      setLoadingApproveIds((prev) =>
+        prev.filter((id) => id !== applicantId)
+      ); // Remove applicant ID from loadingApproveIds
     }
   };
 
   const handleDeclineApplicant = async (mentorshipId, applicantId) => {
+    setLoadingDeclineIds((prev) => [...prev, applicantId]); // Add applicant ID to loadingDeclineIds
+
     try {
       const url = `${API_URL}/api/mentorships/${mentorshipId}/decline/${applicantId}`;
       const response = await axios.post(url, {}, { withCredentials: true });
@@ -209,6 +222,10 @@ const MentorDashboard = () => {
       toast.error(
         error.response?.data?.message || "Failed to decline applicant."
       );
+    } finally {
+      setLoadingDeclineIds((prev) =>
+        prev.filter((id) => id !== applicantId)
+      ); // Remove applicant ID from loadingDeclineIds
     }
   };
 
@@ -249,14 +266,14 @@ const MentorDashboard = () => {
 
   const handleSessionSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setLoadingCreateSession(true); // Set loading state for "Create Session"
 
     // Validate the link field
     const urlRegex =
       /^(https?:\/\/)?([\w\-]+\.)+[\w\-]+(\/[\w\-._~:/?#[\]@!$&'()*+,;=]*)?$/;
     if (sessionForm.link && !urlRegex.test(sessionForm.link)) {
       toast.error("Invalid session link format. Please enter a valid URL.");
-      setLoading(false);
+      setLoadingCreateSession(false);
       return;
     }
 
@@ -286,7 +303,7 @@ const MentorDashboard = () => {
       console.error("Error creating session:", error);
       toast.error(error.response?.data?.message || "Failed to create session");
     } finally {
-      setLoading(false);
+      setLoadingCreateSession(false); // Reset loading state
     }
   };
 
@@ -584,9 +601,14 @@ const MentorDashboard = () => {
                                 applicant._id
                               )
                             }
-                            className="px-4 py-2 bg-green-500 text-white rounded"
+                            className="px-4 py-2 bg-green-600 text-white rounded flex items-center"
+                            disabled={loadingApproveIds.includes(applicant._id)} // Disable button while loading
                           >
-                            Approve
+                            {loadingApproveIds.includes(applicant._id) ? (
+                              <ImSpinner6 className="animate-spin text-white mx-4" />
+                            ) : (
+                              "Approve"
+                            )}
                           </button>
                           <button
                             onClick={() =>
@@ -595,9 +617,14 @@ const MentorDashboard = () => {
                                 applicant._id
                               )
                             }
-                            className="px-4 py-2 bg-red-500 text-white rounded"
+                            className="px-4 py-2 bg-red-600 text-white rounded flex items-center"
+                            disabled={loadingDeclineIds.includes(applicant._id)} // Disable button while loading
                           >
-                            Decline
+                            {loadingDeclineIds.includes(applicant._id) ? (
+                              <ImSpinner6 className="animate-spin text-white mx-4" />
+                            ) : (
+                              "Decline"
+                            )}
                           </button>
                         </div>
                       </li>
@@ -712,9 +739,14 @@ const MentorDashboard = () => {
                   </div>
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-blue-500 text-white rounded"
+                    className="px-4 py-2 bg-blue-500 text-white rounded flex items-center justify-center"
+                    disabled={loadingCreateSession} // Disable button while loading
                   >
-                    Create Session
+                    {loadingCreateSession ? (
+                      <ImSpinner6 className="animate-spin text-white mx-8" />
+                    ) : (
+                      "Create Session"
+                    )}
                   </button>
                 </form>
 
@@ -890,7 +922,7 @@ const MentorDashboard = () => {
                                             applicant._id
                                           )
                                         }
-                                        className="px-2 py-1 bg-green-500 text-white rounded text-sm"
+                                        className="px-2 py-1 bg-green-600 text-white rounded text-sm"
                                       >
                                         Approve
                                       </button>
