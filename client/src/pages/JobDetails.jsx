@@ -8,8 +8,9 @@ import { IoLocationOutline } from "react-icons/io5";
 import { BsFilePersonFill } from "react-icons/bs";
 import { LiaIndustrySolid } from "react-icons/lia";
 import { IoChevronBackOutline } from "react-icons/io5";
-import { AiOutlineUpload } from "react-icons/ai"; // Import upload icon
+import { AiOutlineUpload, AiOutlineLoading3Quarters } from "react-icons/ai"; // Import upload and loading spinner icons
 import LoadingScreen from "../components/LoadingScreen";
+import Spinner from "../elements/Spinner"; // Import Spinner component
 
 const JobDetails = () => {
   const { jobId } = useParams();
@@ -17,6 +18,7 @@ const JobDetails = () => {
   const navigate = useNavigate();
   const [cv, setCv] = useState(null);
   const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false); // Add loading state
 
   useEffect(() => {
     const fetchJob = async () => {
@@ -35,9 +37,11 @@ const JobDetails = () => {
 
   const handleApply = async (e) => {
     e.preventDefault();
+    setLoading(true); // Set loading to true when submitting
 
     if (!cv) {
       toast.error("Please upload your CV.");
+      setLoading(false); // Reset loading state
       return;
     }
 
@@ -48,6 +52,7 @@ const JobDetails = () => {
     ];
     if (!allowedTypes.includes(cv.type)) {
       toast.error("Only .pdf, .doc, and .docx files are allowed.");
+      setLoading(false); // Reset loading state
       return;
     }
 
@@ -69,6 +74,8 @@ const JobDetails = () => {
       const errorMessage =
         error.response?.data?.message || "Failed to submit application.";
       toast.error(errorMessage);
+    } finally {
+      setLoading(false); // Reset loading state
     }
   };
 
@@ -158,9 +165,10 @@ const JobDetails = () => {
           </div>
           <button
             type="submit"
-            className="px-6 py-3 bg-green-500 text-white font-SatoshiMedium rounded-lg hover:bg-green-600 transition-all shadow-md w-full"
+            className="px-6 py-3 bg-green-500 text-white font-SatoshiMedium rounded-lg hover:bg-green-600 transition-all shadow-md w-full flex items-center justify-center gap-2"
+            disabled={loading} // Disable button while loading
           >
-            Submit Application
+            {loading ? <Spinner /> : "Submit Application"}
           </button>
         </form>
       </div>

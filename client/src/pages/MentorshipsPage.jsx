@@ -5,6 +5,7 @@ import { noresults } from "../constants/assests.js";
 import { toast } from "react-toastify";
 import LoadingScreen from "../components/LoadingScreen.jsx";
 import { skillsList } from "../constants/index.js";
+import Spinner from "../elements/Spinner"; // Import Spinner component
 
 const MentorshipsPage = () => {
   const [mentorships, setMentorships] = useState([]);
@@ -13,6 +14,7 @@ const MentorshipsPage = () => {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSkill, setSelectedSkill] = useState("All Skills");
+  const [loadingMentorshipId, setLoadingMentorshipId] = useState(null); // Track loading state for specific mentorship
 
   useEffect(() => {
     const fetchMentorships = async () => {
@@ -62,6 +64,7 @@ const MentorshipsPage = () => {
   };
 
   const handleApply = async (mentorshipId) => {
+    setLoadingMentorshipId(mentorshipId); // Set loading state for the specific mentorship
     try {
       const response = await fetch(
         `http://localhost:3000/api/mentorships/${mentorshipId}/apply`,
@@ -121,7 +124,8 @@ const MentorshipsPage = () => {
           error.message ||
           "Failed to apply for mentorship"
       );
-      toast.error(error.message || "Failed to apply for mentorship");
+    } finally {
+      setLoadingMentorshipId(null); // Reset loading state
     }
   };
 
@@ -249,16 +253,21 @@ const MentorshipsPage = () => {
                   {mentorship.currentApplicants >= mentorship.maxApplicants ? (
                     <button
                       disabled
-                      className="text-xs px-3 py-1.5 rounded-full bg-gray-50 text-gray-400 border border-gray-200 flex items-center gap-1.5"
+                      className="text-xs px-6 py-3 rounded-full bg-gray-50 text-grayStroke border border-gray-200 flex items-center"
                     >
                       Closed
                     </button>
                   ) : (
                     <button
                       onClick={() => handleApply(mentorship._id)}
-                      className="text-xs px-3 py-1.5 rounded-full bg-primary/5 text-primary border border-primary/20 hover:bg-primary hover:text-white transition-all flex items-center gap-1.5 group-hover:shadow-sm"
+                      className="text-xs w-[5.5rem] h-[3rem] rounded-full bg-primary/5 text-primary border text-center justify-center border-primary/20 hover:bg-primary hover:text-white transition-all flex items-center group-hover:shadow-sm"
+                      disabled={loadingMentorshipId === mentorship._id} // Disable button while loading
                     >
-                      Apply
+                      {loadingMentorshipId === mentorship._id ? (
+                        <Spinner />
+                      ) : (
+                        "Apply"
+                      )}
                     </button>
                   )}
                 </div>
