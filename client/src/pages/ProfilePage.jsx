@@ -15,6 +15,7 @@ import { HiMiniDocumentText } from "react-icons/hi2";
 import { MdSpaceDashboard } from "react-icons/md";
 import { TbLocationFilled } from "react-icons/tb";
 import { IoIosCloseCircle } from "react-icons/io";
+import Spinner from "../elements/Spinner"; // Import Spinner component
 
 const ProfilePage = () => {
   const { user, setUser } = useAuthStore();
@@ -46,6 +47,7 @@ const ProfilePage = () => {
   );
   const [loading, setLoading] = useState(true);
   const [skills, setSkills] = useState(profileData.skills || []);
+  const [loadingSave, setLoadingSave] = useState(false); // Track loading state for save button
 
   useEffect(() => {
     if (user) {
@@ -137,6 +139,7 @@ const ProfilePage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoadingSave(true); // Set loading state to true
     const formData = new FormData();
     formData.append("firstname", profileData.firstname);
     formData.append("lastname", profileData.lastname);
@@ -193,6 +196,8 @@ const ProfilePage = () => {
     } catch (error) {
       console.error("Profile update error:", error);
       toast.error("Failed to update profile.");
+    } finally {
+      setLoadingSave(false); // Reset loading state
     }
   };
 
@@ -465,12 +470,15 @@ const ProfilePage = () => {
             />
           </div>
         </div>
-        <button
-          type="submit"
-          className="bg-blue-500 text-white p-2 rounded hover:bg-blue-700 mt-4 leading-normal mx-auto flex w-fit h-fit"
-        >
-          Save Profile
-        </button>
+        <div className="flex flex-col items-center justify-center w-1/12 h-[3.5rem] mx-auto">
+          <button
+            type="submit"
+            className="bg-blue-500 text-white items-center rounded hover:bg-blue-700 mt-4 leading-normal mx-auto flex w-full justify-center h-[3.5rem]"
+            disabled={loadingSave} // Disable button while loading
+          >
+            {loadingSave ? <Spinner /> : "Save Profile"}
+          </button>
+        </div>
       </form>
     </div>
   );

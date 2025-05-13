@@ -1,8 +1,8 @@
 import React from "react";
 
-const Spinner = () => (
+const Spinner = ({ClassName}) => (
   <svg
-    className="animate-spin h-6 w-6 text-white"
+    className={`${ClassName} animate-spin h-6 w-6 text-white `}
     xmlns="http://www.w3.org/2000/svg"
     fill="none"
     viewBox="0 0 24 24"

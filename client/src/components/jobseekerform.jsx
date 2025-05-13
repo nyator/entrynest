@@ -3,7 +3,7 @@ import InputField from "../elements/inputField";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { toast } from "react-toastify";
-import { BiLoaderCircle } from "react-icons/bi";
+import Spinner from "../elements/Spinner";
 
 async function signup(firstname, lastname, email, password, role) {
   try {
@@ -43,7 +43,13 @@ function JobseekerForm({
     e.preventDefault();
     setLoading(true); // Set loading to true
 
-    if (!jsfirstname || !jslastname || !jsemail || !jspassword || !jsconfirmpassword) {
+    if (
+      !jsfirstname ||
+      !jslastname ||
+      !jsemail ||
+      !jspassword ||
+      !jsconfirmpassword
+    ) {
       toast.error("Please fill in all fields");
       setLoading(false);
       return;
@@ -76,7 +82,9 @@ function JobseekerForm({
 
   const handleResendCode = async () => {
     if (resendCooldown > 0) {
-      toast.warning(`Please wait ${resendCooldown} seconds before requesting a new code`);
+      toast.warning(
+        `Please wait ${resendCooldown} seconds before requesting a new code`
+      );
       return;
     }
 
@@ -92,7 +100,9 @@ function JobseekerForm({
       setResendCooldown(60);
     } catch (error) {
       console.error("Resend verification error:", error);
-      toast.error(error.response?.data?.message || "Failed to send new verification code");
+      toast.error(
+        error.response?.data?.message || "Failed to send new verification code"
+      );
     } finally {
       setIsResending(false);
     }
@@ -164,17 +174,15 @@ function JobseekerForm({
         </div>
         <div>
           {signupError && (
-          <div className="text-red-600 text-[0.60rem] mt-2 text-center">{signupError}</div>
-        )}
+            <div className="text-red-600 text-[0.60rem] mt-2 text-center">
+              {signupError}
+            </div>
+          )}
           <button
             type="submit"
             className="w-full bg-primary text-white font-medium py-2  flex justify-center items-center rounded-xl"
           >
-            {loading ? (
-              <BiLoaderCircle className="font-bold text-2xl text-center items-center animate-spin" />
-            ) : (
-              "Signup"
-            )}
+            {loading ? <Spinner /> : "Signup"}
           </button>
         </div>
       </form>

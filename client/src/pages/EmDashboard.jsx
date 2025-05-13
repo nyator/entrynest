@@ -11,6 +11,7 @@ import { FaCircleXmark } from "react-icons/fa6";
 import { IoCheckmarkCircle } from "react-icons/io5";
 import { MdOutlinePostAdd } from "react-icons/md";
 import Swal from "sweetalert2"; // Import SweetAlert2 for confirmation popups
+import { ImSpinner6 } from "react-icons/im";
 
 const EmDashboard = () => {
   const [applications, setApplications] = useState([]);
@@ -22,6 +23,8 @@ const EmDashboard = () => {
   const navigate = useNavigate();
   const [pendingApplicationsCount, setPendingApplicationsCount] = useState(0);
   const [manageJobsCount, setManageJobsCount] = useState(0);
+  const [loadingApproveIds, setLoadingApproveIds] = useState([]); // Track loading state for specific "Approve" buttons
+  const [loadingDeclineIds, setLoadingDeclineIds] = useState([]); // Track loading state for specific "Decline" buttons
 
   const currentTabApplications = applications.slice(
     (currentPage - 1) * itemsPerPage,
@@ -251,6 +254,12 @@ const EmDashboard = () => {
   };
 
   const handleUpdateStatus = async (applicationId, status) => {
+    if (status === "approved") {
+      setLoadingApproveIds((prev) => [...prev, applicationId._id]); // Add application ID to loadingApproveIds
+    } else if (status === "declined") {
+      setLoadingDeclineIds((prev) => [...prev, applicationId._id]); // Add application ID to loadingDeclineIds
+    }
+
     try {
       await axios.patch(
         `/jobs/${applicationId.jobId}/applications/${applicationId._id}`,
@@ -263,14 +272,27 @@ const EmDashboard = () => {
         }
       );
       toast.success(`Application ${status} successfully`);
+
+      // Immediately remove the application from the state
       setApplications((prev) =>
-        prev.map((app) =>
-          app._id === applicationId._id ? { ...app, status } : app
-        )
+        prev.filter((app) => app._id !== applicationId._id)
       );
+
+      // Decrement the pending applications count
+      setPendingApplicationsCount((prevCount) => Math.max(prevCount - 1, 0));
     } catch (error) {
       console.error(`Error updating application status to ${status}:`, error);
       toast.error(`Failed to ${status} application`);
+    } finally {
+      if (status === "approved") {
+        setLoadingApproveIds((prev) =>
+          prev.filter((id) => id !== applicationId._id)
+        ); // Remove application ID from loadingApproveIds
+      } else if (status === "declined") {
+        setLoadingDeclineIds((prev) =>
+          prev.filter((id) => id !== applicationId._id)
+        ); // Remove application ID from loadingDeclineIds
+      }
     }
   };
 
@@ -476,19 +498,33 @@ const EmDashboard = () => {
                               onClick={() =>
                                 handleUpdateStatus(app, "approved")
                               }
-                              className="px-4 py-2 bg-green-600 text-white rounded"
-                              disabled={app.status === "approved"}
+                              className="px-4 py-2 bg-green-600 text-white rounded flex items-center"
+                              disabled={
+                                loadingApproveIds.includes(app._id) ||
+                                app.status === "approved"
+                              } // Disable button while loading or already approved
                             >
-                              Approve
+                              {loadingApproveIds.includes(app._id) ? (
+                                <ImSpinner6 className="animate-spin text-white mx-4" />
+                              ) : (
+                                "Approve"
+                              )}
                             </button>
                             <button
                               onClick={() =>
                                 handleUpdateStatus(app, "declined")
                               }
-                              className="px-2 py-1 sm:px-4 md:py-2 bg-red-600 text-white rounded"
-                              disabled={app.status === "declined"}
+                              className="px-2 py-1 sm:px-4 md:py-2 bg-red-600 text-white rounded flex items-center"
+                              disabled={
+                                loadingDeclineIds.includes(app._id) ||
+                                app.status === "declined"
+                              } // Disable button while loading or already declined
                             >
-                              Decline
+                              {loadingDeclineIds.includes(app._id) ? (
+                                <ImSpinner6 className="animate-spin text-white mx-4" />
+                              ) : (
+                                "Decline"
+                              )}
                             </button>
                           </div>
                           <div className="flex gap-4 items-center">

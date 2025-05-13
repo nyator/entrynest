@@ -7,6 +7,7 @@ import { MdSpaceDashboard } from "react-icons/md";
 import { FaDownload } from "react-icons/fa6";
 import { HiMiniArrowsUpDown } from "react-icons/hi2";
 import { MdOutlineArrowDropDown } from "react-icons/md";
+import { ImSpinner6 } from "react-icons/im"; // Import spinner icon
 
 import { toast } from "react-toastify";
 import LoadingScreen from "../components/LoadingScreen";
@@ -22,6 +23,8 @@ const JobApplications = () => {
   const [sortOrder, setSortOrder] = useState("newest"); // Add sort order state
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false); // State to toggle sort dropdown visibility
   const [loading, setLoading] = useState(true); // Add loading state
+  const [loadingApproveIds, setLoadingApproveIds] = useState([]); // Track loading state for specific "Approve" buttons
+  const [loadingDeclineIds, setLoadingDeclineIds] = useState([]); // Track loading state for specific "Decline" buttons
   const applicationsPerPage = 5;
   const navigate = useNavigate();
 
@@ -156,6 +159,12 @@ const JobApplications = () => {
   };
 
   const handleUpdateStatus = async (applicationId, status) => {
+    if (status === "approved") {
+      setLoadingApproveIds((prev) => [...prev, applicationId]); // Add application ID to loadingApproveIds
+    } else if (status === "declined") {
+      setLoadingDeclineIds((prev) => [...prev, applicationId]); // Add application ID to loadingDeclineIds
+    }
+
     try {
       await axios.patch(
         `/jobs/${jobId}/applications/${applicationId}`,
@@ -181,6 +190,16 @@ const JobApplications = () => {
     } catch (error) {
       console.error(`Error updating application status to ${status}:`, error);
       toast.error(`Failed to ${status} application`);
+    } finally {
+      if (status === "approved") {
+        setLoadingApproveIds((prev) =>
+          prev.filter((id) => id !== applicationId)
+        ); // Remove application ID from loadingApproveIds
+      } else if (status === "declined") {
+        setLoadingDeclineIds((prev) =>
+          prev.filter((id) => id !== applicationId)
+        ); // Remove application ID from loadingDeclineIds
+      }
     }
   };
 
@@ -340,15 +359,25 @@ const JobApplications = () => {
                   <div className="flex flex-col md:flex-row gap-4 items-end md:items-center absolute -top-2 md:top-0 right-0 p-4">
                     <button
                       onClick={() => handleUpdateStatus(app._id, "approved")}
-                      className="px-2 py-1 sm:px-4 md:py-2 bg-green-500 text-white rounded border border-green-600"
+                      className="px-2 py-1 sm:px-4 md:py-2 bg-green-600 text-white rounded border border-green-700 flex items-center"
+                      disabled={loadingApproveIds.includes(app._id)} // Disable button while loading
                     >
-                      Approve
+                      {loadingApproveIds.includes(app._id) ? (
+                        <ImSpinner6 className="animate-spin text-white mx-4" />
+                      ) : (
+                        "Approve"
+                      )}
                     </button>
                     <button
                       onClick={() => handleUpdateStatus(app._id, "declined")}
-                      className="px-2 py-1 sm:px-4 md:py-2 bg-red-500 text-white rounded border border-red-600"
+                      className="px-2 py-1 sm:px-4 md:py-2 bg-red-500 text-white rounded border border-red-600 flex items-center"
+                      disabled={loadingDeclineIds.includes(app._id)} // Disable button while loading
                     >
-                      Decline
+                      {loadingDeclineIds.includes(app._id) ? (
+                        <ImSpinner6 className="animate-spin text-white mx-4" />
+                      ) : (
+                        "Decline"
+                      )}
                     </button>
                   </div>
                 )}

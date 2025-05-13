@@ -9,6 +9,7 @@ import { FcGoogle } from "react-icons/fc";
 import { BiLoaderCircle } from "react-icons/bi";
 
 import { useAuthStore } from "../store/authStore";
+import Spinner from "../elements/Spinner";
 
 function LoginPage() {
   const emailRef = useRef(null);
@@ -119,11 +120,7 @@ function LoginPage() {
                     type="submit"
                     className="w-full bg-primary text-white justify-center flex font-medium py-2 rounded-xl"
                   >
-                    {loading ? (
-                      <BiLoaderCircle className="font-bold text-2xl items-center animate-spin transition-all ease-in-out duration-200 " />
-                    ) : (
-                      "Login"
-                    )}
+                    {loading ? <Spinner /> : "Login"}
                   </button>
                 </div>
               </form>
