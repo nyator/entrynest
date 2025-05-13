@@ -64,7 +64,7 @@ export const createMentorship = async (req, res) => {
 
 export const getMentorships = async (req, res) => {
   try {
-    const mentorships = await Mentorship.find();
+    const mentorships = await Mentorship.find({ mentor: req.userId }); // Fetch only mentorships created by the logged-in mentor
     res.status(200).json({
       success: true,
       mentorships,
@@ -463,11 +463,14 @@ export const updateMentorship = async (req, res) => {
 
 export const getMentorshipById = async (req, res) => {
   try {
-    const mentorship = await Mentorship.findById(req.params.mentorshipId);
+    const mentorship = await Mentorship.findOne({
+      _id: req.params.mentorshipId,
+      mentor: req.userId, // Ensure the logged-in mentor owns the mentorship
+    });
     if (!mentorship) {
       return res.status(404).json({
         success: false,
-        message: "Mentorship not found",
+        message: "Mentorship not found or access denied",
       });
     }
 

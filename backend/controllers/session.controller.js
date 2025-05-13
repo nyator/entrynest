@@ -4,9 +4,9 @@ import { sendSessionCreatedEmail } from "../utils/emailService.js";
 
 export const getSessionsByMentor = async (req, res) => {
   try {
-    const sessions = await Session.find({ mentor: req.userId })
+    const sessions = await Session.find({ mentor: req.userId }) // Fetch only sessions created by the logged-in mentor
       .populate("mentees", "firstname lastname email") // Populate mentee details
-      .select("topic date startTime endTime message mentees link"); // Include the link field
+      .select("topic date startTime endTime message mentees link");
 
     res.status(200).json({
       success: true,

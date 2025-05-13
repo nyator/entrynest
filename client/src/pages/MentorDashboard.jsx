@@ -60,6 +60,7 @@ const MentorDashboard = () => {
   const [loadingApproveIds, setLoadingApproveIds] = useState([]); // Track loading state for specific "Approve" buttons
   const [loadingDeclineIds, setLoadingDeclineIds] = useState([]); // Track loading state for specific "Decline" buttons
   const [loadingCreateSession, setLoadingCreateSession] = useState(false); // Track loading state for "Create Session" button
+  const [loadingPostMentorship, setLoadingPostMentorship] = useState(false); // Add loading state for post mentorship
 
   const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
 
@@ -231,7 +232,7 @@ const MentorDashboard = () => {
 
   const handlePostSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setLoadingPostMentorship(true); // Set loading state
     try {
       const response = await axios.post(
         `${API_URL}/api/mentorships`,
@@ -260,7 +261,7 @@ const MentorDashboard = () => {
           "Failed to create mentorship opportunity"
       );
     } finally {
-      setLoading(false);
+      setLoadingPostMentorship(false); // Reset loading state
     }
   };
 
@@ -1053,9 +1054,14 @@ const MentorDashboard = () => {
                   <div className="flex gap-2">
                     <button
                       type="submit"
-                      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+                      className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center justify-center"
+                      disabled={loadingPostMentorship} // Disable button while loading
                     >
-                      Post Mentorship
+                      {loadingPostMentorship ? (
+                        <ImSpinner6 className="animate-spin text-white mx-4" />
+                      ) : (
+                        "Post Mentorship"
+                      )}
                     </button>
                     <button
                       type="button"

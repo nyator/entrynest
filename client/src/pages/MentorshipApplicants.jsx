@@ -7,6 +7,7 @@ import { HiMiniArrowsUpDown } from "react-icons/hi2";
 import { MdOutlineArrowDropDown } from "react-icons/md";
 import { toast } from "react-toastify";
 import LoadingScreen from "../components/LoadingScreen";
+import { ImSpinner6 } from "react-icons/im";
 
 const MentorshipApplicants = () => {
   const [applicants, setApplicants] = useState([]);
@@ -24,6 +25,8 @@ const MentorshipApplicants = () => {
 
   const [selectedApplicant, setSelectedApplicant] = useState(null);
   const [message, setMessage] = useState(""); // Ensure message state is defined
+  const [loadingApproveIds, setLoadingApproveIds] = useState([]); // Track loading state for specific "Approve" buttons
+  const [loadingDeclineIds, setLoadingDeclineIds] = useState([]); // Track loading state for specific "Decline" buttons
 
   const handleClickOutside = (event) => {
     if (
@@ -82,8 +85,11 @@ const MentorshipApplicants = () => {
   };
 
   const handleApplicantAction = async (applicantId, mentorshipId, action) => {
-    console.log(`Performing ${action} action for applicant ID:`, applicantId); // Debugging
-    console.log(`Mentorship ID:`, mentorshipId); // Debugging
+    if (action === "approve") {
+      setLoadingApproveIds((prev) => [...prev, applicantId]); // Add applicant ID to loadingApproveIds
+    } else if (action === "decline") {
+      setLoadingDeclineIds((prev) => [...prev, applicantId]); // Add applicant ID to loadingDeclineIds
+    }
 
     try {
       const url = `${import.meta.env.VITE_API_URL}/api/mentorships/${mentorshipId}/${action}/${applicantId}`;
@@ -100,6 +106,12 @@ const MentorshipApplicants = () => {
     } catch (error) {
       console.error(`Error ${action} applicant:`, error);
       toast.error(error.response?.data?.message || `Failed to ${action} applicant.`);
+    } finally {
+      if (action === "approve") {
+        setLoadingApproveIds((prev) => prev.filter((id) => id !== applicantId)); // Remove applicant ID from loadingApproveIds
+      } else if (action === "decline") {
+        setLoadingDeclineIds((prev) => prev.filter((id) => id !== applicantId)); // Remove applicant ID from loadingDeclineIds
+      }
     }
   };
 
@@ -291,9 +303,14 @@ const MentorshipApplicants = () => {
                           applicant.mentorshipId
                         )
                       }
-                      className="px-2 py-1 sm:px-4 md:py-2 bg-green-500 text-white rounded border border-green-600 hover:bg-green-600 transition-colors"
+                      className="px-2 py-1 sm:px-4 md:py-2 bg-green-600 text-white rounded border border-green-600 hover:bg-green-600 transition-colors flex items-center justify-center"
+                      disabled={loadingApproveIds.includes(applicant._id)} // Disable button while loading
                     >
-                      Approve
+                      {loadingApproveIds.includes(applicant._id) ? (
+                        <ImSpinner6 className="animate-spin text-white mx-5" />
+                      ) : (
+                        "Approve"
+                      )}
                     </button>
                     <button
                       onClick={() =>
@@ -302,9 +319,14 @@ const MentorshipApplicants = () => {
                           applicant.mentorshipId
                         )
                       }
-                      className="px-2 py-1 sm:px-4 md:py-2 bg-red-500 text-white rounded border border-red-600 hover:bg-red-600 transition-colors"
+                      className="px-2 py-1 sm:px-4 md:py-2 bg-red-600 text-white rounded border border-red-600 hover:bg-red-600 transition-colors flex items-center justify-center"
+                      disabled={loadingDeclineIds.includes(applicant._id)} // Disable button while loading
                     >
-                      Decline
+                      {loadingDeclineIds.includes(applicant._id) ? (
+                        <ImSpinner6 className="animate-spin text-white mx-5" />
+                      ) : (
+                        "Decline"
+                      )}
                     </button>
                   </div>
                 )}

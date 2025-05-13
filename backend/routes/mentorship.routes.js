@@ -18,12 +18,12 @@ const router = express.Router();
 
 // Static routes
 router.post("/", verifyToken, createMentorship); // Route to create a mentorship
-router.get("/", getMentorships); // Route to fetch mentorships
-router.get("/applicants/all", verifyToken, getAllMentorshipApplicants); // Fetch all applicants
-router.get("/mentees", verifyToken, getApprovedMentees); // Fetch approved mentees
+router.get("/", verifyToken, getMentorships); // Fetch mentorships created by the logged-in mentor
+router.get("/applicants/all", verifyToken, getAllMentorshipApplicants); // Fetch all applicants for the logged-in mentor's mentorships
+router.get("/mentees", verifyToken, getApprovedMentees); // Fetch approved mentees for the logged-in mentor
 
 // Dynamic routes (must come after static routes)
-router.get("/:mentorshipId", getMentorshipById); // Fetch mentorship by ID
+router.get("/:mentorshipId", verifyToken, getMentorshipById); // Fetch mentorship by ID (only if owned by the logged-in mentor)
 router.get("/:mentorshipId/applicants", verifyToken, getMentorshipApplicants); // Fetch applicants for a mentorship
 router.post("/:mentorshipId/apply", verifyToken, applyToMentorship); // Apply to a mentorship
 router.put("/:mentorshipId", verifyToken, updateMentorship); // Update a mentorship
