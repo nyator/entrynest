@@ -1,6 +1,6 @@
 import { Session } from "../models/session.model.js";
 import cron from "node-cron";
-import { sendSessionCreatedEmail } from "../utils/emailService.js";
+import { sendSessionCreatedEmail, sendSessionDeletedEmail } from "../utils/emailService.js";
 
 export const getSessionsByMentor = async (req, res) => {
   try {
@@ -79,7 +79,7 @@ export const deleteSession = async (req, res) => {
   try {
     const { sessionId } = req.params;
 
-    const session = await Session.findById(sessionId);
+    const session = await Session.findById(sessionId).populate("mentees", "firstname lastname email");
     if (!session) {
       return res.status(404).json({
         success: false,
@@ -95,6 +95,20 @@ export const deleteSession = async (req, res) => {
       });
     }
 
+    // Send email to mentees
+    session.mentees.forEach((mentee) => {
+      sendSessionDeletedEmail({
+        email: mentee.email,
+        firstname: mentee.firstname,
+        sessionDetails: {
+          topic: session.topic,
+          date: session.date,
+          startTime: session.startTime,
+          endTime: session.endTime,
+        },
+      });
+    });
+
     await session.deleteOne();
 
     res.status(200).json({
@@ -106,7 +120,6 @@ export const deleteSession = async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Failed to delete session",
-      errorDetails: process.env.NODE_ENV === "development" ? error.stack : undefined,
     });
   }
 };

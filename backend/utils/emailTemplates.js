@@ -399,3 +399,47 @@ export const SESSION_CREATED_TEMPLATE = `
 </body>
 </html>
 `;
+
+export const SESSION_DELETED_TEMPLATE = `
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    .header {
+      background: linear-gradient(to right, #8B3AE1, #6B29B0);
+      padding: 20px;
+      text-align: center;
+      color: white;
+    }
+    .content {
+      background-color: #f9f9f9;
+      padding: 20px;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+  <title>Session Canceled</title>
+</head>
+<body>
+  <div class="header">
+    <h1>Session Canceled</h1>
+  </div>
+  <div class="content">
+    <p>Hello {firstname},</p>
+    <p>We regret to inform you that the session "<strong>{topic}</strong>" scheduled on <strong>{date}</strong> from <strong>{startTime}</strong> to <strong>{endTime}</strong> has been canceled.</p>
+    <p>We apologize for any inconvenience caused.</p>
+    <p>Best regards,<br>entrynest Team</p>
+  </div>
+</body>
+</html>
+`;

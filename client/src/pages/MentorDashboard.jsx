@@ -61,6 +61,7 @@ const MentorDashboard = () => {
   const [loadingDeclineIds, setLoadingDeclineIds] = useState([]); // Track loading state for specific "Decline" buttons
   const [loadingCreateSession, setLoadingCreateSession] = useState(false); // Track loading state for "Create Session" button
   const [loadingPostMentorship, setLoadingPostMentorship] = useState(false); // Add loading state for post mentorship
+  const [loadingDeleteSessionIds, setLoadingDeleteSessionIds] = useState([]); // Track loading state for specific "Delete Session" buttons
 
   const today = new Date().toISOString().split("T")[0]; // Get today's date in YYYY-MM-DD format
 
@@ -263,6 +264,13 @@ const MentorDashboard = () => {
 
   const handleSessionSubmit = async (e) => {
     e.preventDefault();
+
+    // Ensure at least one mentee is selected
+    if (sessionForm.selectedMentees.length === 0) {
+      toast.error("Please select at least one mentee to create a session.");
+      return;
+    }
+
     setLoadingCreateSession(true); // Set loading state for "Create Session"
 
     // Validate the link field
@@ -313,6 +321,7 @@ const MentorDashboard = () => {
   };
 
   const handleDeleteSession = async (sessionId) => {
+    setLoadingDeleteSessionIds((prev) => [...prev, sessionId]); // Add session ID to loadingDeleteSessionIds
     try {
       const response = await axios.delete(
         `${API_URL}/api/mentorships/sessions/${sessionId}`,
@@ -330,6 +339,10 @@ const MentorDashboard = () => {
     } catch (error) {
       console.error("Error deleting session:", error);
       toast.error(error.response?.data?.message || "Failed to delete session");
+    } finally {
+      setLoadingDeleteSessionIds((prev) =>
+        prev.filter((id) => id !== sessionId)
+      ); // Remove session ID from loadingDeleteSessionIds
     }
   };
 
@@ -793,9 +806,14 @@ const MentorDashboard = () => {
                       </p> */}
                       <button
                         onClick={() => handleDeleteSession(session._id)}
-                        className="mt-2 px-4 py-2 bg-red-500 text-white rounded"
+                        className="mt-2 px-4 py-2 bg-red-500 text-white rounded flex items-center justify-center"
+                        disabled={loadingDeleteSessionIds.includes(session._id)} // Disable button while loading
                       >
-                        Delete Session
+                        {loadingDeleteSessionIds.includes(session._id) ? (
+                          <ImSpinner6 className="animate-spin text-white mx-6" />
+                        ) : (
+                          "Delete Session"
+                        )}
                       </button>
                     </li>
                   ))}

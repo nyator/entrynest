@@ -10,6 +10,7 @@ import {
   MENTORSHIP_APPROVED_TEMPLATE,
   MENTORSHIP_DECLINED_TEMPLATE,
   SESSION_CREATED_TEMPLATE,
+  SESSION_DELETED_TEMPLATE,
 } from "./emailTemplates.js";
 
 export const sendVerificationEmail = async (
@@ -300,5 +301,30 @@ export const sendSessionCreatedEmail = async ({
   } catch (error) {
     console.error("Error sending session created email:", error);
     throw new Error(`Error sending session created email: ${error.message}`);
+  }
+};
+
+export const sendSessionDeletedEmail = async ({ email, firstname, sessionDetails }) => {
+  try {
+    const { topic, date, startTime, endTime } = sessionDetails;
+
+    const html = SESSION_DELETED_TEMPLATE.replace("{firstname}", firstname)
+      .replace("{topic}", topic)
+      .replace("{date}", new Date(date).toLocaleDateString())
+      .replace("{startTime}", startTime)
+      .replace("{endTime}", endTime);
+
+    const text = `Hello ${firstname},\n\nWe regret to inform you that the session "${topic}" scheduled on ${new Date(
+      date
+    ).toLocaleDateString()} from ${startTime} to ${endTime} has been canceled.\n\nBest regards,\nentrynest Team`;
+
+    await sendEmail({
+      to: email,
+      subject: `📮 Session Canceled: ${topic}`,
+      html,
+      text,
+    });
+  } catch (error) {
+    console.error("Error sending session deleted email:", error);
   }
 };
