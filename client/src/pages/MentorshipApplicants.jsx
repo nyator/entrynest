@@ -92,7 +92,9 @@ const MentorshipApplicants = () => {
     }
 
     try {
-      const url = `${import.meta.env.VITE_API_URL}/api/mentorships/${mentorshipId}/${action}/${applicantId}`;
+      const url = `${
+        import.meta.env.VITE_API_URL
+      }/api/mentorships/${mentorshipId}/${action}/${applicantId}`;
       const response = await axios.post(url, {}, { withCredentials: true });
 
       if (response.data.success) {
@@ -105,7 +107,9 @@ const MentorshipApplicants = () => {
       }
     } catch (error) {
       console.error(`Error ${action} applicant:`, error);
-      toast.error(error.response?.data?.message || `Failed to ${action} applicant.`);
+      toast.error(
+        error.response?.data?.message || `Failed to ${action} applicant.`
+      );
     } finally {
       if (action === "approve") {
         setLoadingApproveIds((prev) => prev.filter((id) => id !== applicantId)); // Remove applicant ID from loadingApproveIds
@@ -142,7 +146,11 @@ const MentorshipApplicants = () => {
   );
 
   if (loading) {
-    return <LoadingScreen />;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <LoadingScreen />
+      </div>
+    );
   }
 
   return (

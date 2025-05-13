@@ -9,6 +9,7 @@ import { HiMiniDocumentText } from "react-icons/hi2";
 import { MdSpaceDashboard } from "react-icons/md";
 import { IoIosCloseCircle } from "react-icons/io";
 import { IoMdPricetags } from "react-icons/io";
+import { ImSpinner6 } from "react-icons/im";
 
 const SKILLS = [
   "JavaScript",
@@ -60,13 +61,14 @@ const SKILLS = [
   "Product Management",
   "Agile/Scrum",
   "Project Management",
-  "Technical Writing"
+  "Technical Writing",
 ];
 
 const EditMentorshipPage = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
+  const [loadingUpdateMentorship, setLoadingUpdateMentorship] = useState(false); // Add loading state for update mentorship
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [formData, setFormData] = useState({
     title: "",
@@ -99,7 +101,9 @@ const EditMentorshipPage = () => {
         }
       } catch (error) {
         console.error("Error fetching mentorship:", error);
-        toast.error(error.response?.data?.message || "Failed to fetch mentorship");
+        toast.error(
+          error.response?.data?.message || "Failed to fetch mentorship"
+        );
         navigate("/mentor-dashboard");
       } finally {
         setLoading(false);
@@ -134,7 +138,7 @@ const EditMentorshipPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
+    setLoadingUpdateMentorship(true); // Set loading state
     try {
       const response = await axios.put(
         `${import.meta.env.VITE_API_URL}/api/mentorships/${id}`,
@@ -150,14 +154,20 @@ const EditMentorshipPage = () => {
       }
     } catch (error) {
       console.error("Error updating mentorship:", error);
-      toast.error(error.response?.data?.message || "Failed to update mentorship");
+      toast.error(
+        error.response?.data?.message || "Failed to update mentorship"
+      );
     } finally {
-      setLoading(false);
+      setLoadingUpdateMentorship(false); // Reset loading state
     }
   };
 
   if (loading) {
-    return <LoadingScreen />;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <LoadingScreen />
+      </div>
+    );
   }
 
   return (
@@ -222,7 +232,9 @@ const EditMentorshipPage = () => {
             <div className="mb-4">
               <label className="block text-black/60">Skills Required</label>
               <CustomDropdown
-                options={SKILLS.filter((skill) => !selectedSkills.includes(skill))}
+                options={SKILLS.filter(
+                  (skill) => !selectedSkills.includes(skill)
+                )}
                 value=""
                 onChange={handleSkillChange}
                 placeholder="Select a skill"
@@ -266,9 +278,14 @@ const EditMentorshipPage = () => {
         <div className="flex gap-2">
           <button
             type="submit"
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 flex items-center justify-center"
+            disabled={loadingUpdateMentorship} // Disable button while loading
           >
-            Update Mentorship
+            {loadingUpdateMentorship ? (
+              <ImSpinner6 className="animate-spin text-white mx-4" />
+            ) : (
+              "Update Mentorship"
+            )}
           </button>
           <button
             type="button"
@@ -283,4 +300,4 @@ const EditMentorshipPage = () => {
   );
 };
 
-export default EditMentorshipPage; 
+export default EditMentorshipPage;

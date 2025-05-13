@@ -201,9 +201,7 @@ const MentorDashboard = () => {
         error.response?.data?.message || "Failed to approve applicant."
       );
     } finally {
-      setLoadingApproveIds((prev) =>
-        prev.filter((id) => id !== applicantId)
-      ); // Remove applicant ID from loadingApproveIds
+      setLoadingApproveIds((prev) => prev.filter((id) => id !== applicantId)); // Remove applicant ID from loadingApproveIds
     }
   };
 
@@ -224,9 +222,7 @@ const MentorDashboard = () => {
         error.response?.data?.message || "Failed to decline applicant."
       );
     } finally {
-      setLoadingDeclineIds((prev) =>
-        prev.filter((id) => id !== applicantId)
-      ); // Remove applicant ID from loadingDeclineIds
+      setLoadingDeclineIds((prev) => prev.filter((id) => id !== applicantId)); // Remove applicant ID from loadingDeclineIds
     }
   };
 
@@ -431,7 +427,11 @@ const MentorDashboard = () => {
   };
 
   if (loading) {
-    return <LoadingScreen />;
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <LoadingScreen />
+      </div>
+    );
   }
 
   return (
@@ -658,7 +658,7 @@ const MentorDashboard = () => {
                           />
                           <label>
                             {mentee.firstname} {mentee.lastname} -{" "}
-                            {mentee.email} 
+                            {mentee.email}
                           </label>
                         </li>
                       ))}
