@@ -520,18 +520,18 @@ const MentorDashboard = () => {
                         <p>
                           <strong>Email:</strong> {mentee.email}
                         </p>
-                        <p>
+                        {/* <p>
                           <strong>Message:</strong>{" "}
                           {mentee.message || "No message provided"}
-                        </p>
-                        <p>
+                        </p> */}
+                        {/* <p>
                           <strong>Mentorship Title:</strong>{" "}
                           {mentee.mentorshipTitle}
-                        </p>
-                        <p>
+                        </p> */}
+                        {/* <p>
                           <strong>Description:</strong>{" "}
                           {mentee.mentorshipDescription}
-                        </p>
+                        </p> */}
                       </li>
                     ))}
                   </ul>
@@ -572,10 +572,10 @@ const MentorDashboard = () => {
                           <strong>Skills:</strong>{" "}
                           {applicant.skills?.join(", ") || "No skills listed"}
                         </p>
-                        <p>
+                        {/* <p>
                           <strong>Message:</strong>{" "}
                           {applicant.message || "No message provided"}
-                        </p>
+                        </p> */}
                         <div className="flex gap-4 mt-2">
                           <button
                             onClick={() =>

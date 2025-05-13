@@ -4,6 +4,7 @@ import CustomDropdownV2 from "../components/CustomDropdownV2.jsx";
 import { noresults } from "../constants/assests.js";
 import { toast } from "react-toastify";
 import LoadingScreen from "../components/LoadingScreen.jsx";
+import { skillsList } from "../constants/index.js";
 
 const MentorshipsPage = () => {
   const [mentorships, setMentorships] = useState([]);
@@ -81,7 +82,6 @@ const MentorshipsPage = () => {
         }
         throw new Error(data.message || "Failed to apply for mentorship");
       }
-
       toast.success("Application submitted successfully!");
 
       // Simulate the current user ID for testing purposes
@@ -116,6 +116,11 @@ const MentorshipsPage = () => {
       );
     } catch (error) {
       console.error("Error applying for mentorship:", error);
+      toast.error(
+        error.response?.data?.message ||
+          error.message ||
+          "Failed to apply for mentorship"
+      );
       toast.error(error.message || "Failed to apply for mentorship");
     }
   };
@@ -164,14 +169,7 @@ const MentorshipsPage = () => {
           Filter by:
         </label>
         <CustomDropdownV2
-          options={[
-            "All Skills",
-            "JavaScript",
-            "Python",
-            "React",
-            "Node.js",
-            "Design",
-          ]}
+          options={skillsList}
           value={selectedSkill}
           onChange={(skill) => {
             setSelectedSkill(skill);

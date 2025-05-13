@@ -21,14 +21,14 @@ function Footer() {
             </p>
           </div>
           <div className="h-[1px] w-full bg-gray"></div>
-          <div className="flex justify-center sm:justify-normal text-clampText space-x-10">
+          {/* <div className="flex justify-center sm:justify-normal text-clampText space-x-10">
             <Link to="">
               <p>User Agreement</p>
             </Link>
             <Link to="">
               <p>Privacy</p>
             </Link>
-          </div>
+          </div> */}
         </div>
       </div>
     </>

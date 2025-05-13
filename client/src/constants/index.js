@@ -28,9 +28,9 @@ export const locationOptions = [
   "Worldwide",
 ];
 
-export const salaryRanges = ["0 - 1k", "1k - 3k", "3k - 5k", "Confidential"];
+export const salaryRanges = ["0 - 1,000", "1,000 - 3,000", "3,000 - 5,000", "Confidential"];
 
-export const jobTypes = ["Contract", "Entry level", "Internship", "NSS"];
+export const jobTypes = ["Entry level", "Internship", "NSS"];
 
 export const jobStyles = ["Hybrid", "On-site", "Remote"];
 

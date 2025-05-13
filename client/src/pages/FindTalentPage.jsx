@@ -33,7 +33,7 @@ const FindTalentPage = () => {
               <Button
                 text="Join Us"
                 className="border-primaryStroke bg-primary text-white"
-                Link="/join_signup"
+                Link="/signup"
               />
               <Button
                 text="Learn More"
@@ -71,7 +71,7 @@ const FindTalentPage = () => {
           <Button
             text="Signup now"
             className="text-black bg-white border-none mt-2"
-            Link="/join_signup"
+            Link="/signup"
           />
         </div>
         <img

@@ -214,5 +214,42 @@ export const resources = {
       url: "https://www.producthunt.com/",
       description: "Discover and discuss new products with makers."
     }
+  ],
+  careerAdvice: [
+    {
+      name: "The Balance Careers",
+      url: "https://www.thebalancecareers.com/",
+      description: "Extensive career advice and tips on various topics."
+    },
+    {
+      name: "Harvard Business Review",
+      url: "https://hbr.org/",
+      description: "Professional development and management insights."
+    },
+    {
+      name: "Work It Daily",
+      url: "https://www.workitdaily.com/",
+      description: "Career coaching and job tips."
+    },
+    {
+      name: "Ask a Manager",
+      url: "https://www.askamanager.org/",
+      description: "Workplace and career advice."
+    },
+    {
+      name: "Idealist Career Advice",
+      url: "https://www.idealist.org/grad-schools/career-advice",
+      description: "Resources for socially impactful careers."
+    },
+    {
+      name: "Monster Career Advice",
+      url: "https://www.monster.com/career-advice",
+      description: "Career tips for job seeking and development."
+    },
+    {
+      name: "Career Contessa",
+      url: "https://www.careercontessa.com/",
+      description: "Resources specifically for women's careers."
+    }
   ]
-}; 
+};

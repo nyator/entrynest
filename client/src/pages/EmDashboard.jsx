@@ -479,7 +479,7 @@ const EmDashboard = () => {
                               className="px-4 py-2 bg-green-600 text-white rounded"
                               disabled={app.status === "approved"}
                             >
-                              Contact
+                              Approve
                             </button>
                             <button
                               onClick={() =>
@@ -488,7 +488,7 @@ const EmDashboard = () => {
                               className="px-2 py-1 sm:px-4 md:py-2 bg-red-600 text-white rounded"
                               disabled={app.status === "declined"}
                             >
-                              Skip
+                              Decline
                             </button>
                           </div>
                           <div className="flex gap-4 items-center">

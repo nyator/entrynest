@@ -474,7 +474,7 @@ const AdminDashboard = () => {
             onClick={() => setActiveTab("Employees")}
           >
             <FaUsers />
-            Employees
+            Employers
           </li>
           <li
             className={`cursor-pointer px-6 py-2 inline-flex items-center gap-2 ${
@@ -532,7 +532,7 @@ const AdminDashboard = () => {
             <MdOutlinePostAdd />
             Post Job
           </li>
-          <li
+          {/* <li
             className={`cursor-pointer px-6 py-2 inline-flex items-center gap-2 ${
               activeTab === "support"
                 ? "bg-white rounded-lg transition-all ease-linear duration-150 border-gray/90 border"
@@ -542,7 +542,7 @@ const AdminDashboard = () => {
           >
             <BiSupport />
             Support
-          </li>
+          </li> */}
         </ul>
       </div>
 

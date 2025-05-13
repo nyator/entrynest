@@ -65,7 +65,7 @@ const LandingPage = () => {
               <Button
                 text="Find Jobs"
                 className="border-primaryStroke bg-white text-primaryStroke"
-                Link="/"
+                Link="/login"
               />
 
               <Button
@@ -115,7 +115,7 @@ const LandingPage = () => {
           <Button
             text="Signup now"
             className="text-black bg-white border-none mt-2"
-            Link="/join_signup"
+            Link="/signup"
           />
         </div>
         <img

@@ -342,13 +342,13 @@ const JobApplications = () => {
                       onClick={() => handleUpdateStatus(app._id, "approved")}
                       className="px-2 py-1 sm:px-4 md:py-2 bg-green-500 text-white rounded border border-green-600"
                     >
-                      Contact
+                      Approve
                     </button>
                     <button
                       onClick={() => handleUpdateStatus(app._id, "declined")}
                       className="px-2 py-1 sm:px-4 md:py-2 bg-red-500 text-white rounded border border-red-600"
                     >
-                      Skip
+                      Decline
                     </button>
                   </div>
                 )}

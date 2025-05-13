@@ -50,7 +50,7 @@ export const signup = async (req, res) => {
     }
 
     // Validate password complexity
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[a-zA-Z\d]{8,}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[a-zA-Z\d@$!%*?&]{8,}$/;
     if (!passwordRegex.test(password)) {
       console.warn("Password complexity validation failed");
       return res.status(400).json({

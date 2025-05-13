@@ -35,12 +35,12 @@ const JobDetails = () => {
 
   const handleApply = async (e) => {
     e.preventDefault();
+
     if (!cv) {
       toast.error("Please upload your CV.");
       return;
     }
 
-    // Validate file type
     const allowedTypes = [
       "application/pdf",
       "application/msword",
@@ -56,7 +56,7 @@ const JobDetails = () => {
     formData.append("message", message);
 
     try {
-      await axios.post(`/jobs/${jobId}/apply`, formData, {
+      const response = await axios.post(`/jobs/${jobId}/apply`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
           Authorization: `Bearer ${localStorage.getItem("token")}`,
@@ -64,7 +64,6 @@ const JobDetails = () => {
         withCredentials: true,
       });
       toast.success("Your application has been submitted successfully!");
-      navigate(-1);
     } catch (error) {
       console.error("Error submitting application:", error);
       const errorMessage =
