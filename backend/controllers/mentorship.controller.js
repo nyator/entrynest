@@ -64,7 +64,7 @@ export const createMentorship = async (req, res) => {
 
 export const getMentorships = async (req, res) => {
   try {
-    const mentorships = await Mentorship.find({ mentor: req.userId }); // Fetch only mentorships created by the logged-in mentor
+    const mentorships = await Mentorship.find().populate("mentor", "firstname lastname email"); // Fetch all mentorships and populate mentor details
     res.status(200).json({
       success: true,
       mentorships,

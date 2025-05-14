@@ -18,7 +18,7 @@ const router = express.Router();
 
 // Static routes
 router.post("/", verifyToken, createMentorship); // Route to create a mentorship
-router.get("/", verifyToken, getMentorships); // Fetch mentorships created by the logged-in mentor
+router.get("/", verifyToken, getMentorships); // Fetch all mentorships
 router.get("/applicants/all", verifyToken, getAllMentorshipApplicants); // Fetch all applicants for the logged-in mentor's mentorships
 router.get("/mentees", verifyToken, getApprovedMentees); // Fetch approved mentees for the logged-in mentor
 

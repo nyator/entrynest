@@ -30,6 +30,7 @@ const MentorshipsPage = () => {
         }
 
         const data = await response.json();
+        console.log("Fetched Mentorships:", data.mentorships); // Debugging log
         setMentorships(data.mentorships || []);
         setFilteredMentorships(data.mentorships || []);
       } catch (error) {
@@ -191,10 +192,10 @@ const MentorshipsPage = () => {
           {filteredMentorships.map((mentorship) => (
             <div
               key={mentorship._id}
-              className="group relative bg-white rounded-2xl overflow-hidden"
+              className="group relative bg-white rounded-2xl overflow-hidden border border-gray shadow-sm hover:scale-105 duration-300"
             >
               {/* Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+              <div className="absolute inset-0 bg-gradient-to-br from-primary/5 to-transparent opacity-0 group-hover:opacity-100 transition-all ease-in-out  duration-300" />
 
               {/* Content */}
               <div className="relative p-5">
