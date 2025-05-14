@@ -67,6 +67,19 @@ const MentorshipsPage = () => {
   const handleApply = async (mentorshipId) => {
     setLoadingMentorshipId(mentorshipId); // Set loading state for the specific mentorship
     try {
+      // Check if the user has already applied
+      const mentorship = mentorships.find((m) => m._id === mentorshipId);
+      const currentUserId = "currentUserId"; // Simulate the current user ID for testing purposes
+      const hasAlreadyApplied = mentorship.applicants?.some(
+        (applicant) => applicant._id === currentUserId
+      );
+
+      if (hasAlreadyApplied) {
+        toast.info("You have already applied for this mentorship."); // Toast for already applied
+        setLoadingMentorshipId(null); // Reset loading state
+        return;
+      }
+
       const response = await fetch(
         `http://localhost:3000/api/mentorships/${mentorshipId}/apply`,
         {
@@ -86,10 +99,8 @@ const MentorshipsPage = () => {
         }
         throw new Error(data.message || "Failed to apply for mentorship");
       }
-      toast.success("Application submitted successfully!");
 
-      // Simulate the current user ID for testing purposes
-      const currentUserId = "currentUserId";
+      toast.success("Application submitted successfully!"); // Toast for success
 
       // Update the mentorships state to reflect the applied status
       setMentorships((prevMentorships) =>
