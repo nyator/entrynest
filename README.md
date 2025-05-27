@@ -1,6 +1,9 @@
 # 📝 entrynest
 
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
+![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
+![Express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)
 ![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)
 
@@ -16,6 +19,7 @@
 - [Usage](#-usage)
 - [Technologies Used](#-technologies-used)
 - [Project Structure](#-project-structure)
+- [Deployment](#-deployment)
 - [Contributing](#-contributing)
 - [FAQ](#-faq)
 - [License](#-license)
@@ -52,26 +56,35 @@
 
 - [Node.js](https://nodejs.org/) (v14 or higher)
 - [npm](https://www.npmjs.com/) or [yarn](https://yarnpkg.com/)
+- [MongoDB](https://www.mongodb.com/) (Atlas or local)
 
 ### Installation
 
+#### 1. Clone the repository
+
 ```bash
-git clone https://github.com/yourusername/entrynest.git
+git clone https://github.com/nyator/entrynest.git
 cd entrynest
-npm install
-# or
-yarn install
 ```
 
-### Running Locally
+#### 2. Setup the backend
 
 ```bash
+cd backend
+cp .env.example .env # Edit .env with your MongoDB URI and secrets
+npm install
 npm start
-# or
-yarn start
 ```
 
-Visit [http://localhost:3000](http://localhost:3000) to view the app.
+#### 3. Setup the frontend
+
+```bash
+cd ../client
+npm install
+npm run dev
+```
+
+The frontend will run on [http://localhost:5173](http://localhost:5173) and the backend on [http://localhost:3000](http://localhost:3000) by default.
 
 ---
 
@@ -88,13 +101,9 @@ Visit [http://localhost:3000](http://localhost:3000) to view the app.
 
 ## 🛠️ Technologies Used
 
-- [React](https://reactjs.org/)
-- [TypeScript](https://www.typescriptlang.org/) (if applicable)
-- [Redux](https://redux.js.org/) (if used)
-- [Styled Components](https://styled-components.com/) / [Tailwind CSS](https://tailwindcss.com/) (if used)
-- [React Router](https://reactrouter.com/)
-- [Axios](https://axios-http.com/) (for API calls)
-- [Jest](https://jestjs.io/) / [React Testing Library](https://testing-library.com/) (for testing)
+- **Frontend:** React, Vite, CSS/Tailwind/Styled Components
+- **Backend:** Node.js, Express.js, MongoDB, Mongoose, JWT, Multer, Nodemailer
+- **Other:** REST API, Email notifications, File uploads
 
 ---
 
@@ -102,22 +111,40 @@ Visit [http://localhost:3000](http://localhost:3000) to view the app.
 
 ```
 entrynest/
-├── public/
-├── src/
-│   ├── components/
-│   ├── pages/
-│   ├── hooks/
-│   └── ...
-├── package.json
-└── README.md
+├── backend/
+│   ├── controllers/
+│   ├── db/
+│   ├── middleware/
+│   ├── models/
+│   ├── routes/
+│   ├── utils/
+│   ├── uploads/
+│   ├── .env.example
+│   └── package.json
+├── client/
+│   ├── public/
+│   ├── src/
+│   ├── package.json
+│   └── README.md
+├── README.md
 ```
+
+---
+
+## 🚀 Deployment
+
+- **Frontend:** Deploy with Vercel, Netlify, or your preferred static host.
+- **Backend:** Deploy with Render, Railway, Heroku, or a VPS.  
+  - Set environment variables for MongoDB, JWT, SMTP, and API URLs.
+  - Make sure the backend `API_URL` and frontend `CLIENT_URL` are set correctly in `.env`.
+- **Uploads:** If using file uploads, ensure the `/uploads` directory is writable and served as static files.
 
 ---
 
 ## 🤝 Contributing
 
 Contributions, issues and feature requests are welcome!  
-Feel free to check [issues page](https://github.com/yourusername/entrynest/issues) or submit a pull request.
+Feel free to check [issues page](https://github.com/nyator/entrynest/issues) or submit a pull request.
 
 ---
 
@@ -130,7 +157,7 @@ A: Yes, your data is stored securely and never shared.
 A: Yes, entrynest is fully responsive and works on all devices.
 
 **Q: How do I report a bug?**  
-A: Please open an issue on the [GitHub Issues page](https://github.com/yourusername/entrynest/issues).
+A: Please open an issue on the [GitHub Issues page](https://github.com/nyator/entrynest/issues).
 
 ---
 
@@ -142,7 +169,7 @@ This project is licensed under the MIT License.
 
 ## 🙋‍♂️ Author
 
-- **Your Name** – [@yourgithub](https://github.com/yourusername)
+- **Henry Nyator** – [@nyator](https://github.com/nyator)
 
 ---
 
