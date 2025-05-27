@@ -35,7 +35,6 @@
 - 🔍 **Search & Filter:** Quickly find entries with powerful search and filter options.
 - ☁️ **Cloud Sync:** (Optional) Sync your entries across devices.
 - 🔒 **Privacy First:** Your data stays with you.
-- 🌓 **Dark Mode:** Switch between light and dark themes.
 
 ---
 
@@ -44,8 +43,6 @@
 <!-- Add your screenshots here -->
 <p align="center">
   <img src="docs/screenshot1.png" width="600" alt="entrynest screenshot 1"/>
-  <br/>
-  <img src="docs/screenshot2.png" width="600" alt="entrynest screenshot 2"/>
 </p>
 
 ---
@@ -95,7 +92,6 @@ The frontend will run on [http://localhost:5173](http://localhost:5173) and the 
 3. **Organize:** Use categories and tags to organize your entries.
 4. **Search & Filter:** Use the search bar or filters to quickly find entries.
 5. **Edit/Delete:** Click on any entry to edit or delete it.
-6. **Switch Theme:** Toggle between light and dark mode from the settings.
 
 ---
 
@@ -175,7 +171,7 @@ This project is licensed under the MIT License.
 
 ## 📬 Contact
 
-For questions or support, please email [your.email@example.com](mailto:your.email@example.com).
+For questions or support, please email [your.email@example.com](mailto:nyatorhenry@gmail.com).
 
 ---
 
