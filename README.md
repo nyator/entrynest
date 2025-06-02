@@ -5,7 +5,6 @@
 ![Express](https://img.shields.io/badge/Express.js-000000?style=for-the-badge&logo=express&logoColor=white)
 ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)
-![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=for-the-badge)
 
 > **entrynest** is a modern, user-friendly platform for managing and organizing your entries, notes, or journal logs with ease.
 
@@ -96,6 +95,39 @@ The frontend will run on [http://localhost:5173](http://localhost:5173) and the 
 ---
 
 ## 💡 Usage
+
+### 👥 User Types & Capabilities
+
+- **Jobseeker**
+
+  - Sign up, create and manage a profile.
+  - Search and apply for jobs.
+  - Join mentorship programs and communicate with mentors.
+  - Track application status by email notifications.
+
+- **Employer**
+
+  - Register and create a company profile.
+  - Post job openings and manage job listings.
+  - View and manage job applications.
+  - Download and view application resumes.
+  - Communicate with jobseekers and manage hiring process.
+
+- **Mentor**
+
+  - Register as a mentor and set up a mentorship profile.
+  - Create mentorship opportunities and manage mentee applications.
+  - Schedule and manage mentorship sessions.
+  - Provide resource for mentees.
+  - Communicate with mentees and provide guidance.
+
+- **Admin**
+  - Access the admin dashboard.
+  - Manage users (jobseekers, employers, mentors).
+  - Oversee job postings, mentorships, and platform statistics.
+  - Moderate content and manage platform.
+
+---
 
 1. **Sign Up / Log In:** Create an account or log in to access your entries.
 2. **Create Entries:** Click the "New Entry" button to add notes or journal logs.
