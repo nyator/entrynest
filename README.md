@@ -6,8 +6,7 @@
 ![MongoDB](https://img.shields.io/badge/MongoDB-4EA94B?style=for-the-badge&logo=mongodb&logoColor=white)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg?style=for-the-badge)
 
-> **entrynest** is a modern, user-friendly platform for managing and organizing your entries, notes, or journal logs with ease.
-
+> **entrynest** is a job search portal to discover internships, mentorships and entry-level jobs (entrynest). It is a web application that allows users to search for job openings, apply to positions, and connect with potential employers. The platform is designed to be user-friendly and accessible, making it easy for job seekers to find opportunities
 ---
 
 ## 📚 Table of Contents
