@@ -42,7 +42,22 @@
 
 <!-- Add your screenshots here -->
 <p align="center">
-  <img src="docs/screenshot1.png" width="600" alt="entrynest screenshot 1"/>
+  <img src="docs/client_1.png" width="600" alt="entrynest client"/>
+</p>
+<p align="center">
+  <img src="docs/client_2.png" width="600" alt="entrynest client"/>
+</p>
+<p align="center">
+  <img src="docs/client_3.png" width="600" alt="entrynest client"/>
+</p>
+<p align="center">
+  <img src="docs/employer.png" width="600" alt="entrynest employer"/>
+</p>
+<p align="center">
+  <img src="docs/mentor.png" width="600" alt="entrynest mentor"/>
+</p>
+<p align="center">
+  <img src="docs/admin.png" width="600" alt="entrynest admin"/>
 </p>
 
 ---
@@ -171,8 +186,4 @@ This project is licensed under the MIT License.
 
 ## 📬 Contact
 
-For questions or support, please email [your.email@example.com](mailto:nyatorhenry@gmail.com).
-
----
-
-> Made with ❤️ for productivity and peace of mind.
+For questions or support, please email [nyatorhenry@gmail.com](mailto:nyatorhenry@gmail.com).
