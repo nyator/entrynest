@@ -1,4 +1,4 @@
-# 📝 entrynest
+# 📝 GROUP 46 - entrynest
 
 ![React](https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB)
 ![Node.js](https://img.shields.io/badge/Node.js-339933?style=for-the-badge&logo=nodedotjs&logoColor=white)
@@ -43,20 +43,15 @@
 <!-- Add your screenshots here -->
 <p align="center">
   <img src="docs/client_1.png" width="600" alt="entrynest client"/>
-</p>
-<p align="center">
+
   <img src="docs/client_2.png" width="600" alt="entrynest client"/>
-</p>
-<p align="center">
+
   <img src="docs/client_3.png" width="600" alt="entrynest client"/>
-</p>
-<p align="center">
+
   <img src="docs/employer.png" width="600" alt="entrynest employer"/>
-</p>
-<p align="center">
+
   <img src="docs/mentor.png" width="600" alt="entrynest mentor"/>
-</p>
-<p align="center">
+
   <img src="docs/admin.png" width="600" alt="entrynest admin"/>
 </p>
 
@@ -145,7 +140,7 @@ entrynest/
 ## 🚀 Deployment
 
 - **Frontend:** Deploy with Vercel, Netlify, or your preferred static host.
-- **Backend:** Deploy with Render, Railway, Heroku, or a VPS.  
+- **Backend:** Deploy with Render, Railway, Heroku, or a VPS.
   - Set environment variables for MongoDB, JWT, SMTP, and API URLs.
   - Make sure the backend `API_URL` and frontend `CLIENT_URL` are set correctly in `.env`.
 - **Uploads:** If using file uploads, ensure the `/uploads` directory is writable and served as static files.
