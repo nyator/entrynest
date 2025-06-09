@@ -22,13 +22,15 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(cors({
-  origin: process.env.CLIENT_URL
-    ? process.env.CLIENT_URL.split(",").map(url => url.trim())
-    : "*",
+  origin: [
+    "http://localhost:5173",
+    "https://entrynest-frontend.onrender.com"
+  ],
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
 }));
+
 
 app.use(express.json());
 app.use(cookieParser());
@@ -44,6 +46,9 @@ app.use("/api/user", userRoutes); // Ensure this line exists
 app.use("/api/jobs", jobRoutes); // Use job routes
 app.use("/api/mentorships/sessions", sessionRoutes); // Ensure this line is mounted before dynamic mentorship routes
 app.use("/api/mentorships", mentorshipRoutes); // Mount mentorship routes
+
+// Optionally, handle preflight requests globally (not strictly needed if using cors package, but safe)
+app.options("*", cors());
 
 // Health check route for Render
 app.get("/healthz", (req, res) => res.send("OK"));
