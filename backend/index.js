@@ -25,6 +25,8 @@ app.use(cors({
   origin: process.env.CLIENT_URL
     ? process.env.CLIENT_URL.split(",").map(url => url.trim())
     : "*",
+  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+  allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true
 }));
 
