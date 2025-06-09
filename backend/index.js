@@ -26,11 +26,19 @@ app.use(cors({
     "http://localhost:5173",
     "https://entrynest-frontend.onrender.com"
   ],
-  methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
   allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true
+  credentials: true,
+  optionsSuccessStatus: 200 // Ensure legacy browsers get a 200 on preflight
 }));
 
+// Explicitly handle preflight OPTIONS requests for all routes
+app.options("*", cors({
+  origin: [
+    "http://localhost:5173",
+    "https://entrynest-frontend.onrender.com"
+  ],
+  credentials: true
+}));
 
 app.use(express.json());
 app.use(cookieParser());
@@ -48,7 +56,7 @@ app.use("/api/mentorships/sessions", sessionRoutes); // Ensure this line is moun
 app.use("/api/mentorships", mentorshipRoutes); // Mount mentorship routes
 
 // Optionally, handle preflight requests globally (not strictly needed if using cors package, but safe)
-app.options("*", cors());
+// app.options("*", cors());
 
 // Health check route for Render
 app.get("/healthz", (req, res) => res.send("OK"));
