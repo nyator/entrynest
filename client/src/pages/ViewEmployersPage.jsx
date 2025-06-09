@@ -21,11 +21,11 @@ const ViewEmployersPage = () => {
         const token = localStorage.getItem("token"); // Retrieve the token from localStorage
         console.log("Token used for request:", token); // Log the token for debugging
 
-        const response = await fetch("http://localhost:3000/api/jobs", {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/jobs`, {
           headers: {
-            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+            Authorization: `Bearer ${token}`,
           },
-          credentials: "include", // Ensure cookies are sent with the request
+          credentials: "include",
         });
 
         console.log("Response status:", response.status); // Log the response status

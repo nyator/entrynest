@@ -82,10 +82,11 @@ export const updateProfile = async (req, res) => {
     await user.save();
 
     // Create a clean user object for the response
+    const apiUrl = process.env.API_URL || "";
     const userResponse = {
       ...user._doc,
-      avatar: user.avatar ? `${process.env.API_URL}${user.avatar}` : null,
-      cv: user.cv ? `${process.env.API_URL}${user.cv}` : null,
+      avatar: user.avatar ? `${apiUrl}${user.avatar}` : null,
+      cv: user.cv ? `${apiUrl}${user.cv}` : null,
       password: undefined,
     };
 
@@ -173,7 +174,7 @@ export const getEmployerById = async (req, res) => {
       employer: {
         ...employer._doc,
         avatar: employer.avatar
-          ? `${process.env.API_URL}${employer.avatar}`
+          ? `${process.env.API_URL || ""}${employer.avatar}`
           : null, // Ensure avatar URL is included
       },
       jobs,

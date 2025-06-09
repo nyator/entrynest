@@ -40,7 +40,7 @@ const AdminDashboard = () => {
   const [recentEmployers, setRecentEmployers] = useState([]); // State for recent employers
   const navigate = useNavigate();
 
-  const API_URL = "http://localhost:3000"; // Define API base URL
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000/api"; // Use env variable
 
   useEffect(() => {
     const fetchEmployers = async () => {

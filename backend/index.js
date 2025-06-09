@@ -22,7 +22,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 app.use(cors({
-  origin: ["http://localhost:5173"],
+  // origin: process.env.CLIENT_URL?.split(",") || "*",
+  origin: ["http://localhost:5173", "https://entrynest.vercel.app/", "https://entrynest.com/"],
   credentials: true
 }));
 
@@ -40,6 +41,9 @@ app.use("/api/user", userRoutes); // Ensure this line exists
 app.use("/api/jobs", jobRoutes); // Use job routes
 app.use("/api/mentorships/sessions", sessionRoutes); // Ensure this line is mounted before dynamic mentorship routes
 app.use("/api/mentorships", mentorshipRoutes); // Mount mentorship routes
+
+// Health check route for Render
+app.get("/healthz", (req, res) => res.send("OK"));
 
 app.listen(PORT, () => {
   connectDB();

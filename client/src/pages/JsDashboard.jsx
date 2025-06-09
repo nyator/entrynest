@@ -63,7 +63,7 @@ const JsDashboard = () => {
   useEffect(() => {
     const fetchJobs = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/api/jobs", {
+        const response = await axios.get("/jobs", {
           withCredentials: true,
         });
         const userId = localStorage.getItem("userId"); // Get the logged-in user's ID
@@ -143,7 +143,7 @@ const JsDashboard = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:3000/api/jobs/${jobId}/apply`,
+        `/jobs/${jobId}/apply`,
         formData,
         {
           headers: { "Content-Type": "multipart/form-data" },

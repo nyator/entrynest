@@ -19,7 +19,7 @@ const MentorshipsPage = () => {
   useEffect(() => {
     const fetchMentorships = async () => {
       try {
-        const response = await fetch("http://localhost:3000/api/mentorships", {
+        const response = await fetch(`${import.meta.env.VITE_API_URL}/mentorships`, {
           method: "GET",
           credentials: "include",
         });
@@ -81,7 +81,7 @@ const MentorshipsPage = () => {
       }
 
       const response = await fetch(
-        `http://localhost:3000/api/mentorships/${mentorshipId}/apply`,
+        `${import.meta.env.VITE_API_URL}/mentorships/${mentorshipId}/apply`,
         {
           method: "POST",
           headers: {

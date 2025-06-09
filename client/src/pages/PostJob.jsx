@@ -53,7 +53,7 @@ const PostJob = () => {
     setIsLoading(true); // Start loading animation
     try {
       await axios.post(
-        "http://localhost:3000/api/jobs",
+        "/jobs", // Use relative path, Axios baseURL handles the rest
         {
           title: jobTitle,
           location: jobLocation,

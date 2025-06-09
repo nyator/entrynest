@@ -8,7 +8,8 @@ import {
 import dotenv from "dotenv";
 dotenv.config();
 
-const API_URL = process.env.VITE_API_URL || "http://localhost:3000"; // Define API base URL
+const API_URL = process.env.API_URL || "";
+const CLIENT_URL = process.env.CLIENT_URL || "";
 
 export const createJob = async (req, res) => {
   const {
@@ -50,7 +51,7 @@ export const createJob = async (req, res) => {
 
     // Send notifications to jobseekers
     const jobseekers = await User.find({ role: "jobseeker" });
-    const postingUrl = `${process.env.CLIENT_URL}/jobs/${job._id}`; // Assuming you have a frontend URL in your env
+    const postingUrl = `${CLIENT_URL}/jobs/${job._id}`; // Use CLIENT_URL from env
 
     for (const jobseeker of jobseekers) {
       try {
@@ -104,7 +105,7 @@ export const getJobs = async (req, res) => {
       postedBy: {
         ...job.postedBy._doc,
         avatar: job.postedBy.avatar
-          ? `${process.env.API_URL}${job.postedBy.avatar}`
+          ? `${API_URL}${job.postedBy.avatar}`
           : null,
       },
       hasApplied: job.applications.some(

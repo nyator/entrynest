@@ -24,7 +24,7 @@ export const createMentorship = async (req, res) => {
 
     // Send notifications to jobseekers
     const jobseekers = await User.find({ role: "jobseeker" });
-    const postingUrl = `${process.env.FRONTEND_URL}/mentorships/${mentorship._id}`; // Assuming you have a frontend URL in your env
+    const postingUrl = `${process.env.CLIENT_URL}/mentorships/${mentorship._id}`; // Use CLIENT_URL from env
 
     for (const jobseeker of jobseekers) {
       try {
@@ -327,7 +327,7 @@ const updateApplicantStatus = async (req, res, status) => {
         applicant.user.firstname,
         {
           title: mentorship.title,
-          // mentorshipUrl: `${process.env.FRONTEND_URL}/mentorships/${mentorship._id}`,
+          // mentorshipUrl: `${process.env.CLIENT_URL}/mentorships/${mentorship._id}`,
         }
       );
     } else if (status === "declined") {
@@ -336,7 +336,7 @@ const updateApplicantStatus = async (req, res, status) => {
         applicant.user.firstname,
         {
           title: mentorship.title,
-          // mentorshipsUrl: `${process.env.FRONTEND_URL}/mentorships`,
+          // mentorshipsUrl: `${process.env.CLIENT_URL}/mentorships`,
         }
       );
     }
